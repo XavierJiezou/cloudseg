@@ -3,7 +3,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 
 
-class HRC_WHU(Dataset):
+class HRCWHU(Dataset):
     
     METAINFO = dict(
         classes=('clear sky', 'cloud'),
@@ -71,8 +71,8 @@ if __name__ == '__main__':
         transforms.Lambda(lambda x: x.long()),
     ])
     
-    train_dataset = HRC_WHU(root='/data/zouxuechao/hrc_whu', phase='train', img_transform=img_transform, ann_transform=ann_transform)
-    test_dataset = HRC_WHU(root='/data/zouxuechao/hrc_whu', phase='test', img_transform=img_transform, ann_transform=ann_transform)
+    train_dataset = HRCWHU(root='/data/zouxuechao/HRCWHU', phase='train', img_transform=img_transform, ann_transform=ann_transform)
+    test_dataset = HRCWHU(root='/data/zouxuechao/HRCWHU', phase='test', img_transform=img_transform, ann_transform=ann_transform)
     
     assert len(train_dataset) == train_dataset.METAINFO['train_size']
     assert len(test_dataset) == test_dataset.METAINFO['test_size']
@@ -92,4 +92,5 @@ if __name__ == '__main__':
         axs[1].set_title('Annotation')
         plt.suptitle(f'Land Cover Type: {train_sample["lac_type"].capitalize()}', y=0.8)
         plt.tight_layout()
-        plt.savefig('hrc_whu_sample.png', bbox_inches="tight")
+        plt.savefig('HRCWHU_sample.png', bbox_inches="tight")
+    

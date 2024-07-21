@@ -1,0 +1,20 @@
+_target_: src.data.hrcwhu_datamodule.HRCWHUDataModule
+root: data/hrcwhu
+img_transform: 
+  _target_: torchvision.transforms.Compose
+  transforms:
+    - _target_: torchvision.transforms.ToTensor
+    - _target_: torchvision.transforms.RandomCrop
+      size: [256, 256]
+ann_transform: 
+  _target_: torchvision.transforms.Compose
+  transforms:
+    - _target_: torchvision.transforms.Resize
+      size: [256, 256]
+    - _target_: torchvision.transforms.PILToTensor
+    - _target_: torchvision.transforms.Lambda
+      lambd: "lambda x: x.long()"
+batch_size: 8
+num_workers: 8
+pin_memory: True
+persistent_workers: True
