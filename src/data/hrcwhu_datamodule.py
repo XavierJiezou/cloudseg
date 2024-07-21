@@ -8,8 +8,10 @@ class HRCWHUDataModule(LightningDataModule):
     def __init__(
         self,
         root: str,
-        img_transform: None,
-        ann_transform: None,
+        train_pipeline: None,
+        val_pipeline: None,
+        test_pipeline: None,
+        seed: int=42,
         batch_size: int = 1,
         num_workers: int = 0,
         pin_memory: bool = False,
@@ -42,17 +44,17 @@ class HRCWHUDataModule(LightningDataModule):
         # train
         HRCWHU(
             root=self.hparams.root,
-            phase="train"
-            img_transform=self.hparams.img_transform
-            ann_transform=self.hparams.ann_transform
+            phase="train",
+            **self.hparams.train_pipeline,
+            seed=self.hparams.seed,
         )
         
         # val or test
         HRCWHU(
             root=self.hparams.root,
-            phase="test"
-            img_transform=self.hparams.img_transform
-            ann_transform=self.hparams.ann_transform
+            phase="test",
+            **self.hparams.test_pipeline,
+            seed=self.hparams.seed,
         )
 
     def setup(self, stage: Optional[str] = None) -> None:
@@ -74,19 +76,19 @@ class HRCWHUDataModule(LightningDataModule):
             self.batch_size_per_device = self.hparams.batch_size // self.trainer.world_size
 
         # load and split datasets only if not loaded already
-        if not self.data_train and not self.data_val and not self.data_test:
+        if not self.train_dataset and not self.val_dataset and not self.test_dataset:
             self.train_dataset = HRCWHU(
                 root=self.hparams.root,
-                phase="train"
-                img_transform=self.hparams.img_transform
-                ann_transform=self.hparams.ann_transform
+                phase="train",
+                **self.hparams.train_pipeline,
+                seed=self.hparams.seed,
             )
             
             self.val_dataset = self.test_dataset = HRCWHU(
                 root=self.hparams.root,
-                phase="test"
-                img_transform=self.hparams.img_transform
-                ann_transform=self.hparams.ann_transform
+                phase="test",
+                **self.hparams.test_pipeline,
+                seed=self.hparams.seed,
             )
 
     def train_dataloader(self) -> DataLoader[Any]:
