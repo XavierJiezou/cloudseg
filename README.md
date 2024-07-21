@@ -1,8 +1,8 @@
-# Multimedia Deepfake Challenge
+# Cloud Segmentation
 
 ## Installation
 
-#### Pip
+### Pip
 
 ```bash
 # clone project
@@ -20,7 +20,7 @@ conda activate deepfake
 pip install -r requirements.txt
 ```
 
-#### Conda
+### Conda
 
 ```bash
 # clone project
