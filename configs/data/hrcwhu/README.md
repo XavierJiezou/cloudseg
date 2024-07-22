@@ -20,6 +20,7 @@ Cloud detection is an important preprocessing step for the precise application o
 <img src="https://github.com/user-attachments/assets/16ca8da2-7e54-49df-9d17-2420a8531cd0" width="800"/>
 </div>
 
+
 ## Dataset
 
 ```yaml
