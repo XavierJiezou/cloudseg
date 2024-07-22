@@ -4,7 +4,9 @@
 
 ## Introduction
 
-[Official Site](http://sendimage.whu.edu.cn/en/hrc_whu/) | [PDF](http://sendimage.whu.edu.cn/en/wp-content/uploads/2019/03/2019_PHOTO_Zhiwei-Li_Deep-learning-based-cloud-detection-for-medium-and-high-resolution-remote-sensing-images-of-different-sensors.pdf) | Download [[Baidu Disk](https://pan.baidu.com/s/1thOTKVO2iTAalFAjFI2_ZQ) (password: ihfb) or [Google Drive](https://drive.google.com/file/d/1qqikjaX7tkfOONsF5EtR4vl6J7sToA6p/view?usp=sharing)]
+- [Official Site](http://sendimage.whu.edu.cn/en/hrc_whu/)
+- [Paper Download](http://sendimage.whu.edu.cn/en/wp-content/uploads/2019/03/2019_PHOTO_Zhiwei-Li_Deep-learning-based-cloud-detection-for-medium-and-high-resolution-remote-sensing-images-of-different-sensors.pdf)
+- Data Download: [Baidu Disk](https://pan.baidu.com/s/1thOTKVO2iTAalFAjFI2_ZQ) (password: ihfb) or [Google Drive](https://drive.google.com/file/d/1qqikjaX7tkfOONsF5EtR4vl6J7sToA6p/view?usp=sharing)
 
 ## Abstract
 
