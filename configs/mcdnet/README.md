@@ -17,7 +17,8 @@ Cloud detection plays a crucial role in the preprocessing of optical remote sens
 
 <!-- [IMAGE] -->
 
-![Overall architecture of MCDNet.](https://ars.els-cdn.com/content/image/1-s2.0-S1569843224001742-gr3.jpg)
+![image](https://github.com/user-attachments/assets/dd0a6a20-da10-4f8e-949b-3722af001b28)
+
 
 ## Results and models
 
