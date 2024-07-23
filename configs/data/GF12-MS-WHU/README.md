@@ -14,42 +14,44 @@ Recently, deep learning has been widely used for cloud detection in satellite im
 
 ## Dataset
 
-The GaoFen12 dataset consists of multiple subsets, including GF1MS-WHU and GF2MS-WHU, each created from different sensor data with varying spatial resolutions. The dataset is divided into training, validation, and test sets with detailed annotations.
-
 ### GF1MS-WHU Dataset
+
+> The two GF-1 PMS sensors have four MS bands with an 8-m spatial resolution and a panchromatic (PAN) band with a higher spatial resolution of 2 m. The spectral range of the MS bands is identical to that of the WFV sensors. In this study, 141 unlabeled images collected from various regions in China were used as the training data for the proposed method. In addition, 33 labeled images were used as the training data for the fully supervised methods, as well as the validation data for the different methods. The acquisition of the images spanned from June 2014 to December 2020 and encompassed four MS bands in both PMS sensors. Note that Fig. 7 only presents the distribution regions of the labeled images. 
 
 ```yaml
 name: GF1MS-WHU
 source: GaoFen-1
 band: 4 (MS)
 resolution: 8m (MS), 2m (PAN)
-pixel: Variable
-train: 141 unlabeled images, 33 labeled images
-val: Included in labeled images
-test: Not specified
-disk: 1.2GB (approx.)
+pixel: 250x250
+train: 6343
+val: -
+test: 4085
+disk: 10.8GB
 annotation:
   - 0: clear sky
   - 1: cloud
-scene: [Water, Vegetation, Urban, Snow/Ice, Barren]
+scene: [Forest,Urban,Barren,Water,Farmland,Grass,Wetland]
 ```
 
 ### GF2MS-WHU Dataset
+
+> The GF-2 satellite is configured with two PMS sensors. Each sensor has four MS bands with a 4-m spatial resolution and a PAN band with a 1-m spatial resolution. The GF-2 PMS sensors have the same bandwidth as the GF-1 WFV sensors. In this study, 163 unlabeled images obtained from Hubei, Jilin, and Hainan provinces were used as the training data for the proposed method, and 29 labeled images were used as the training data for the fully supervised methods, as well as the validation data for the different methods. The images were acquired from June 2014 to October 2020 and included four MS bands in both PMS sensors.
 
 ```yaml
 name: GF2MS-WHU
 source: GaoFen-2
 band: 4 (MS)
 resolution: 4m (MS), 1m (PAN)
-pixel: Variable
-train: 163 unlabeled images, 29 labeled images
-val: Included in labeled images
-test: Not specified
-disk: 1.5GB (approx.)
+pixel: 250x250
+train: 14357
+val: -
+test: 7560
+disk: 26.7GB
 annotation:
   - 0: clear sky
   - 1: cloud
-scene: [Water, Vegetation, Urban, Snow/Ice, Barren]
+scene: [Forest,Urban,Barren,Water,Farmland,Grass,Wetland]
 ```
 
 
