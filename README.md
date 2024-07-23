@@ -1,4 +1,4 @@
-# Cloud Segmentation
+# Cloud Segmentation for Remote Sensing
 
 ## Datasets
 
