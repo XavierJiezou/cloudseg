@@ -1,4 +1,4 @@
-# Cloud Segmentation for Remote Sensing
+# Cloud Segmentation
 
 ## Datasets
 
@@ -18,7 +18,11 @@ cloudseg
 │   │   │   ├── test
 ```
 
+## Supported Methods
+
 ## Installation
+
+- [UNet (MICCAI 2016)](configs/model/unet)
 
 ### Pip
 
