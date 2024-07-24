@@ -19,7 +19,7 @@ Cloud detection is a crucial preprocessing step for optical satellite remote sen
 <!-- [IMAGE] -->
 
 <div align=center>
-<img src="https://github.com/user-attachments/assets/502456ca-0f61-4616-99e7-baa93ee6d5e2" width="70%"/>
+<img src="https://github.com/user-attachments/assets/8e213e6f-3c7a-45f1-b9fc-de7fe6c92489" width="70%"/>
 </div>
 
 ## Results and models
