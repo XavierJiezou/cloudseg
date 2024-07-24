@@ -242,11 +242,11 @@ class BR(nn.Module):
         return out
 
 
-class CDnetV1_MODEL(nn.Module):
-    def __init__(self, block, layers, num_classes, aux=True):
+class CDnetV1(nn.Module):
+    def __init__(self, block=Bottleneck, layers=[3, 4, 6, 3], num_classes=21, aux=True):
         self.inplanes = 64
         self.aux = aux
-        super(CDnetV1_MODEL, self).__init__()
+        super().__init__()
         # self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
         # self.bn1 = nn.BatchNorm2d(64, affine = affine_par)
 
@@ -382,11 +382,6 @@ class CDnetV1_MODEL(nn.Module):
         # #outputs.append(auxout)
 
         return score3, predict1, predict2, predict3
-
-
-def CDnetV1(num_classes=21):
-    model = CDnetV1_MODEL(Bottleneck, [3, 4, 6, 3], num_classes)
-    return model
 
 
 if __name__ == '__main__':

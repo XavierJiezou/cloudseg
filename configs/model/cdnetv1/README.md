@@ -1,6 +1,6 @@
 # CDnet: CNN-Based Cloud Detection for Remote Sensing Imagery
 
-> [High-Resolution Cloud Detection Network](https://ieeexplore.ieee.org/document/8681238)
+> [CDnet: CNN-Based Cloud Detection for Remote Sensing Imagery](https://ieeexplore.ieee.org/document/8681238)
 
 ## Introduction
 
