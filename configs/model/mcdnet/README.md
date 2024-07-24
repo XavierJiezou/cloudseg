@@ -18,7 +18,7 @@ Cloud detection plays a crucial role in the preprocessing of optical remote sens
 <!-- [IMAGE] -->
 
 <div align=center>
-<img src="[https://arxiv.org/html/2407.07365v1/x1.png](https://github.com/user-attachments/assets/dd0a6a20-da10-4f8e-949b-3722af001b28)" width="70%"/>
+<img src="https://github.com/user-attachments/assets/dd0a6a20-da10-4f8e-949b-3722af001b28" width="70%"/>
 </div>
 
 
