@@ -20,7 +20,7 @@ Cloud detection is one of the important tasks for remote sensing image (RSI) pre
 <!-- [IMAGE] -->
 
 <div align=center>
-<img src="https://arxiv.org/html/2407.07365v1/x1.png" width="70%"/>
+<img src="[https://arxiv.org/html/2407.07365v1/x1.png](https://github.com/user-attachments/assets/502456ca-0f61-4616-99e7-baa93ee6d5e2)" width="70%"/>
 </div>
 
 ## Results and models
