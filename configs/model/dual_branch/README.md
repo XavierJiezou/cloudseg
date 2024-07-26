@@ -37,7 +37,7 @@ cloud and cloud shadow segmentation approaches.
 <!-- [IMAGE] -->
 
 <div align=center>
-<img src="https://arxiv.org/html/2407.07365v1/x1.png" width="70%"/>
+<img src="https://github.com/user-attachments/assets/7fcfa82c-bb50-4788-851c-4bf62bbf5903" width="70%"/>
 </div>
 
 ## Results and models
