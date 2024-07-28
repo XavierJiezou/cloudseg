@@ -5,7 +5,7 @@
 # @File    : mcdnet.py
 # @Software: PyCharm
 
-#论文地址：https://www.sciencedirect.com/science/article/pii/S1569843224001742?via%3Dihub
+# 论文地址：https://www.sciencedirect.com/science/article/pii/S1569843224001742?via%3Dihub
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -413,6 +413,10 @@ class MCDNet(nn.Module):
         out = F.interpolate(out, x1.size()[2:], mode='bilinear')
 
         return out
+
+
+def lr_lambda(epoch):
+    return (1 - epoch / 50) ** 0.9
 
 
 if __name__ == "__main__":
