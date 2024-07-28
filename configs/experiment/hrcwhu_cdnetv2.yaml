@@ -1,0 +1,110 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /trainer: gpu
+  - override /data: null
+  - override /model: null
+  - override /logger: wandb
+  - override /callbacks: default
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["hrcWhu", "cdnetv2"]
+
+seed: 42
+
+trainer:
+  min_epochs: 10
+  max_epochs: 10
+  devices: 1
+
+data:
+  _target_: src.data.hrcwhu_datamodule.HRCWHUDataModule
+  root: data/hrcwhu
+  train_pipeline:
+    all_transform:
+      _target_: torchvision.transforms.Compose
+      transforms:
+        - _target_: torchvision.transforms.RandomCrop
+          size: [321, 321]
+          # antialias: True
+    img_transform:
+      _target_: torchvision.transforms.Compose
+      transforms:
+        - _target_: torchvision.transforms.ToTensor
+    ann_transform:
+      _target_: torchvision.transforms.Compose
+      transforms:
+        - _target_: torchvision.transforms.PILToTensor
+  val_pipeline: null
+  test_pipeline:
+    all_transform:
+      _target_: torchvision.transforms.Compose
+      transforms:
+        - _target_: torchvision.transforms.RandomCrop
+          size: [321, 321]
+          # antialias: True
+    img_transform:
+      _target_: torchvision.transforms.Compose
+      transforms:
+        - _target_: torchvision.transforms.ToTensor
+    ann_transform:
+      _target_: torchvision.transforms.Compose
+      transforms:
+        - _target_: torchvision.transforms.PILToTensor
+  seed: 42
+  batch_size: 10
+  num_workers: 5
+  pin_memory: True
+  persistent_workers: True
+
+model:
+  _target_: src.models.ae_module.AELitModule
+
+  net:
+    _target_: src.models.components.CDnetv2.CDnetV2
+    num_classes: 2
+
+  num_classes: 2
+
+  criterion:
+    _target_: torch.nn.CrossEntropyLoss
+
+  optimizer:
+    _target_: torch.optim.SGD
+    _partial_: true
+    lr: 0.0001
+
+  scheduler: null
+
+  # scheduler:
+  #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  #   _partial_: true
+  #   mode: min
+  #   factor: 0.1
+  #   patience: 10
+
+logger:
+  wandb:
+    project: "hrcWhu"
+    name: "cdnetv2"
+  aim:
+    experiment: "hrcwhu_cdnetv2"
+
+callbacks:
+  model_checkpoint:
+    dirpath: ${paths.output_dir}/checkpoints
+    filename: "epoch_{epoch:03d}"
+    monitor: "val/loss"
+    mode: "min"
+    save_last: True
+    auto_insert_metric_name: False
+
+  early_stopping:
+    monitor: "val/loss"
+    patience: 10
+    mode: "min"
