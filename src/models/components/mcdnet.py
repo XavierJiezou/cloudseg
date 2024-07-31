@@ -286,7 +286,7 @@ class PPM(nn.Module):
 
 
 class MCDNet(nn.Module):
-    def __init__(self, in_channels=4, out_channels=4, maxpool=False, bilinear=False) -> None:
+    def __init__(self, in_channels=4, num_classes=4, maxpool=False, bilinear=False) -> None:
         super(MCDNet, self).__init__()
         level = 1
         # encoder
@@ -422,7 +422,7 @@ def lr_lambda(epoch):
 if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     # device = 'cpu'
-    model = MCDNet(in_channels=3, out_channels=7).to(device)
+    model = MCDNet(in_channels=3, num_classes=7).to(device)
     fake_img = torch.randn(size=(2, 3, 256, 256)).to(device)
     out = model(fake_img, fake_img).detach().cpu()
     print(out.shape)
