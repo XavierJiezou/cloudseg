@@ -20,20 +20,26 @@ cloudseg
 
 ## Supported Methods
 
-## Installation
 
 - [UNet (MICCAI 2016)](configs/model/unet)
+- [CDNetv1](configs/model/cdnetv1)
+- [Dual_Branch](configs/model/dual_branch)
+- [HrCloudNet](configs/model/hrcloudnet)
+- [McdNet](configs/model/mcdnet)
+- [Scnn](configs/model/scnn)
+
+## Installation
 
 ### Pip
 
 ```bash
 # clone project
-git clone https://github.com/XavierJiezou/multimedia-deepfake-challenge
-cd multimedia-deepfake-challenge
+git clone https://github.com/XavierJiezou/cloudseg.git
+cd cloudseg
 
-# [OPTIONAL] create conda environment
-conda create -n deepfake python=3.9
-conda activate deepfake
+# [OPTIONAL] create pip environment
+pip -m venv venv
+source venv/bin/activate
 
 # install pytorch according to instructions
 # https://pytorch.org/get-started/
@@ -46,14 +52,15 @@ pip install -r requirements.txt
 
 ```bash
 # clone project
-git clone https://github.com/XavierJiezou/multimedia-deepfake-challenge
-cd multimedia-deepfake-challenge
+git clone https://github.com/XavierJiezou/cloudseg.git
+cd cloudseg
 
-# create conda environment and install dependencies
-conda env create -f environment.yaml -n deepfake
+# [OPTIONAL] create conda environment
+conda env create -f environment.yaml -n cloudseg
+conda activate cloudseg
 
-# activate conda environment
-conda activate deepfake
+# install pytorch according to instructions
+# https://pytorch.org/get-started/
 ```
 
 ## Usage
