@@ -6,7 +6,7 @@
 defaults:
   - override /trainer: gpu
   - override /data: null
-  - override /model: null
+  - override /model: cdnetv1/cdnetv1
   - override /logger: wandb
   - override /callbacks: default
 
@@ -62,24 +62,6 @@ data:
   pin_memory: True
   persistent_workers: True
 
-model:
-  _target_: src.models.ae_module.AELitModule
-
-  net:
-    _target_: src.models.components.cdnetv1.CDnetV1
-    num_classes: 2
-
-  num_classes: 2
-
-  criterion:
-    _target_: torch.nn.CrossEntropyLoss
-
-  optimizer:
-    _target_: torch.optim.SGD
-    _partial_: true
-    lr: 0.0001
-
-  scheduler: null
 
   # scheduler:
   #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau

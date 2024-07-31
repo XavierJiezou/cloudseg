@@ -1,0 +1,15 @@
+_target_: src.models.ae_module.AELitModule
+
+net:
+  _target_: src.models.components.scnn.SCNNNet
+  num_classes: 2
+
+num_classes: 2
+
+criterion:
+  _target_: torch.nn.CrossEntropyLoss
+
+optimizer:
+  _target_: torch.optim.RMSprop
+  _partial_: true
+  lr: 0.0001
