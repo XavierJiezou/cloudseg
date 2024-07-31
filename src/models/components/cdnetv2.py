@@ -2,7 +2,7 @@
 # @Time    : 2024/7/24 下午3:41
 # @Author  : xiaoshun
 # @Email   : 3038523973@qq.com
-# @File    : CDnetv2.py
+# @File    : cdnetv2.py
 # @Software: PyCharm
 
 """Cloud detection Network"""
