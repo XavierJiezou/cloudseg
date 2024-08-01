@@ -380,8 +380,8 @@ class CDnetV1(nn.Module):
         # auxout = self.dsn(mid)
         # auxout = F.interpolate(auxout, size, mode='bilinear', align_corners=True)
         # #outputs.append(auxout)
-
-        return score3, predict1, predict2, predict3
+        return score3
+        # return score3, predict1, predict2, predict3
 
 
 if __name__ == '__main__':

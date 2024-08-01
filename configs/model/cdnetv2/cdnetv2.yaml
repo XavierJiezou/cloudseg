@@ -1,4 +1,4 @@
-_target_: src.models.base_module.BaseLitModule
+_target_: src.models.cdnetv2_module.CDNetv2LitModule
 
 net:
   _target_: src.models.components.cdnetv2.CDnetV2
@@ -7,7 +7,8 @@ net:
 num_classes: 2
 
 criterion:
-  _target_: torch.nn.CrossEntropyLoss
+  _target_: src.loss.cdnetv2_loss.CDnetv2Loss
+  loss_fn: torch.nn.CrossEntropyLoss
 
 optimizer:
   _target_: torch.optim.SGD
