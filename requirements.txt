@@ -18,10 +18,11 @@ matplotlib==3.8.0
 einops==0.8.0          # for using einops in taming transformers
 # sh            # for running bash commands in some tests (linux/macos only)
 
-numpy==1.24.3
+numpy==1.26.4
 pillow==10.4.0
 omegaconf==2.3.0
 tqdm==4.66.4
 yacs==0.1.8
 packaging==23.2
 setuptools==69.5.1
+albumentations==1.4.12
