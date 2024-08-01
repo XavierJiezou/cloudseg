@@ -30,7 +30,6 @@ class HRCWHU(Dataset):
         self.seed = seed
         self.data = self.load_data()
 
-        albumentations.Compose()
 
     def load_data(self):
         data_list = []
@@ -86,7 +85,7 @@ class HRCWHU(Dataset):
 
         return {
             'img': img,
-            'ann': ann,
+            'ann': np.int64(ann),
             'img_path': img_path,
             'ann_path': ann_path,
             'lac_type': lac_type,

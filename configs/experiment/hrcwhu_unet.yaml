@@ -5,7 +5,7 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: null
+  - override /data: hrcwhu/hrcwhu
   - override /model: null
   - override /logger: wandb
   - override /callbacks: default
@@ -22,45 +22,6 @@ trainer:
   max_epochs: 100
   devices: 1
 
-data:
-  _target_: src.data.hrcwhu_datamodule.HRCWHUDataModule
-  root: data/hrcwhu
-  train_pipeline:
-    all_transform: 
-      _target_: torchvision.transforms.Compose
-      transforms:
-        - _target_: torchvision.transforms.RandomCrop
-          size: [256, 256]
-          # antialias: True
-    img_transform: 
-      _target_: torchvision.transforms.Compose
-      transforms:
-        - _target_: torchvision.transforms.ToTensor
-    ann_transform: 
-      _target_: torchvision.transforms.Compose
-      transforms:
-        - _target_: torchvision.transforms.PILToTensor
-  val_pipeline: null
-  test_pipeline:
-    all_transform: 
-      _target_: torchvision.transforms.Compose
-      transforms:
-        - _target_: torchvision.transforms.RandomCrop
-          size: [256, 256]
-          # antialias: True
-    img_transform: 
-      _target_: torchvision.transforms.Compose
-      transforms:
-        - _target_: torchvision.transforms.ToTensor
-    ann_transform: 
-      _target_: torchvision.transforms.Compose
-      transforms:
-        - _target_: torchvision.transforms.PILToTensor
-  seed: 42
-  batch_size: 10
-  num_workers: 5
-  pin_memory: True
-  persistent_workers: True
 
 model:
   _target_: src.models.ae_module.AELitModule

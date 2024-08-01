@@ -1,56 +1,82 @@
 _target_: src.data.hrcwhu_datamodule.HRCWHUDataModule
 root: data/hrcwhu
-all_transform:
-  _target_: albumentations.Compose
-  transforms:
-    - _target_: albumentations.HorizontalFlip
-      p: 0.5
-    - _target_: albumentations.ShiftScaleRotate
-      p: 1
-    - _target_: albumentations.RandomCrop
-      height: 256
-      width: 256
-      always_apply: true
-    - _target_: albumentations.GaussNoise
-      p: 0.2
-    - _target_: albumentations.Perspective
-      p: 0.5
-    - _target_: albumentations.OneOf
-      transforms:
-        - _target_: albumentations.CLAHE
-          p: 1
-        - _target_: albumentations.RandomGamma
-          p: 1
-      p: 0.9
+train_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.HorizontalFlip
+        p: 0.5
+      - _target_: albumentations.ShiftScaleRotate
+        p: 1
+      - _target_: albumentations.RandomCrop
+        height: 256
+        width: 256
+        always_apply: true
+      - _target_: albumentations.GaussNoise
+        p: 0.2
+      - _target_: albumentations.Perspective
+        p: 0.5
+      - _target_: albumentations.OneOf
+        transforms:
+          - _target_: albumentations.CLAHE
+            p: 1
+          - _target_: albumentations.RandomGamma
+            p: 1
+        p: 0.9
 
-    - _target_: albumentations.OneOf
-      transforms:
-        - _target_: albumentations.Sharpen
-          p: 1
-        - _target_: albumentations.Blur
-          p: 1
-        - _target_: albumentations.MotionBlur
-          p: 1
-      p: 0.9
+      - _target_: albumentations.OneOf
+        transforms:
+          - _target_: albumentations.Sharpen
+            p: 1
+          - _target_: albumentations.Blur
+            p: 1
+          - _target_: albumentations.MotionBlur
+            p: 1
+        p: 0.9
 
-    - _target_: albumentations.OneOf
-      transforms:
-        - _target_: albumentations.RandomBrightnessContrast
-          p: 1
-        - _target_: albumentations.HueSaturationValue
-          p: 1
-      p: 0.9
+      - _target_: albumentations.OneOf
+        transforms:
+          - _target_: albumentations.RandomBrightnessContrast
+            p: 1
+          - _target_: albumentations.HueSaturationValue
+            p: 1
+        p: 0.9
 
-img_transform:
-  _target_: torchvision.transforms.Compose
-  transforms:
-    - _target_: torchvision.transforms.ToTensor
+  img_transform:
+    _target_: torchvision.transforms.Compose
+    transforms:
+      - _target_: torchvision.transforms.ToTensor
 
-ann_transform:
-  _target_: torchvision.transforms.Compose
-  transforms:
-    - _target_: torchvision.transforms.Lambda
-      lambd: "lambda x: x.long()"
+  ann_transform: null
+val_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.RandomCrop
+        height: 256
+        width: 256
+
+  img_transform:
+    _target_: torchvision.transforms.Compose
+    transforms:
+      - _target_: torchvision.transforms.ToTensor
+  ann_transform: null
+
+test_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.RandomCrop
+        height: 256
+        width: 256
+
+  img_transform:
+    _target_: torchvision.transforms.Compose
+    transforms:
+      - _target_: torchvision.transforms.ToTensor
+  ann_transform: null
+
+seed: 42
 batch_size: 8
 num_workers: 8
 pin_memory: True
