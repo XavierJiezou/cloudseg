@@ -329,7 +329,7 @@ class MCDNet(nn.Module):
         self.dense_1 = Bottleneck(64 * level, 32 * level)
         self.add_block1 = AddRelu()
 
-        self.head = UpsampleConvLayer(32 * level, out_channels, kernel_size=3, stride=2)
+        self.head = UpsampleConvLayer(32 * level, num_classes, kernel_size=3, stride=2)
         self.apply(self._weights_init)
 
     def _weights_init(self, m):
