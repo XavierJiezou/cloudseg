@@ -1,4 +1,6 @@
 import os
+
+import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
 import torchvision
@@ -28,6 +30,8 @@ class HRCWHU(Dataset):
         self.seed = seed
         self.data = self.load_data()
 
+        albumentations.Compose()
+
     def load_data(self):
         data_list = []
         split = 'train' if self.phase == 'train' else 'test'
@@ -48,6 +52,9 @@ class HRCWHU(Dataset):
         img_path, ann_path, lac_type = self.data[idx]
         img = Image.open(img_path)
         ann = Image.open(ann_path)
+
+        img = np.array(img)
+        ann = np.array(ann)
 
         if self.all_transform:
             albumention = self.all_transform(image=img, mask=ann)
@@ -79,7 +86,7 @@ class HRCWHU(Dataset):
 
         return {
             'img': img,
-            'ann': ann.long(),
+            'ann': ann,
             'img_path': img_path,
             'ann_path': ann_path,
             'lac_type': lac_type,
