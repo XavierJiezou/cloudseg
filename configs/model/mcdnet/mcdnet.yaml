@@ -1,4 +1,4 @@
-_target_: src.models.ae_module.AELitModule
+_target_: src.models.base_module.BaseLitModule
 
 net:
   _target_: src.models.components.mcdnet.MCDNet

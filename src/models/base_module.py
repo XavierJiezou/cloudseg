@@ -6,7 +6,7 @@ from torchmetrics.classification import Accuracy, F1Score, Precision, Recall
 from torchmetrics.segmentation import MeanIoU, GeneralizedDiceScore
 
 
-class AELitModule(LightningModule):
+class BaseLitModule(LightningModule):
     """Example of a `LightningModule` for MNIST classification.
 
     A `LightningModule` implements 8 key methods:
