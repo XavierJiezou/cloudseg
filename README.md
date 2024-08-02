@@ -22,11 +22,12 @@ cloudseg
 
 
 - [UNet (MICCAI 2016)](configs/model/unet)
-- [CDNetv1](configs/model/cdnetv1)
-- [Dual_Branch](configs/model/dual_branch)
-- [HrCloudNet](configs/model/hrcloudnet)
-- [McdNet](configs/model/mcdnet)
-- [Scnn](configs/model/scnn)
+- [CDNetv1 (TGRS 2019)](configs/model/cdnetv1)
+- [CDNetv2 (TGRS 2021)](configs/model/cdnetv2)
+- [Dual_Branch (TGRS 2022)](configs/model/dual_branch)
+- [HrCloudNet (arxiv 2024)](configs/model/hrcloudnet)
+- [McdNet (JAG 2024)](configs/model/mcdnet)
+- [Scnn (ISPRS JOURNAL 2024)](configs/model/scnn)
 
 ## Installation
 
