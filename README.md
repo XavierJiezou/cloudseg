@@ -31,25 +31,7 @@ cloudseg
 
 ## Installation
 
-### Pip
 
-```bash
-# clone project
-git clone https://github.com/XavierJiezou/cloudseg.git
-cd cloudseg
-
-# [OPTIONAL] create pip environment
-pip -m venv venv
-source venv/bin/activate
-
-# install pytorch according to instructions
-# https://pytorch.org/get-started/
-
-# install requirements
-pip install -r requirements.txt
-```
-
-### Conda
 
 ```bash
 # clone project
@@ -57,7 +39,7 @@ git clone https://github.com/XavierJiezou/cloudseg.git
 cd cloudseg
 
 # [OPTIONAL] create conda environment
-conda env create -f environment.yaml -n cloudseg
+conda env create -f environment.yaml
 conda activate cloudseg
 
 # install pytorch according to instructions
