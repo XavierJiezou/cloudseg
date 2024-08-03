@@ -638,7 +638,7 @@ class HRcloudNet(nn.Module):
             dict_return['out'] = out
             dict_return['out_fp'] = out_fp
 
-            return dict_return
+            return dict_return['out']
 
         out = F.interpolate(x, size=input.size()[2:], mode='bilinear', align_corners=True)
         if use_corr:  # True
@@ -648,7 +648,7 @@ class HRcloudNet(nn.Module):
             corr_out = F.interpolate(corr_out, size=(352, 352), mode="bilinear", align_corners=True)
             dict_return['corr_out'] = corr_out
         dict_return['out'] = out
-        return dict_return
+        return dict_return['out']
         # return x
 
     def init_weights(self, pretrained='', ):
@@ -740,12 +740,12 @@ class Corr(nn.Module):
         # corr_map 4 484 484
         out = rearrange(torch.matmul(out_temp, corr_map), 'n c (h w) -> n c h w', h=h_in, w=w_in)
         # out torch.Size([4, 2, 22, 22])
-        return out['out']
+        return out
 
 
 if __name__ == '__main__':
     input = torch.randn(4, 3, 352, 352)
     cloud = HRcloudNet(num_classes=2)
     output = cloud(input)
-    print(output['corr_out'].shape, output['out'].shape, output['out_fp'].shape)
+    print(output.shape)
     # torch.Size([4, 2, 352, 352]) torch.Size([4, 2, 352, 352]) torch.Size([4, 2, 352, 352])
