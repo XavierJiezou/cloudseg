@@ -14,7 +14,7 @@ class CDnetv2Loss(nn.Module):
         self.loss_fn = loss_fn
 
     def forward(self, logits: torch.Tensor, logits_aux,target: torch.Tensor) -> torch.Tensor:
-        loss = self.loss_fn(logits, logits_aux)
+        loss = self.loss_fn(logits, target)
         loss_aux = self.loss_fn(logits_aux, target)
         total_loss = loss + loss_aux
         return total_loss
