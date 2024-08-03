@@ -20,7 +20,6 @@ cloudseg
 
 ## Supported Methods
 
-
 - [UNet (MICCAI 2016)](configs/model/unet)
 - [CDNetv1 (TGRS 2019)](configs/model/cdnetv1)
 - [CDNetv2 (TGRS 2021)](configs/model/cdnetv2)
@@ -31,19 +30,11 @@ cloudseg
 
 ## Installation
 
-
-
 ```bash
-# clone project
 git clone https://github.com/XavierJiezou/cloudseg.git
 cd cloudseg
-
-# [OPTIONAL] create conda environment
 conda env create -f environment.yaml
 conda activate cloudseg
-
-# install pytorch according to instructions
-# https://pytorch.org/get-started/
 ```
 
 ## Usage
