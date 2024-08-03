@@ -17,14 +17,6 @@ tags: ["hrcWhu", "scnn"]
 
 seed: 42
 
-trainer:
-  min_epochs: 10
-  max_epochs: 50
-  devices: 1
-
-
-  
-  scheduler: null
 
   # scheduler:
   #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau

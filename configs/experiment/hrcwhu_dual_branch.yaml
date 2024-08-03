@@ -17,11 +17,6 @@ tags: ["hrcWhu", "dual_branch"]
 
 seed: 42
 
-trainer:
-  min_epochs: 10
-  max_epochs: 300
-  devices: 1
-
 
 
   # scheduler:

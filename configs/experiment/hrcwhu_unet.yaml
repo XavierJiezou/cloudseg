@@ -17,10 +17,6 @@ tags: ["hrcWhu", "unet"]
 
 seed: 42
 
-trainer:
-  min_epochs: 10
-  max_epochs: 100
-  devices: 1
 
 
 model:

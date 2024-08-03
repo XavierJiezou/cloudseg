@@ -17,12 +17,6 @@ tags: ["hrcWhu", "hrcloud"]
 
 seed: 42
 
-trainer:
-  min_epochs: 10
-  max_epochs: 60
-  devices: 1
-
-
 
   # scheduler:
   #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
