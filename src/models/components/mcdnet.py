@@ -4,7 +4,8 @@
 # @Email   : 3038523973@qq.com
 # @File    : mcdnet.py
 # @Software: PyCharm
-
+import cv2
+import image_dehazer
 # 论文地址：https://www.sciencedirect.com/science/article/pii/S1569843224001742?via%3Dihub
 import torch
 import torch.nn as nn
@@ -342,7 +343,20 @@ class MCDNet(nn.Module):
             nn.init.constant_(m.weight, 1)
             nn.init.constant_(m.bias, 0)
 
-    def forward(self, x1, x2):
+    def get_lr_data(self, x: torch.Tensor) -> torch.Tensor:
+        images = x.cpu().permute(0, 2, 3, 1).numpy()
+        batch_size = images.shape[0]
+        lr = []
+        for i in range(batch_size):
+            lr_image = cv2.cvtColor(images[i], cv2.COLOR_RGB2BGR)
+            lr_image = image_dehazer.remove_haze(lr_image, showHazeTransmissionMap=False)[0]
+            lr_image = cv2.cvtColor(lr_image, cv2.COLOR_BGR2RGB)
+            lr_tensor = torch.from_numpy(lr_image).permute(2, 0, 1).float()
+            lr.append(lr_tensor)
+        return torch.stack(lr, dim=0).to(x.device)
+
+    def forward(self, x1):
+        x2 = self.get_lr_data(x1)
         # encoder1
         res1x_1 = self.conv_input(x1)
         res1x_1 = self.dense0(res1x_1)
@@ -424,6 +438,6 @@ if __name__ == "__main__":
     # device = 'cpu'
     model = MCDNet(in_channels=3, num_classes=7).to(device)
     fake_img = torch.randn(size=(2, 3, 256, 256)).to(device)
-    out = model(fake_img, fake_img).detach().cpu()
+    out = model(fake_img).detach().cpu()
     print(out.shape)
 #     torch.Size([2, 7, 256, 256])
