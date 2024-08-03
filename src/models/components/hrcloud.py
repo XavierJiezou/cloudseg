@@ -4,14 +4,13 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import os
 import logging
-import functools
+import os
 
 import numpy as np
 import torch
-import torch.nn as nn
 import torch._utils
+import torch.nn as nn
 import torch.nn.functional as F
 
 BatchNorm2d = nn.BatchNorm2d
@@ -741,7 +740,7 @@ class Corr(nn.Module):
         # corr_map 4 484 484
         out = rearrange(torch.matmul(out_temp, corr_map), 'n c (h w) -> n c h w', h=h_in, w=w_in)
         # out torch.Size([4, 2, 22, 22])
-        return out
+        return out['out']
 
 
 if __name__ == '__main__':
