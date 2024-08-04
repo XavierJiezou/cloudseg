@@ -17,6 +17,7 @@ import wandb
 from PIL import Image
 from matplotlib import pyplot as plt
 from rich.progress import track
+from thop import profile
 
 from src.data.components.hrcwhu import HRCWHU
 from src.data.hrcwhu_datamodule import HRCWHUDataModule
@@ -37,6 +38,7 @@ class WandbVis:
         self.num_classes = 2
         self.model = self.load_model()
         self.dataloader = self.load_dataset()
+        self.macs, self.params = None, None
         wandb.init(project='model_vis', name=self.model_name)
 
     def load_weight(self, weight_path: str):
@@ -127,6 +129,7 @@ class WandbVis:
 
     @torch.no_grad
     def pred_mask(self, x: torch.Tensor):
+        self.macs, self.params = profile(self.model, inputs=(x, ))
         x = x.to(self.device)
         logits = self.model(x)
         if isinstance(logits, tuple):
@@ -162,6 +165,7 @@ class WandbVis:
             plt.title("predict mask")
             plt.imshow(colors_fake)
             wandb.log({image_name: wandb.Image(plt)})
+        wandb.log({"macs":self.macs,"params":self.params})
         wandb.finish()
         if delete_wadb_log and os.path.exists("wandb"):
             shutil.rmtree("wandb")
