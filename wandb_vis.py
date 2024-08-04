@@ -58,7 +58,7 @@ class WandbVis:
         if self.model_name == "hrcloud":
             return HRcloudNet(num_classes=2).to(self.device)
         if self.model_name == "mcdnet":
-            return MCDNet(in_channels=3, num_classes=7).to(self.device)
+            return MCDNet(in_channels=3, num_classes=2).to(self.device)
 
         if self.model_name == "scnn":
             return SCNNNet(num_classes=2).to(self.device)
