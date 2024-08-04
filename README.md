@@ -26,7 +26,7 @@ cloudseg
 - [Dual_Branch (TGRS 2022)](configs/model/dual_branch)
 - [HrCloudNet (JEI 2024)](configs/model/hrcloudnet)
 - [McdNet (International Journal of Applied Earth Observation and Geoinformation 2024)](configs/model/mcdnet)
-- [Scnn (ISPRS JOURNAL 2024)](configs/model/scnn)
+- [Scnn (ISPRS 2024)](configs/model/scnn)
 
 ## Installation
 
