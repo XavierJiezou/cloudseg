@@ -25,7 +25,7 @@ cloudseg
 - [CDNetv2 (TGRS 2021)](configs/model/cdnetv2)
 - [Dual_Branch (TGRS 2022)](configs/model/dual_branch)
 - [HrCloudNet (arxiv 2024)](configs/model/hrcloudnet)
-- [McdNet (JAG 2024)](configs/model/mcdnet)
+- [McdNet (International Journal of Applied Earth Observation and Geoinformation 2024)](configs/model/mcdnet)
 - [Scnn (ISPRS JOURNAL 2024)](configs/model/scnn)
 
 ## Installation
@@ -39,7 +39,7 @@ conda activate cloudseg
 
 ## Usage
 
-Train model with default configuration
+**Train model with default configuration**
 
 ```bash
 # train on CPU
@@ -49,14 +49,32 @@ python src/train.py trainer=cpu
 python src/train.py trainer=gpu
 ```
 
-Train model with chosen experiment configuration from [configs/experiment/](configs/experiment/)
+**Train model with chosen experiment configuration from [configs/experiment/](configs/experiment/)**
 
 ```bash
 python src/train.py experiment=experiment_name.yaml
 ```
 
-You can override any parameter from command line like this
+**Tranin Example**
+
+```bash
+python src/train.py experiment=hrcwhu_cdnetv1.yaml
+```
+
+**You can override any parameter from command line like this**
 
 ```bash
 python src/train.py trainer.max_epochs=20 data.batch_size=64
+```
+
+**Visualization in wandb**
+
+```bash
+python wand_vis.py --model-name model_name
+```
+
+**Example**
+
+```bash
+python wand_vis.py --model-name cdnetv1
 ```
