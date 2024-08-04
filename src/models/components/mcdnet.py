@@ -6,6 +6,7 @@
 # @Software: PyCharm
 import cv2
 import image_dehazer
+import numpy as np
 # 论文地址：https://www.sciencedirect.com/science/article/pii/S1569843224001742?via%3Dihub
 import torch
 import torch.nn as nn
@@ -351,6 +352,10 @@ class MCDNet(nn.Module):
             lr_image = cv2.cvtColor(images[i], cv2.COLOR_RGB2BGR)
             lr_image = image_dehazer.remove_haze(lr_image, showHazeTransmissionMap=False)[0]
             lr_image = cv2.cvtColor(lr_image, cv2.COLOR_BGR2RGB)
+            max_pix = np.max(lr_image)
+            min_pix = np.min(lr_image)
+            lr_image = (lr_image - min_pix) / (max_pix - min_pix)
+            lr_image = np.clip(lr_image, 0, 1)
             lr_tensor = torch.from_numpy(lr_image).permute(2, 0, 1).float()
             lr.append(lr_tensor)
         return torch.stack(lr, dim=0).to(x.device)
