@@ -350,6 +350,7 @@ class MCDNet(nn.Module):
         lr = []
         for i in range(batch_size):
             lr_image = cv2.cvtColor(images[i], cv2.COLOR_RGB2BGR)
+            lr_image = lr_image * 255.0
             lr_image = image_dehazer.remove_haze(lr_image, showHazeTransmissionMap=False)[0]
             lr_image = cv2.cvtColor(lr_image, cv2.COLOR_BGR2RGB)
             max_pix = np.max(lr_image)
