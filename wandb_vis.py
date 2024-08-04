@@ -130,7 +130,7 @@ class WandbVis:
     @torch.no_grad
     def pred_mask(self, x: torch.Tensor):
         x = x.to(self.device)
-        self.macs, self.params = profile(self.model, inputs=(x,))
+        self.macs, self.params = profile(self.model, inputs=(x,),verbose=False)
         logits = self.model(x)
         if isinstance(logits, tuple):
             logits = logits[0]
