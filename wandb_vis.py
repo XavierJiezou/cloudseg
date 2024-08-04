@@ -4,23 +4,25 @@
 # @Email   : 3038523973@qq.com
 # @File    : wandb_vis.py
 # @Software: PyCharm
+import argparse
 import os
 import shutil
-import torch
+from glob import glob
+
 import albumentations as albu
-import torchvision
 import numpy as np
+import torch
+import torchvision
+import wandb
 from PIL import Image
 from matplotlib import pyplot as plt
+from rich.progress import track
+
 from src.data.components.hrcwhu import HRCWHU
 from src.data.hrcwhu_datamodule import HRCWHUDataModule
-import wandb
-import argparse
-from rich.progress import track
-from glob import glob
-from src.models.components.dual_branch import Dual_Branch
 from src.models.components.cdnetv1 import CDnetV1
 from src.models.components.cdnetv2 import CDnetV2
+from src.models.components.dual_branch import Dual_Branch
 from src.models.components.hrcloud import HRcloudNet
 from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNNNet
@@ -168,7 +170,7 @@ class WandbVis:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--model-name", type=str, default="dual_branch")
+    parser.add_argument("--delete-wadb-log", type=bool, default=True)
     args = parser.parse_args()
-    # print(args.model_name)
     vis = WandbVis(model_name=args.model_name)
-    vis.run(delete_wadb_log=False)
+    vis.run(delete_wadb_log=args.delete_wadb_log)
