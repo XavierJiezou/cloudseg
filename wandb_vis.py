@@ -12,9 +12,9 @@ from glob import glob
 import albumentations as albu
 import numpy as np
 import torch
-import torchvision
 import wandb
 from PIL import Image
+from albumentations.pytorch.transforms import ToTensorV2
 from matplotlib import pyplot as plt
 from rich.progress import track
 from thop import profile
@@ -86,9 +86,10 @@ class WandbVis:
                 )
             ]
         )
-        img_transform = torchvision.transforms.Compose(
-            [torchvision.transforms.ToTensor()]
-        )
+        img_transform = albu.Compose([
+            albu.ToFloat(255.0),
+            ToTensorV2()
+        ])
         ann_transform = None
         val_pipeline = dict(
             all_transform=all_transform,
