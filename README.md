@@ -36,7 +36,7 @@ cloudseg
 - [CDNetv2 (TGRS 2021)](configs/model/cdnetv2)
 - [DBNet (TGRS 2022)](configs/model/dbnet)
 - [HRCloudNet (JEI 2024)](configs/model/hrcloudnet)
-- [McdNet (International Journal of Applied Earth Observation and Geoinformation 2024)](configs/model/mcdnet)
+- [MCDNet (JAG 2024)](configs/model/mcdnet)
 - [SCNN (ISPRS 2024)](configs/model/scnn)
 
 ## Installation
