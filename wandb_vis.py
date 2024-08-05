@@ -50,7 +50,7 @@ class WandbVis:
         return state_dict
 
     def load_model_by_model_name(self):
-        if self.model_name == 'DBNet':
+        if self.model_name == 'dbnet':
             return Dual_Branch(img_size=256, in_channels=3, num_classes=2).to(self.device)
         if self.model_name == "cdnetv1":
             return CDnetV1(num_classes=2).to(self.device)
