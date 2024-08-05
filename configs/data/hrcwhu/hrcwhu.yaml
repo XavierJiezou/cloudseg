@@ -43,9 +43,11 @@ train_pipeline:
         p: 0.9
 
   img_transform:
-    _target_: torchvision.transforms.Compose
+    _target_: albumentations.Compose
     transforms:
-      - _target_: torchvision.transforms.ToTensor
+      - _target_: albumentations.ToFloat
+        max_value: 255.0
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
 
   ann_transform: null
 val_pipeline:
@@ -57,9 +59,11 @@ val_pipeline:
         width: 256
 
   img_transform:
-    _target_: torchvision.transforms.Compose
+    _target_: albumentations.Compose
     transforms:
-      - _target_: torchvision.transforms.ToTensor
+      - _target_: albumentations.ToFloat
+        max_value: 255.0
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 
 test_pipeline:
@@ -71,9 +75,11 @@ test_pipeline:
         width: 256
 
   img_transform:
-    _target_: torchvision.transforms.Compose
+    _target_: albumentations.Compose
     transforms:
-      - _target_: torchvision.transforms.ToTensor
+      - _target_: albumentations.ToFloat
+        max_value: 255.0
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 
 seed: 42

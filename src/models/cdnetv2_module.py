@@ -4,9 +4,11 @@
 # @Email   : 3038523973@qq.com
 # @File    : cdnetv2_module.py
 # @Software: PyCharm
-import src.models.base_module
-import torch
 from typing import Tuple
+
+import torch
+
+import src.models.base_module
 
 
 class CDNetv2LitModule(src.models.base_module.BaseLitModule):

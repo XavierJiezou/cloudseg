@@ -1,12 +1,9 @@
 import os
 
+import albumentations
 import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
-import torchvision
-import albumentations
-import random
-import torch
 
 
 class HRCWHU(Dataset):
@@ -20,8 +17,8 @@ class HRCWHU(Dataset):
     )
 
     def __init__(self, root, phase, all_transform: albumentations.Compose = None,
-                 img_transform: torchvision.transforms.Compose = None,
-                 ann_transform: torchvision.transforms.Compose = None, seed: int = 42):
+                 img_transform: albumentations.Compose = None,
+                 ann_transform: albumentations.Compose = None, seed: int = 42):
         self.root = root
         self.phase = phase
         self.all_transform = all_transform
@@ -61,10 +58,10 @@ class HRCWHU(Dataset):
             ann = albumention['mask']
 
         if self.img_transform:
-            img = self.img_transform(img)
+            img = self.img_transform(image=img)['image']
 
         if self.ann_transform:
-            ann = self.ann_transform(ann)
+            ann = self.ann_transform(image=img)['image']
 
         # if self.img_transform is not None:
         #     img = self.img_transform(img)

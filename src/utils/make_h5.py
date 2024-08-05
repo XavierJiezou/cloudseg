@@ -1,7 +1,8 @@
 import os
+
 import h5py
-from PIL import Image
 import numpy as np
+from PIL import Image
 from tqdm import tqdm
 
 

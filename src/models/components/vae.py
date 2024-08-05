@@ -1,18 +1,10 @@
-import torch
-from torch import nn
-import torch.nn.functional as F
-from contextlib import contextmanager
-from typing import List, Dict
-from src.plugin.taming_transformers.taming.modules.vqvae.quantize import VectorQuantizer2 as VectorQuantizer
-
-from src.plugin.ldm.modules.diffusionmodules.model import Encoder, Decoder
-from src.plugin.ldm.modules.distributions.distributions import DiagonalGaussianDistribution
+from typing import List
 
 import matplotlib.pyplot as plt
-
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+from src.plugin.ldm.modules.diffusionmodules.model import Encoder, Decoder
+from src.plugin.ldm.modules.distributions.distributions import DiagonalGaussianDistribution
 
 
 class AutoencoderKL(nn.Module):
@@ -106,7 +98,7 @@ if __name__ == '__main__':
     from PIL import Image
     import numpy as np
     from src.data.components.celeba import DalleTransformerPreprocessor
-    from src.data.components.celeba import CelebA
+
     image = Image.open(image_path).convert('RGB')
     image = np.array(image).astype(np.uint8)
     import copy

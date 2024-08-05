@@ -5,10 +5,10 @@
 # @File    : dual_branch.py
 # @Software: PyCharm
 
-from einops import rearrange
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from einops import rearrange
 
 
 # from models.Transformer.ViT import truncated_normal_

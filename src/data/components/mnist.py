@@ -1,8 +1,8 @@
-from torchvision.transforms import ToTensor
-from torch.utils.data import Dataset
 import h5py
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+from torch.utils.data import Dataset
+from torchvision.transforms import ToTensor
 
 
 class MNIST(Dataset):

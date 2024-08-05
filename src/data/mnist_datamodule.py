@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional, Tuple
 
 import torch
 from lightning import LightningDataModule
-from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
+from torch.utils.data import DataLoader, Dataset, random_split
 from torchvision.transforms import transforms
 
 from src.data.components.mnist import MNIST

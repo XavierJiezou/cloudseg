@@ -13,18 +13,11 @@ This is the implementation of CDnetV2 without multi-scale inputs. This implement
 # nn.GroupNorm
 
 import torch
-from torch import nn
 # import torch.nn as nn
-import torch.optim as optim
 import torch.nn.functional as F
-import torch.backends.cudnn as cudnn
-from torch.utils import data, model_zoo
-from torch.autograd import Variable
-import math
-import numpy as np
+from torch import nn
 
 affine_par = True
-from torch.autograd import Function
 
 
 def conv3x3(in_planes, out_planes, stride=1):
