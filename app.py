@@ -28,7 +28,7 @@ class Application:
         self.models = {
             "cdnetv1": CDnetV1(num_classes=2).to(self.device),
             "cdnetv2": CDnetV2(num_classes=2).to(self.device),
-            "hrcloud": HRcloudNet(num_classes=2).to(self.device),
+            "hrcloudnet": HRcloudNet(num_classes=2).to(self.device),
             "mcdnet": MCDNet(in_channels=3, num_classes=2).to(self.device),
             "scnn": SCNNNet(num_classes=2).to(self.device),
             "dbnet": Dual_Branch(img_size=256, in_channels=3, num_classes=2).to(
