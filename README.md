@@ -34,7 +34,7 @@ cloudseg
 - [UNet (MICCAI 2016)](configs/model/unet)
 - [CDNetv1 (TGRS 2019)](configs/model/cdnetv1)
 - [CDNetv2 (TGRS 2021)](configs/model/cdnetv2)
-- [DBNet (TGRS 2022)](configs/model/dual_branch)
+- [DBNet (TGRS 2022)](configs/model/dbnet)
 - [HrCloudNet (JEI 2024)](configs/model/hrcloudnet)
 - [McdNet (International Journal of Applied Earth Observation and Geoinformation 2024)](configs/model/mcdnet)
 - [Scnn (ISPRS 2024)](configs/model/scnn)

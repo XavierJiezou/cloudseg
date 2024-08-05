@@ -31,7 +31,7 @@ class Application:
             "hrcloud": HRcloudNet(num_classes=2).to(self.device),
             "mcdnet": MCDNet(in_channels=3, num_classes=2).to(self.device),
             "scnn": SCNNNet(num_classes=2).to(self.device),
-            "dual_branch": Dual_Branch(img_size=256, in_channels=3, num_classes=2).to(
+            "dbnet": Dual_Branch(img_size=256, in_channels=3, num_classes=2).to(
                 self.device
             ),
         }
@@ -117,14 +117,14 @@ class Application:
             [
                 gr.Image(sources=["clipboard", "upload"], type="pil"),
                 gr.Radio(
-                    ["cdnetv1", "cdnetv2", "hrcloud", "mcdnet", "scnn", "dual_branch"],
+                    ["cdnetv1", "cdnetv2", "hrcloud", "mcdnet", "scnn", "dbnet"],
                     label="model_name",
                     info="选择使用的模型",
                 ),
             ],
             [gr.Image(), gr.Textbox(label="提示信息")],
             examples=[
-                ["examples_png/barren_11.png", "dual_branch"],
+                ["examples_png/barren_11.png", "dbnet"],
                 ["examples_png/snow_10.png", "scnn"],
                 ["examples_png/vegetation_21.png", "cdnetv2"],
                 ["examples_png/water_22.png", "hrcloud"],

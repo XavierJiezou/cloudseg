@@ -6,14 +6,14 @@
 defaults:
   - override /trainer: gpu
   - override /data: hrcwhu/hrcwhu
-  - override /model: dual_branch/dual_branch
+  - override /model: dbnet/dbnet
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hrcWhu", "dual_branch"]
+tags: ["hrcWhu", "dbnet"]
 
 seed: 42
 
@@ -29,9 +29,9 @@ seed: 42
 logger:
   wandb:
     project: "hrcWhu"
-    name: "dual_branch"
+    name: "dbnet"
   aim:
-    experiment: "hrcwhu_dual_branch"
+    experiment: "hrcwhu_dbnet"
 
 callbacks:
   model_checkpoint:

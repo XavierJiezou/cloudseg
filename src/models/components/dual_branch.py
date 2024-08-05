@@ -2,7 +2,7 @@
 # @Time    : 2024/7/26 上午11:19
 # @Author  : xiaoshun
 # @Email   : 3038523973@qq.com
-# @File    : dual_branch.py
+# @File    : dbnet.py
 # @Software: PyCharm
 
 import torch

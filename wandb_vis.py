@@ -50,7 +50,7 @@ class WandbVis:
         return state_dict
 
     def load_model_by_model_name(self):
-        if self.model_name == 'dual_branch':
+        if self.model_name == 'DBNet':
             return Dual_Branch(img_size=256, in_channels=3, num_classes=2).to(self.device)
         if self.model_name == "cdnetv1":
             return CDnetV1(num_classes=2).to(self.device)
@@ -173,7 +173,7 @@ class WandbVis:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-name", type=str, default="dual_branch")
+    parser.add_argument("--model-name", type=str, default="dbnet")
     parser.add_argument("--delete-wadb-log", type=bool, default=True)
     args = parser.parse_args()
     vis = WandbVis(model_name=args.model_name)
