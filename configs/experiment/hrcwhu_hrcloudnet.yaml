@@ -13,7 +13,7 @@ defaults:
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hrcWhu", "hrcloud"]
+tags: ["hrcWhu", "hrcloudnet"]
 
 seed: 42
 
@@ -28,9 +28,9 @@ seed: 42
 logger:
   wandb:
     project: "hrcWhu"
-    name: "hrcloud"
+    name: "hrcloudnet"
   aim:
-    experiment: "hrcwhu_hrcloud"
+    experiment: "hrcwhu_hrcloudnet"
 
 callbacks:
   model_checkpoint:
