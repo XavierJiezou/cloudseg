@@ -27,6 +27,7 @@ from src.models.components.dbnet import DBNet
 from src.models.components.hrcloudnet import HRCloudNet
 from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNN
+from src.models.components.unetmobv2 import UNetMobV2
 
 
 class WandbVis:
@@ -64,6 +65,9 @@ class WandbVis:
 
         if self.model_name == "scnn":
             return SCNN(num_classes=2).to(self.device)
+
+        if self.model_name == "unetmobv2":
+            return UNetMobV2(num_classes=2)
 
         raise ValueError(f"{self.model_name}模型不存在")
 
@@ -131,7 +135,7 @@ class WandbVis:
     @torch.no_grad
     def pred_mask(self, x: torch.Tensor):
         x = x.to(self.device)
-        self.macs, self.params = profile(self.model, inputs=(x,),verbose=False)
+        self.macs, self.params = profile(self.model, inputs=(x,), verbose=False)
         logits = self.model(x)
         if isinstance(logits, tuple):
             logits = logits[0]
@@ -166,7 +170,7 @@ class WandbVis:
             plt.title("predict mask")
             plt.imshow(colors_fake)
             wandb.log({image_name: wandb.Image(plt)})
-        wandb.log({"macs":self.macs,"params":self.params})
+        wandb.log({"macs": self.macs, "params": self.params})
         wandb.finish()
         if delete_wadb_log and os.path.exists("wandb"):
             shutil.rmtree("wandb")
