@@ -19,7 +19,7 @@ from src.models.components.cdnetv2 import CDnetV2
 from src.models.components.dbnet import DBNet
 from src.models.components.hrcloudnet import HRCloudNet
 from src.models.components.mcdnet import MCDNet
-from src.models.components.scnn import SCNNNet
+from src.models.components.scnn import SCNN
 
 
 class Application:
@@ -30,7 +30,7 @@ class Application:
             "cdnetv2": CDnetV2(num_classes=2).to(self.device),
             "hrcloudnet": HRCloudNet(num_classes=2).to(self.device),
             "mcdnet": MCDNet(in_channels=3, num_classes=2).to(self.device),
-            "scnn": SCNNNet(num_classes=2).to(self.device),
+            "scnn": SCNN(num_classes=2).to(self.device),
             "dbnet": DBNet(img_size=256, in_channels=3, num_classes=2).to(
                 self.device
             ),

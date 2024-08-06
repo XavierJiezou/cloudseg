@@ -26,7 +26,7 @@ from src.models.components.cdnetv2 import CDnetV2
 from src.models.components.dbnet import DBNet
 from src.models.components.hrcloudnet import HRCloudNet
 from src.models.components.mcdnet import MCDNet
-from src.models.components.scnn import SCNNNet
+from src.models.components.scnn import SCNN
 
 
 class WandbVis:
@@ -63,7 +63,7 @@ class WandbVis:
             return MCDNet(in_channels=3, num_classes=2).to(self.device)
 
         if self.model_name == "scnn":
-            return SCNNNet(num_classes=2).to(self.device)
+            return SCNN(num_classes=2).to(self.device)
 
         raise ValueError(f"{self.model_name}模型不存在")
 

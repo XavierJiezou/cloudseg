@@ -12,7 +12,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class SCNNNet(nn.Module):
+class SCNN(nn.Module):
     def __init__(self, in_channels=3, num_classes=2, dropout_p=0.5):
         super().__init__()
         self.conv1 = nn.Conv2d(in_channels, 64, kernel_size=1)
@@ -29,7 +29,7 @@ class SCNNNet(nn.Module):
 
 
 if __name__ == '__main__':
-    model = SCNNNet(num_classes=7)
+    model = SCNN(num_classes=7)
     fake_img = torch.randn((2, 3, 224, 224))
     out = model(fake_img)
     print(out.shape)
