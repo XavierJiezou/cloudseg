@@ -67,7 +67,7 @@ class WandbVis:
             return SCNN(num_classes=2).to(self.device)
 
         if self.model_name == "unetmobv2":
-            return UNetMobV2(num_classes=2)
+            return UNetMobV2(num_classes=2).to(self.device)
 
         raise ValueError(f"{self.model_name}模型不存在")
 
