@@ -18,6 +18,7 @@
 ### 2024.08.06
 
 - [ ] 增加另外三个数据集的支持
+- [ ] 完成unetmobv2模型的训练，可视化，huggingface上传unetmobv2模型
  
 ## Datasets
 
