@@ -1,4 +1,4 @@
-# Cloud Segmentation
+# Cloud Segmentation for Remote Sensing
 
 [![demo](https://img.shields.io/badge/🤗HugginngFace-Spaces-orange)](https://huggingface.co/spaces/caixiaoshun/cloudseg)
 [![python](https://img.shields.io/badge/-Python_3.8_%7C_3.9_%7C_3.10-blue?logo=python&logoColor=white)](https://github.com/pre-commit/pre-commit)
@@ -29,7 +29,7 @@ cloudseg
 │   │   │   ├── test
 ```
 
-## Supported Methods
+## Methods
 
 - [UNet (MICCAI 2016)](configs/model/unet)
 - [CDNetv1 (TGRS 2019)](configs/model/cdnetv1)
