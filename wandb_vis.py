@@ -23,8 +23,8 @@ from src.data.components.hrcwhu import HRCWHU
 from src.data.hrcwhu_datamodule import HRCWHUDataModule
 from src.models.components.cdnetv1 import CDnetV1
 from src.models.components.cdnetv2 import CDnetV2
-from src.models.components.dual_branch import Dual_Branch
-from src.models.components.hrcloud import HRcloudNet
+from src.models.components.dbnet import DBNet
+from src.models.components.hrcloudnet import HRCloudNet
 from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNNNet
 
@@ -51,14 +51,14 @@ class WandbVis:
 
     def load_model_by_model_name(self):
         if self.model_name == 'dbnet':
-            return Dual_Branch(img_size=256, in_channels=3, num_classes=2).to(self.device)
+            return DBNet(img_size=256, in_channels=3, num_classes=2).to(self.device)
         if self.model_name == "cdnetv1":
             return CDnetV1(num_classes=2).to(self.device)
         if self.model_name == "cdnetv2":
             return CDnetV2(num_classes=2).to(self.device)
 
         if self.model_name == "hrcloud":
-            return HRcloudNet(num_classes=2).to(self.device)
+            return HRCloudNet(num_classes=2).to(self.device)
         if self.model_name == "mcdnet":
             return MCDNet(in_channels=3, num_classes=2).to(self.device)
 
