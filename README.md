@@ -29,7 +29,7 @@ cloudseg
 │   │   │   ├── test
 ```
 
-## Supported Methods
+## Methods
 
 - [UNet (MICCAI 2016)](configs/model/unet)
 - [CDNetv1 (TGRS 2019)](configs/model/cdnetv1)
