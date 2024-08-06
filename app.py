@@ -20,6 +20,7 @@ from src.models.components.dbnet import DBNet
 from src.models.components.hrcloudnet import HRCloudNet
 from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNN
+from src.models.components.unetmobv2 import UNetMobV2
 
 
 class Application:
@@ -34,6 +35,7 @@ class Application:
             "dbnet": DBNet(img_size=256, in_channels=3, num_classes=2).to(
                 self.device
             ),
+            "unetmobv2": UNetMobV2(num_classes=2).to(self.device),
         }
         self.__load_weight()
         self.transform = albu.Compose(
@@ -94,9 +96,9 @@ class Application:
 
     def flip(self, image_pil: Image.Image, model_name: str):
         if image_pil is None:
-            return Image.fromarray(np.uint8(np.random.random((32,32,3)) * 255)), "请上传一张图片"
+            return Image.fromarray(np.uint8(np.random.random((32, 32, 3)) * 255)), "请上传一张图片"
         if model_name is None:
-            return Image.fromarray(np.uint8(np.random.random((32,32,3)) * 255)), "请选择模型名称"
+            return Image.fromarray(np.uint8(np.random.random((32, 32, 3)) * 255)), "请选择模型名称"
         image = np.array(image_pil)
         raw_height, raw_width = image.shape[0], image.shape[1]
         transform = self.transform(image=image)
@@ -104,7 +106,7 @@ class Application:
         image = image / 255.0
         fake_image = self.inference(image, model_name)
         fake_image = self.to_pil(fake_image, raw_width, raw_height)
-        return fake_image,"success"
+        return fake_image, "success"
 
     def tiff_to_png(image: Image.Image):
         if image.format == "TIFF":
@@ -117,7 +119,7 @@ class Application:
             [
                 gr.Image(sources=["clipboard", "upload"], type="pil"),
                 gr.Radio(
-                    ["cdnetv1", "cdnetv2", "hrcloud", "mcdnet", "scnn", "dbnet"],
+                    ["cdnetv1", "cdnetv2", "hrcloud", "mcdnet", "scnn", "dbnet", "unetmobv2"],
                     label="model_name",
                     info="选择使用的模型",
                 ),
