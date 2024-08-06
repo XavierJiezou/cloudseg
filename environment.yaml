@@ -25,3 +25,5 @@ dependencies:
       - gradio
       - image-dehazer
       - thop
+      - albumentations
+      - segmentation_models_pytorch
