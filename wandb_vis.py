@@ -25,6 +25,7 @@ from src.models.components.cdnetv1 import CDnetV1
 from src.models.components.cdnetv2 import CDnetV2
 from src.models.components.dbnet import DBNet
 from src.models.components.hrcloudnet import HRCloudNet
+from src.models.components.kappamask import KappaMask
 from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNN
 from src.models.components.unetmobv2 import UNetMobV2
@@ -68,6 +69,9 @@ class WandbVis:
 
         if self.model_name == "unetmobv2":
             return UNetMobV2(num_classes=2).to(self.device)
+
+        if self.model_name == "kappamask":
+            return KappaMask(num_classes=2, in_channels=3).to(self.device)
 
         raise ValueError(f"{self.model_name}模型不存在")
 

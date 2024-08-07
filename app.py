@@ -18,6 +18,7 @@ from src.models.components.cdnetv1 import CDnetV1
 from src.models.components.cdnetv2 import CDnetV2
 from src.models.components.dbnet import DBNet
 from src.models.components.hrcloudnet import HRCloudNet
+from src.models.components.kappamask import KappaMask
 from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNN
 from src.models.components.unetmobv2 import UNetMobV2
@@ -36,6 +37,7 @@ class Application:
                 self.device
             ),
             "unetmobv2": UNetMobV2(num_classes=2).to(self.device),
+            "kappamask":KappaMask(num_classes=2,in_channels=3).to(self.device)
         }
         self.__load_weight()
         self.transform = albu.Compose(
@@ -120,7 +122,7 @@ class Application:
             [
                 gr.Image(sources=["clipboard", "upload"], type="pil"),
                 gr.Radio(
-                    ["cdnetv1", "cdnetv2", "hrcloud", "mcdnet", "scnn", "dbnet", "unetmobv2"],
+                    ["cdnetv1", "cdnetv2", "hrcloudnet", "mcdnet", "scnn", "dbnet", "unetmobv2","kappamask"],
                     label="model_name",
                     info="选择使用的模型",
                 ),
@@ -130,7 +132,7 @@ class Application:
                 ["examples_png/barren_11.png", "dbnet"],
                 ["examples_png/snow_10.png", "scnn"],
                 ["examples_png/vegetation_21.png", "cdnetv2"],
-                ["examples_png/water_22.png", "hrcloud"],
+                ["examples_png/water_22.png", "hrcloudnet"],
             ],
             title="云检测模型在线演示",
             submit_btn=gr.Button("Submit", variant="primary")
