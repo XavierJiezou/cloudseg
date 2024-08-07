@@ -104,9 +104,9 @@ class Application:
             return Image.fromarray(np.uint8(np.random.random((32, 32, 3)) * 255)), "请选择模型名称"
         image = np.array(image_pil)
         raw_height, raw_width = image.shape[0], image.shape[1]
+        print("image type:",image.dtype)
         transform = self.transform(image=image)
         image = transform["image"]
-        image = image / 255.0
         fake_image = self.inference(image, model_name)
         fake_image = self.to_pil(fake_image, raw_width, raw_height)
         return fake_image, "success"
