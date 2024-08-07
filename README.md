@@ -59,7 +59,7 @@ cloudseg
 ```bash
 git clone https://github.com/XavierJiezou/cloudseg.git
 cd cloudseg
-conda env create -f environment.yaml
+conda env create -f environment.yml
 conda activate cloudseg
 ```
 
