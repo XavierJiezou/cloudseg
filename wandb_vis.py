@@ -91,7 +91,7 @@ class WandbVis:
             ]
         )
         img_transform = albu.Compose([
-            albu.ToFloat(255.0),
+            albu.ToFloat(),
             ToTensorV2()
         ])
         ann_transform = None

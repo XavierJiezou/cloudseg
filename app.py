@@ -41,6 +41,7 @@ class Application:
         self.transform = albu.Compose(
             [
                 albu.Resize(256, 256, always_apply=True),
+                albu.ToFloat(),
                 ToTensorV2(),
             ]
         )
