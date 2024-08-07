@@ -27,7 +27,7 @@ seed: 42
 
 logger:
   wandb:
-    project: "hrcWhu"
+    project: "hrcwhu"
     name: "cdnetv1"
   aim:
     experiment: "hrcwhu_cdnetv1"

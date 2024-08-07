@@ -28,7 +28,7 @@ seed: 42
 
 logger:
   wandb:
-    project: "hrcWhu"
+    project: "hrcwhu"
     name: "dbnet"
   aim:
     experiment: "hrcwhu_dbnet"

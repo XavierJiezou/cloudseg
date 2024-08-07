@@ -27,7 +27,7 @@ seed: 42
 
 logger:
   wandb:
-    project: "hrcWhu"
+    project: "hrcwhu"
     name: "kappamask"
   aim:
     experiment: "hrcwhu_kappamask"

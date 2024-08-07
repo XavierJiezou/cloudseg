@@ -48,7 +48,7 @@ model:
 
 logger:
   wandb:
-    project: "hrcWhu"
+    project: "hrcwhu"
     name: "unet"
   aim:
     experiment: "hrcwhu_unet"
