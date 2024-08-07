@@ -13,6 +13,11 @@ criterion:
 optimizer:
   _target_: torch.optim.AdamW
   _partial_: true
-  lr: 0.0001
+  lr: 0.00001
 
-scheduler: null
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 4
