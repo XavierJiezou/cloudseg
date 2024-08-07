@@ -1,4 +1,4 @@
-name: xxx
+name: cloudseg
 channels:
   - pytorch
   - nvidia
