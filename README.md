@@ -14,11 +14,12 @@
 ## TODO
 
 ### 2024.08.07
-
+- [ ] 新增KappaMask模型
 ### 2024.08.06
 
 - [ ] 增加另外三个数据集的支持
-- [ ] 完成unetmobv2模型的训练，可视化，huggingface上传unetmobv2模型
+- [x] 完成unetmobv2模型的训练，可视化，huggingface上传unetmobv2模型
+- [x] 完成cloud-38数据集下载
  
 ## Datasets
 
