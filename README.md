@@ -17,7 +17,7 @@
 
 ### 2024.08.07
 
-- [ ] 新增KappaMask模型
+- [x] 新增KappaMask模型，并完成在模型训练，wandb可视化，huggingface更新
 
 ### 2024.08.06
 
