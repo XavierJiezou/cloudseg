@@ -19,7 +19,7 @@ U-Net models often have considerable memory requirements since the encoder and d
 <!-- [IMAGE] -->
 
 <div align=center>
-<img src="https://user-images.githubusercontent.com/24582831/142902977-20fe689d-a147-4d92-9690-dbfde8b68dbe.png" width="70%"/>
+<img src="https://github.com/user-attachments/assets/734d7f11-631e-4460-99d1-db7e4e8766c5" width="70%"/>
 </div>
 
 ## Results and models
