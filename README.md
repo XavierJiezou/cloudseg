@@ -15,10 +15,12 @@
 
 ### 2024.08.08
 
+- [x] 下载3个数据集
+
 ### 2024.08.07
 
 - [x] 新增KappaMask模型，并完成在模型训练，wandb可视化，huggingface更新
-- [ ] 补充unetmobv2和kappamask文档
+- [x] 补充unetmobv2和kappamask文档
 
 ### 2024.08.06
 
