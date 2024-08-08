@@ -6,9 +6,7 @@
 
 <!-- [ALGORITHM] -->
 
-<a href="https://www.nature.com/articles/s41597-022-01878-2#Tab5">Official Repo</a>
-
-<a href="https://github.com/cloudsen12/models">Code Snippet</a>
+<a href="https://github.com/cloudsen12/models">Official Repo</a>
 
 ## Abstract
 
