@@ -16,7 +16,7 @@ The Copernicus Sentinel-2 mission operated by the European Space Agency (ESA) pr
 <!-- [IMAGE] -->
 
 <div align=center>
-<img src="https://github.com/user-attachments/assets/dd0a6a20-da10-4f8e-949b-3722af001b28" width="70%"/>
+<img src="https://github.com/user-attachments/assets/9c50377a-519d-48e3-8302-59b4f39ffa6f" width="70%"/>
 </div>
 
 
