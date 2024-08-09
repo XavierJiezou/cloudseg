@@ -345,20 +345,21 @@ class MCDNet(nn.Module):
             nn.init.constant_(m.bias, 0)
 
     def get_lr_data(self, x: torch.Tensor) -> torch.Tensor:
-        images = x.cpu().permute(0, 2, 3, 1).numpy()
+        images = x.detach().cpu().permute(0, 2, 3, 1).numpy() # b, h, w, c
         batch_size = images.shape[0]
         lr = []
         for i in range(batch_size):
-            lr_image = cv2.cvtColor(images[i], cv2.COLOR_RGB2BGR)
-            lr_image = image_dehazer.remove_haze(lr_image, showHazeTransmissionMap=False)[0]
-            lr_image = cv2.cvtColor(lr_image, cv2.COLOR_BGR2RGB)
-            max_pix = np.max(lr_image)
-            min_pix = np.min(lr_image)
-            lr_image = (lr_image - min_pix) / (max_pix - min_pix)
-            lr_image = np.clip(lr_image, 0, 1)
-            lr_tensor = torch.from_numpy(lr_image).permute(2, 0, 1).float()
+            # lr_image = cv2.cvtColor(images[i], cv2.COLOR_RGB2BGR)
+            # lr_image = image_dehazer.remove_haze(lr_image, showHazeTransmissionMap=False)[0]
+            # lr_image = cv2.cvtColor(lr_image, cv2.COLOR_BGR2RGB)
+            # max_pix = np.max(lr_image)
+            # min_pix = np.min(lr_image)
+            # lr_image = (lr_image - min_pix) / (max_pix - min_pix)
+            # lr_image = np.clip(lr_image, 0, 1)
+            lr_image = image_dehazer.remove_haze(images[i], showHazeTransmissionMap=False)[0] # h, w, c, numpy.array
+            lr_tensor = torch.from_numpy(lr_image).permute(2, 0, 1).float() # c, h, w
             lr.append(lr_tensor)
-        return torch.stack(lr, dim=0).to(x.device)
+        return torch.stack(lr, dim=0).to(x.device) # b, c, h, w
 
     def forward(self, x1):
         x2 = self.get_lr_data(x1)
