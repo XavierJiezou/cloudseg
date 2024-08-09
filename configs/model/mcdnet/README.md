@@ -6,9 +6,7 @@
 
 <!-- [ALGORITHM] -->
 
-<a href="https://www.sciencedirect.com/science/article/pii/S1569843224001742?via%3Dihub">Official Repo</a>
-
-<a href="https://github.com/djw-easy/MCDNet">Code Snippet</a>
+<a href="https://github.com/djw-easy/MCDNet">Official Repo</a>
 
 ## Abstract
 
