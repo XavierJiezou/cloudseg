@@ -41,6 +41,7 @@ class WandbVis:
         self.model = self.load_model()
         self.dataloader = self.load_dataset()
         self.macs, self.params = None, None
+        self.chop = True
         wandb.init(project='model_vis', name=self.model_name)
 
     def load_weight(self, weight_path: str):
@@ -114,14 +115,6 @@ class WandbVis:
         dataloader.setup()
         test_dataloader = dataloader.test_dataloader()
         return test_dataloader
-        # for data in test_dataloader:
-        #     print(data['img'].shape,data['ann'].shape,data['img_path'],data['ann_path'],data['lac_type'])
-        #     break
-        # torch.Size([1, 3, 256, 256])
-        # torch.Size([1, 256, 256])
-        # ['/home/liujie/liumin/cloudseg/data/hrcwhu/img_dir/test/barren_30.tif']
-        # ['/home/liujie/liumin/cloudseg/data/hrcwhu/ann_dir/test/barren_30.tif']
-        # ['barren']
 
     def give_colors_to_mask(self, mask: np.ndarray):
         """
@@ -139,7 +132,11 @@ class WandbVis:
     @torch.no_grad
     def pred_mask(self, x: torch.Tensor):
         x = x.to(self.device)
-        self.macs, self.params = profile(self.model, inputs=(x,), verbose=False)
+        if self.chop:
+            self.macs, self.params = profile(self.model, inputs=(x,), verbose=False)
+            self.params = self.params / (1000 ** 2)
+            self.macs = self.macs / (1000 ** 3)
+            self.chop = False
         logits = self.model(x)
         if isinstance(logits, tuple):
             logits = logits[0]
@@ -152,8 +149,6 @@ class WandbVis:
         return np.array(pil_np)
 
     def run(self, delete_wadb_log=True):
-        # print(len(self.dataloader))
-        # 30
         for data in track(self.dataloader):
             img = data["img"]
             ann = data["ann"].squeeze(0).numpy()
@@ -174,7 +169,7 @@ class WandbVis:
             plt.title("predict mask")
             plt.imshow(colors_fake)
             wandb.log({image_name: wandb.Image(plt)})
-        wandb.log({"macs": self.macs, "params": self.params})
+        wandb.log({"MACs (G)": self.macs, "Params (M)": self.params})
         wandb.finish()
         if delete_wadb_log and os.path.exists("wandb"):
             shutil.rmtree("wandb")
