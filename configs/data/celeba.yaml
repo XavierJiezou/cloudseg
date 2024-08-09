@@ -1,8 +1,0 @@
-_target_: src.data.celeba_datamodule.CelebADataModule
-size: 512 # image size
-test_dataset_size: 3000
-conditions: [] # [] for image-only, ['seg_mask', 'text'] for multi-modal conditions, ['seg_mask'] for segmentation mask only, ['text'] for text only
-batch_size: 2
-num_workers: 8
-pin_memory: False
-persistent_workers: False
