@@ -344,8 +344,9 @@ class MCDNet(nn.Module):
             nn.init.constant_(m.weight, 1)
             nn.init.constant_(m.bias, 0)
 
+    @torch.no_grad
     def get_lr_data(self, x: torch.Tensor) -> torch.Tensor:
-        images = x.detach().cpu().permute(0, 2, 3, 1).numpy() # b, h, w, c
+        images = x.cpu().permute(0, 2, 3, 1).numpy() # b, h, w, c
         batch_size = images.shape[0]
         lr = []
         for i in range(batch_size):
