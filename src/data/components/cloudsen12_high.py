@@ -37,22 +37,22 @@ class CloudSEN12High(Dataset):
         self.all_transform = all_transform
         self.img_transform = img_transform
         self.ann_transform = ann_transform
-        self.channel_data, self.channel_type, self.label_data = self.load_data()
+        self.channel_data, self.channel_dtype, self.label_data = self.load_data()
         self.eps = 1e-6 #最大最小归一化时防止分母为0
 
     def load_data(self):
         channel_list = []
-        channel_type_list = []
+        channel_dtype_list = []
         for bands in self.bands:
             level_name = None if bands.startswith("S1_") else self.level
             data, data_type = self.__load_channel_data(level_name, bands)
             channel_list.append(data)
-            channel_type_list.append(data_type)
+            channel_dtype_list.append(data_type)
         label_path = os.path.join(self.root, self.phase, "LABEL_manual_hq.dat")
         label_shape = self.__get_file_shape()
         label_data = np.memmap(label_path, dtype=np.int8, mode="r", shape=label_shape)
 
-        return channel_list, channel_type_list, label_data
+        return channel_list, channel_dtype_list, label_data
 
     def __load_channel_data(
         self, level_name: str = None, bond: str = None
@@ -143,7 +143,7 @@ class CloudSEN12High(Dataset):
         if self.ann_transform:
             ann = self.ann_transform(image=img)["image"]
         
-        img = self.__to_tensor(img,self.channel_type)
+        img = self.__to_tensor(img,self.channel_dtype)
 
         return {
             "img": img,
