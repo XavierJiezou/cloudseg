@@ -13,8 +13,7 @@ class CloudSEN12High(Dataset):
     METAINFO = dict(
         classes=("clear", "thick cloud", "thin cloud", "cloud shadow"),
         palette=((31, 119, 18), (255, 127, 14), (44, 160, 44), (214, 39, 40)),
-        img_size=(3, 512, 512),  # C, H, W
-        ann_size=(512, 512),  # C, H, W
+        ann_size=(512, 512),
         train_size=8490,
         val_size=535,
         test_size=975,
@@ -49,9 +48,7 @@ class CloudSEN12High(Dataset):
             channel_list.append(data)
             channel_dtype_list.append(data_type)
         label_path = os.path.join(self.root, self.phase, "LABEL_manual_hq.dat")
-        label_shape = self.__get_file_shape()
-        label_data = np.memmap(label_path, dtype=np.int8, mode="r", shape=label_shape)
-
+        label_data = np.memmap(filename=label_path, dtype=np.int8, mode="r").reshape(-1, *self.METAINFO["ann_size"])
         return channel_list, channel_dtype_list, label_data
 
     def __load_channel_data(
@@ -70,29 +67,12 @@ class CloudSEN12High(Dataset):
         else:
             filename = os.path.join(self.root, self.phase, bond)
         filename = filename + ".dat"
-        file_type = np.int16 if level_name else np.float32
-        file_shape = self.__get_file_shape()
-        file = np.memmap(filename=filename, dtype=file_type, mode="r", shape=file_shape)
-        return file, file_type
-
-    def __get_file_shape(self) -> Tuple[int, int, int]:
-        """得到数据形状"""
-        key = f"{self.phase}_size"
-        if key in self.METAINFO:
-            return (self.METAINFO[f"{self.phase}_size"], 512, 512)
-
-        raise ValueError(
-            f"不存在的phase.phase应当是'train'或'val'或'test',实际却是{self.phase}."
-        )
+        file_dtype = np.int16 if level_name else np.float32
+        file = np.memmap(filename=filename, dtype=file_dtype, mode="r").reshape(-1, *self.METAINFO["ann_size"])
+        return file, file_dtype
 
     def __len__(self) -> int:
-        key = f"{self.phase}_size"
-        if key in self.METAINFO:
-            return self.METAINFO[key]
-
-        raise ValueError(
-            f"不存在的phase.phase应当是'train'或'val'或'test',实际却是{self.phase}."
-        )
+        return self.label_data.shape[0]
 
     def __to_tensor(self,images:np.ndarray,images_type:List[type])->np.ndarray:
         """对数据进行归一化操作，并将数据调整为(c,h,w)
@@ -153,25 +133,72 @@ class CloudSEN12High(Dataset):
 
 
 if __name__ == "__main__":
-    bands = ["B1", "B2", "B3", "B4", "B5","S1_VV","S1_angle","S1_VH"]
+    bands = ["B4", "B3", "B2"] # RGB
     
     all_transform = albu.Compose([
-        albu.RandomCrop(512,512),
-        albu.RandomGamma()
+        # albu.RandomCrop(512,512),
     ])
-    train_set = CloudSEN12High(phase='train',level='l2a',bands=bands,all_transform=all_transform)
-    train_data = train_set[0]
-    print(train_data['img'].shape,train_data['ann'].shape)
 
-    test_set = CloudSEN12High(phase='test',level='l2a',bands=bands,all_transform=all_transform)
-    test_data = test_set[0]
-    print(test_data['img'].shape,test_data['ann'].shape)
+    for phase in ["train", "val", "test"]:
+        dataset = CloudSEN12High(phase=phase, level='l2a', bands=bands, all_transform=all_transform)
+        assert len(dataset)==CloudSEN12High.METAINFO[f"{phase}_size"]
+        assert dataset[0]["img"].shape == (len(bands), *CloudSEN12High.METAINFO["ann_size"])
+        assert dataset[0]["ann"].shape == CloudSEN12High.METAINFO["ann_size"]
 
+    
+    import matplotlib.pyplot as plt
 
-    val_set = CloudSEN12High(phase='val',level='l2a',bands=bands,all_transform=all_transform)
-    val_data = val_set[0]
-    print(val_data['img'].shape,val_data['ann'].shape)
+    
 
-    # (8, 512, 512) (512, 512)
-    # (8, 512, 512) (512, 512)
-    # (8, 512, 512) (512, 512)
+    dataset = CloudSEN12High(phase="train", level='l1c', bands=bands, all_transform=all_transform)
+    data = dataset[-1]['img']
+    data = (np.transpose(data,(1,2,0)) * 255*10).astype(np.uint8)
+
+    plt.figure(figsize=(16, 4))
+
+    plt.subplot(1, 4, 1)
+    plt.title("l1c RGB")
+    plt.axis("off")
+    plt.imshow(data)
+
+    # L1C L2A S1 ANN
+    plt.subplot(1,4,2)
+
+    dataset = CloudSEN12High(phase="train", level="l2a", bands=bands, all_transform=all_transform)
+    data = dataset[-1]['img']
+    data = (np.transpose(data,(1,2,0)) * 255*10).astype(np.uint8)
+
+    # enhance = ImageEnhance.Brightness(Image.fromarray(data))
+    # data = enhance.enhance(2)
+    # data = np.array(data)
+
+    plt.title("l2a RGB")
+    plt.axis("off")
+    plt.imshow(data)
+
+    plt.subplot(1,4,3)
+
+    dataset = CloudSEN12High(phase="train", level="l1c", bands=["S1_VV","S1_VH","S1_angle"], all_transform=all_transform)
+    data = dataset[-1]['img']
+    data = (np.transpose(data,(1,2,0)) * 255).astype(np.uint8)
+
+    # enhance = ImageEnhance.Brightness(Image.fromarray(data))
+    # data = enhance.enhance(2)
+    # data = np.array(data)
+
+    plt.title("l1c S1_VV VH angle")
+    plt.axis("off")
+    plt.imshow(data,cmap="viridis")
+
+    plt.subplot(1,4,4)
+
+    ann = dataset[-1]['ann']
+
+    # enhance = ImageEnhance.Brightness(Image.fromarray(ann))
+    # ann = enhance.enhance(2)
+    # ann = np.array(ann)
+
+    plt.axis("off")
+    plt.title("ann")
+    plt.imshow(ann, cmap="gray")
+    plt.savefig("1.png", bbox_inches="tight", pad_inches=0)
