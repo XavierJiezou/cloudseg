@@ -2,7 +2,6 @@ import os
 
 import albumentations as albu
 import numpy as np
-from PIL import Image
 from torch.utils.data import Dataset
 import numpy as np
 from glob import glob
@@ -85,12 +84,9 @@ class CloudSEN12High(Dataset):
         for i in range(len(images_type)):
             image = images[:,:,i][:,:,np.newaxis]
             if images_type[i] == np.int16:
-                num = (2 ** 16) - 1
-                image = image / num
+                image = image / (2 ** 16 - 1)
             elif images_type[i] == np.float32:
-                max_num = image.max()
-                min_num = image.min()
-                image = (image - min_num) / (max_num - min_num + self.eps)
+                image = (image - image.min()) / (image.max() - image.min() + self.eps)
             else:
                 raise ValueError(f"意外的数据类型:{images_type[i]}")
             if norm_images is None:
@@ -99,7 +95,6 @@ class CloudSEN12High(Dataset):
                 norm_images = np.concatenate([norm_images,image],axis=-1)
         norm_images = np.transpose(norm_images,(2,0,1))
         return norm_images
-
 
     def __getitem__(self, idx):
         ann = self.label_data[idx]
@@ -124,6 +119,7 @@ class CloudSEN12High(Dataset):
             ann = self.ann_transform(image=img)["image"]
         
         img = self.__to_tensor(img,self.channel_dtype)
+        
 
         return {
             "img": img,
@@ -136,7 +132,7 @@ if __name__ == "__main__":
     bands = ["B4", "B3", "B2"] # RGB
     
     all_transform = albu.Compose([
-        # albu.RandomCrop(512,512),
+        albu.RandomCrop(512,512),
     ])
 
     for phase in ["train", "val", "test"]:
@@ -147,17 +143,17 @@ if __name__ == "__main__":
 
     
     import matplotlib.pyplot as plt
-
+    from src.utils.stretch import linear_stretch
     
-
     dataset = CloudSEN12High(phase="train", level='l1c', bands=bands, all_transform=all_transform)
     data = dataset[-1]['img']
-    data = (np.transpose(data,(1,2,0)) * 255*10).astype(np.uint8)
+    data = (np.transpose(data,(1,2,0))*255).astype(np.uint8)
+    data = linear_stretch(data)
 
     plt.figure(figsize=(16, 4))
 
     plt.subplot(1, 4, 1)
-    plt.title("l1c RGB")
+    plt.title("L1C_RGB")
     plt.axis("off")
     plt.imshow(data)
 
@@ -166,13 +162,10 @@ if __name__ == "__main__":
 
     dataset = CloudSEN12High(phase="train", level="l2a", bands=bands, all_transform=all_transform)
     data = dataset[-1]['img']
-    data = (np.transpose(data,(1,2,0)) * 255*10).astype(np.uint8)
+    data = (np.transpose(data,(1,2,0))*255).astype(np.uint8)
+    data = linear_stretch(data)
 
-    # enhance = ImageEnhance.Brightness(Image.fromarray(data))
-    # data = enhance.enhance(2)
-    # data = np.array(data)
-
-    plt.title("l2a RGB")
+    plt.title("L2A_RGB")
     plt.axis("off")
     plt.imshow(data)
 
@@ -180,25 +173,19 @@ if __name__ == "__main__":
 
     dataset = CloudSEN12High(phase="train", level="l1c", bands=["S1_VV","S1_VH","S1_angle"], all_transform=all_transform)
     data = dataset[-1]['img']
-    data = (np.transpose(data,(1,2,0)) * 255).astype(np.uint8)
+    data = (np.transpose(data,(1,2,0))*255).astype(np.uint8)
+    data = linear_stretch(data)
 
-    # enhance = ImageEnhance.Brightness(Image.fromarray(data))
-    # data = enhance.enhance(2)
-    # data = np.array(data)
 
-    plt.title("l1c S1_VV VH angle")
+    plt.title("S1")
     plt.axis("off")
-    plt.imshow(data,cmap="viridis")
+    plt.imshow(data)
 
     plt.subplot(1,4,4)
 
     ann = dataset[-1]['ann']
 
-    # enhance = ImageEnhance.Brightness(Image.fromarray(ann))
-    # ann = enhance.enhance(2)
-    # ann = np.array(ann)
-
     plt.axis("off")
-    plt.title("ann")
+    plt.title("ANN")
     plt.imshow(ann, cmap="gray")
-    plt.savefig("1.png", bbox_inches="tight", pad_inches=0)
+    plt.savefig("cloudsen12_high.png", bbox_inches="tight", pad_inches=0)
