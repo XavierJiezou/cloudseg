@@ -5,32 +5,38 @@ import numpy as np
 from PIL import Image
 from torch.utils.data import Dataset
 
+from typing import Literal, List
 
-class HRCWHU(Dataset):
+
+class CloudSEN12High(Dataset):
     METAINFO = dict(
         classes=('clear sky', 'cloud'),
         palette=((128, 192, 128), (255, 255, 255)),
-        img_size=(3, 256, 256),  # C, H, W
-        ann_size=(256, 256),  # C, H, W
-        train_size=120,
-        test_size=30,
+        img_size=(3, 512, 512),  # C, H, W
+        ann_size=(512, 512),  # C, H, W
+        train_size =8490,
+        val_size = 535
+        test_size =975,
     )
 
     def __init__(
         self, 
-        root, 
-        phase, 
+        root: str, 
+        phase: Literal["train", "val", "test"],
+        level: Literal["l1c", "l2a"],
+        bands: List[str], # ["b02", "b03", "b04", "b08", "vv", "vh", "angle"]
         all_transform: albumentations.Compose = None,
         img_transform: albumentations.Compose = None,
         ann_transform: albumentations.Compose = None
     ):
         self.root = root
         self.phase = phase
+        self.level = level
+        self.bands = bands
         self.all_transform = all_transform
         self.img_transform = img_transform
         self.ann_transform = ann_transform
         self.data = self.load_data()
-
 
     def load_data(self):
         data_list = []

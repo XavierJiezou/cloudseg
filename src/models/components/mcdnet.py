@@ -357,8 +357,10 @@ class MCDNet(nn.Module):
             # min_pix = np.min(lr_image)
             # lr_image = (lr_image - min_pix) / (max_pix - min_pix)
             # lr_image = np.clip(lr_image, 0, 1)
-            lr_image = image_dehazer.remove_haze(images[i], showHazeTransmissionMap=False)[0] # h, w, c, numpy.array
-            lr_tensor = torch.from_numpy(lr_image).permute(2, 0, 1).float() # c, h, w
+            import numpy as np
+            lr_image = image_dehazer.remove_haze((images[i]*255).astype(np.uint8), showHazeTransmissionMap=False)[0] # h, w, c, numpy.array
+            # print(f"lr_image{lr_image.max()}")
+            lr_tensor = torch.from_numpy(lr_image).permute(2, 0, 1)/255. # c, h, w
             lr.append(lr_tensor)
         return torch.stack(lr, dim=0).to(x.device) # b, c, h, w
 
