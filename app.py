@@ -129,10 +129,10 @@ class Application:
             ],
             [gr.Image(), gr.Textbox(label="提示信息")],
             examples=[
-                ["examples_png/barren_11.png", "dbnet"],
-                ["examples_png/snow_10.png", "scnn"],
-                ["examples_png/vegetation_21.png", "cdnetv2"],
-                ["examples_png/water_22.png", "hrcloudnet"],
+                ["images/app_examples/barren_11.png", "dbnet"],
+                ["images/app_examples/snow_10.png", "scnn"],
+                ["images/app_examples/vegetation_21.png", "cdnetv2"],
+                ["images/app_examples/water_22.png", "hrcloudnet"],
             ],
             title="云检测模型在线演示",
             submit_btn=gr.Button("Submit", variant="primary")

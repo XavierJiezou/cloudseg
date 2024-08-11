@@ -59,7 +59,7 @@ class CloudSEN12High(Dataset):
             level_name (str): 数据处理方式，可以不传，这时表示使用的是S1_angle等.
             bond (str): 波段名称.
         """
-        # /data/zouxuechao/cloudseg/cloudsen12_high/train/L2A_B12.dat
+
         filename = ""
         if level_name:
             filename = os.path.join(self.root, self.phase, "_".join([level_name, bond]))
@@ -80,20 +80,9 @@ class CloudSEN12High(Dataset):
             images (np.ndarray): 输入的图片，形状应为(h,w,c)
             images_type (List[type]): 列表，记录了各个通道的数据类型
         """
-        norm_images = None
-        for i in range(len(images_type)):
-            image = images[:,:,i][:,:,np.newaxis]
-            if images_type[i] == np.int16:
-                image = image / (2 ** 16 - 1)
-            elif images_type[i] == np.float32:
-                image = (image - image.min()) / (image.max() - image.min() + self.eps)
-            else:
-                raise ValueError(f"意外的数据类型:{images_type[i]}")
-            if norm_images is None:
-                norm_images = image
-            else:
-                norm_images = np.concatenate([norm_images,image],axis=-1)
-        norm_images = np.transpose(norm_images,(2,0,1))
+        images = images / 1e4
+        
+        norm_images = np.transpose(images,(2,0,1))
         return norm_images
 
     def __getitem__(self, idx):
@@ -134,6 +123,8 @@ if __name__ == "__main__":
     all_transform = albu.Compose([
         albu.RandomCrop(512,512),
     ])
+
+    from albumentations import Lambda
 
     for phase in ["train", "val", "test"]:
         dataset = CloudSEN12High(phase=phase, level='l2a', bands=bands, all_transform=all_transform)

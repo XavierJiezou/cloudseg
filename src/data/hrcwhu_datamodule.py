@@ -4,32 +4,32 @@ from lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 
 from src.data.components.hrcwhu import HRCWHU
+from src.data.base_datamodule import BaseDataModule
 
 
-class HRCWHUDataModule(LightningDataModule):
+class HRCWHUDataModule(BaseDataModule):
     def __init__(
         self,
         root: str,
         train_pipeline: None,
         val_pipeline: None,
         test_pipeline: None,
-        seed: int=42,
         batch_size: int = 1,
         num_workers: int = 0,
         pin_memory: bool = False,
         persistent_workers: bool = False,
     ) -> None:
-        super().__init__()
+        super().__init__(
+            root=root,
+            train_pipeline=train_pipeline,
+            val_pipeline=val_pipeline,
+            test_pipeline=test_pipeline,
+            batch_size=batch_size,
+            num_workers=num_workers,
+            pin_memory=pin_memory,
+            persistent_workers=persistent_workers,
+        )
 
-        # this line allows to access init params with 'self.hparams' attribute
-        # also ensures init params will be stored in ckpt
-        self.save_hyperparameters(logger=False)
-
-        self.train_dataset: Optional[Dataset] = None
-        self.val_dataset: Optional[Dataset] = None
-        self.test_dataset: Optional[Dataset] = None
-
-        self.batch_size_per_device = batch_size
 
     @property
     def num_classes(self) -> int:
@@ -93,71 +93,7 @@ class HRCWHUDataModule(LightningDataModule):
                 seed=self.hparams.seed,
             )
 
-    def train_dataloader(self) -> DataLoader[Any]:
-        """Create and return the train dataloader.
-
-        :return: The train dataloader.
-        """
-        return DataLoader(
-            dataset=self.train_dataset,
-            batch_size=self.batch_size_per_device,
-            num_workers=self.hparams.num_workers,
-            pin_memory=self.hparams.pin_memory,
-            persistent_workers=self.hparams.persistent_workers,
-            shuffle=True,
-        )
-
-    def val_dataloader(self) -> DataLoader[Any]:
-        """Create and return the validation dataloader.
-
-        :return: The validation dataloader.
-        """
-        return DataLoader(
-            dataset=self.val_dataset,
-            batch_size=self.batch_size_per_device,
-            num_workers=self.hparams.num_workers,
-            pin_memory=self.hparams.pin_memory,
-            persistent_workers=self.hparams.persistent_workers,
-            shuffle=False,
-        )
-
-    def test_dataloader(self) -> DataLoader[Any]:
-        """Create and return the test dataloader.
-
-        :return: The test dataloader.
-        """
-        return DataLoader(
-            dataset=self.test_dataset,
-            batch_size=self.batch_size_per_device,
-            num_workers=self.hparams.num_workers,
-            pin_memory=self.hparams.pin_memory,
-            persistent_workers=self.hparams.persistent_workers,
-            shuffle=False,
-        )
-
-    def teardown(self, stage: Optional[str] = None) -> None:
-        """Lightning hook for cleaning up after `trainer.fit()`, `trainer.validate()`,
-        `trainer.test()`, and `trainer.predict()`.
-
-        :param stage: The stage being torn down. Either `"fit"`, `"validate"`, `"test"`, or `"predict"`.
-            Defaults to ``None``.
-        """
-        pass
-
-    def state_dict(self) -> Dict[Any, Any]:
-        """Called when saving a checkpoint. Implement to generate and save the datamodule state.
-
-        :return: A dictionary containing the datamodule state that you want to save.
-        """
-        return {}
-
-    def load_state_dict(self, state_dict: Dict[str, Any]) -> None:
-        """Called when loading a checkpoint. Implement to reload datamodule state given datamodule
-        `state_dict()`.
-
-        :param state_dict: The datamodule state returned by `self.state_dict()`.
-        """
-        pass
+    
 
 
 if __name__ == "__main__":
