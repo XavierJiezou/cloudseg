@@ -11,7 +11,7 @@
 
 ### 2024.08.11
 
-- [ ] 评估指标计算框架由torchmetrics改为mmeval
+- [ ] 评估指标计算框架由torchmetrics改为[mmeval](https://github.com/open-mmlab/mmeval/blob/main/mmeval/metrics/mean_iou.py)或[mmseg](https://github.com/open-mmlab/mmsegmentation/blob/main/mmseg/evaluation/metrics/iou_metric.py)
 
 ### 2024.08.10
 
