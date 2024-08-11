@@ -14,6 +14,7 @@
 - [ ] 评估指标计算框架由torchmetrics改为[mmeval](https://github.com/open-mmlab/mmeval/blob/main/mmeval/metrics/mean_iou.py)或[mmseg](https://github.com/open-mmlab/mmsegmentation/blob/main/mmseg/evaluation/metrics/iou_metric.py)
 - [ ] 验证新的评估指标计算和原计算的结果是否基本一致
 - [ ] 评估指标增加classwise支持
+- [ ] cloudsen12_high数据集上各个方法的测试集结果
 
 ### 2024.08.10
 
