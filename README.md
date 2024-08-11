@@ -44,7 +44,33 @@
 cloudseg
 ├── src
 ├── configs
+├── ...
 ├── data
+│   ├── clousen12_high
+│   │   ├── train
+│   │   │   ├── EXTRA_*.dat
+│   │   │   ├── L1C_B*.dat
+│   │   │   ├── L2A_*.dat
+│   │   │   ├── LABEL_*.data
+│   │   │   ├── LABEL_*.data
+│   │   │   ├── S1_*.data
+│   │   │   ├── metadata.csv
+│   │   ├── val
+│   │   │   ├── EXTRA_*.dat
+│   │   │   ├── L1C_B*.dat
+│   │   │   ├── L2A_*.dat
+│   │   │   ├── LABEL_*.data
+│   │   │   ├── LABEL_*.data
+│   │   │   ├── S1_*.data
+│   │   │   ├── metadata.csv
+│   │   ├── test
+│   │   │   ├── EXTRA_*.dat
+│   │   │   ├── L1C_B*.dat
+│   │   │   ├── L2A_*.dat
+│   │   │   ├── LABEL_*.data
+│   │   │   ├── LABEL_*.data
+│   │   │   ├── S1_*.data
+│   │   │   ├── metadata.csv
 │   ├── hrcwhu
 │   │   ├── train.txt
 │   │   ├── test.txt
