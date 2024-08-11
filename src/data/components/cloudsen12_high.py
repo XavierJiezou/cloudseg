@@ -82,7 +82,7 @@ class CloudSEN12High(Dataset):
         """
         images = images / 1e4
         
-        norm_images = np.transpose(images,(2,0,1))
+        norm_images = np.transpose(images,(2,0,1)).astype(np.float32)
         return norm_images
 
     def __getitem__(self, idx):
@@ -113,7 +113,7 @@ class CloudSEN12High(Dataset):
         return {
             "img": img,
             "ann": np.int64(ann),
-            "lac_type": np.int8,
+            "lac_type": "uin8"
         }
 
 

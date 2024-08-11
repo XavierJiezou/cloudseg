@@ -1,0 +1,50 @@
+_target_: src.data.cloudsen12_high_datamodule.CloudSEN12HighDataModule
+root: /data/zouxuechao/cloudseg/cloudsen12_high
+train_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.HorizontalFlip
+        p: 0.5
+      - _target_: albumentations.ShiftScaleRotate
+        p: 1
+      - _target_: albumentations.RandomCrop
+        height: 512
+        width: 512
+        always_apply: true
+      - _target_: albumentations.Perspective
+        p: 0.5
+      - _target_: albumentations.RandomGamma
+        p: 0.9
+
+
+      - _target_: albumentations.OneOf
+        transforms:
+          - _target_: albumentations.Sharpen
+            p: 1
+          - _target_: albumentations.Blur
+            p: 1
+          - _target_: albumentations.MotionBlur
+            p: 1
+        p: 0.9
+
+
+  img_transform: null
+
+  ann_transform: null
+val_pipeline:
+  all_transform: null
+
+  img_transform: null
+  ann_transform: null
+
+test_pipeline:
+  all_transform: null
+
+  img_transform: null
+  ann_transform: null
+
+batch_size: 32
+num_workers: 4
+pin_memory: True
+persistent_workers: True
