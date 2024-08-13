@@ -20,7 +20,6 @@ The dataset consists of PlanetScope and Sentinel-2 derived scenes (i.e. chips) c
 3) Land cover labels (‘forest’, ‘bare ground’, ‘water’, ‘agriculture’, ‘habitation’).
 Labels belonging to cloud and shade label groups are mutually exclusive for each scene, that is, each image scene received exactly one shade label and one cloud label. 
 
-![image](https://github.com/user-attachments/assets/6ab655dc-aeda-4205-8aa8-dd43f9494728)
 
 
 ```yaml
