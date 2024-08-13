@@ -2,8 +2,10 @@ from typing import Any, Dict, Tuple
 
 import torch
 from lightning import LightningModule
+from torchmetrics import MaxMetric, MeanMetric
+from torchmetrics.classification import Accuracy, F1Score, Precision, Recall
+from torchmetrics.segmentation import MeanIoU, GeneralizedDiceScore
 
-from mmeval import MeanIoU
 
 class BaseLitModule(LightningModule):
     """Example of a `LightningModule` for MNIST classification.
@@ -54,11 +56,38 @@ class BaseLitModule(LightningModule):
         self.save_hyperparameters(logger=False, ignore=['net'])
 
         self.net = net
-        self.train_miou = MeanIoU(num_classes=self.hparams.num_classes,classwise_results=True)
-        self.val_miou = MeanIoU(num_classes=self.hparams.num_classes,classwise_results=True)
-        self.test_miou = MeanIoU(num_classes=self.hparams.num_classes,classwise_results=True)
 
+        # metric objects for calculating and averaging accuracy across batches
+        task = "binary" if self.hparams.num_classes==2 else "multiclass"
         
+        self.train_accuracy = Accuracy(task=task, num_classes=num_classes,average="macro")
+        self.train_precision = Precision(task=task, num_classes=num_classes,average="macro")
+        self.train_recall = Recall(task=task, num_classes=num_classes,average="macro")
+        self.train_f1score = F1Score(task=task, num_classes=num_classes,average="macro")
+        self.train_miou = MeanIoU(num_classes=num_classes)
+        self.train_dice = GeneralizedDiceScore(num_classes=num_classes)
+        
+        self.val_accuracy = Accuracy(task=task, num_classes=num_classes,average="macro")
+        self.val_precision = Precision(task=task, num_classes=num_classes,average="macro")
+        self.val_recall = Recall(task=task, num_classes=num_classes,average="macro")
+        self.val_f1score = F1Score(task=task, num_classes=num_classes,average="macro")
+        self.val_miou = MeanIoU(num_classes=num_classes)
+        self.val_dice = GeneralizedDiceScore(num_classes=num_classes)
+        
+        self.test_accuracy = Accuracy(task=task, num_classes=num_classes,average="macro")
+        self.test_precision = Precision(task=task, num_classes=num_classes,average="macro")
+        self.test_recall = Recall(task=task, num_classes=num_classes,average="macro")
+        self.test_f1score = F1Score(task=task, num_classes=num_classes,average="macro")
+        self.test_miou = MeanIoU(num_classes=num_classes)
+        self.test_dice = GeneralizedDiceScore(num_classes=num_classes)
+        
+        # for averaging loss across batches
+        self.train_loss = MeanMetric()
+        self.val_loss = MeanMetric()
+        self.test_loss = MeanMetric()
+
+        # for tracking best so far validation accuracy
+        self.val_miou_best = MaxMetric()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Perform a forward pass through the model `self.net`.
@@ -72,9 +101,16 @@ class BaseLitModule(LightningModule):
         """Lightning hook that is called when training begins."""
         # by default lightning executes validation step sanity checks before training starts,
         # so it's worth to make sure validation metrics don't store results from these checks
-        self.train_miou.reset()
+        self.val_loss.reset()
+        
+        self.val_accuracy.reset()
+        self.val_precision.reset()
+        self.val_recall.reset()
+        self.val_f1score.reset()
         self.val_miou.reset()
-        self.test_miou.reset()
+        self.val_dice.reset()
+        
+        self.val_miou_best.reset()
 
     def model_step(
         self, batch: Tuple[torch.Tensor, torch.Tensor]
@@ -110,17 +146,23 @@ class BaseLitModule(LightningModule):
         # print(targets.shape) # (8, 256, 256)
 
         # update and log metrics
-        batch_res = self.train_miou(preds, targets)
-
+        self.train_loss(loss)
         
+        self.train_accuracy(preds, targets)
+        self.train_precision(preds, targets)
+        self.train_recall(preds, targets)
+        self.train_f1score(preds, targets)
+        self.train_miou(preds, targets)
+        self.train_dice(preds, targets)
         
-        self.log("train/accuracy", batch_res['mAcc'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/precision", batch_res['mPrecision'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/recall", batch_res['mRecall'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/f1score", batch_res['mFscore'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/miou", batch_res['mIoU'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/dice", batch_res['mDice'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("train/kappa", batch_res['kappa'], on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True)
+        
+        self.log("train/accuracy", self.train_accuracy, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/precision", self.train_precision, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/recall", self.train_recall, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/f1score", self.train_f1score, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/miou", self.train_miou, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("train/dice", self.train_dice, on_step=False, on_epoch=True, prog_bar=True)
 
         # return loss or backpropagation will fail
         return loss
@@ -138,28 +180,32 @@ class BaseLitModule(LightningModule):
         """
         loss, preds, targets = self.model_step(batch)
 
-        batch_res = self.val_miou(preds, targets)
-        self.val_miou.add(preds, targets)
-        self.log("val/loss", loss.item(), on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/accuracy", batch_res['mAcc'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/precision", batch_res['mPrecision'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/recall", batch_res['mRecall'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/f1score", batch_res['mFscore'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/miou", batch_res['mIoU'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/dice", batch_res['mDice'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/kappa", batch_res['kappa'], on_step=False, on_epoch=True, prog_bar=True)
+        # update and log metrics
+        self.val_loss(loss)
+        
+        self.val_accuracy(preds, targets)
+        self.val_precision(preds, targets)
+        self.val_recall(preds, targets)
+        self.val_f1score(preds, targets)
+        self.val_miou(preds, targets)
+        self.val_dice(preds, targets)
+        
+        self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
+        
+        self.log("val/accuracy", self.val_accuracy, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val/precision", self.val_precision, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val/recall", self.val_recall, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val/f1score", self.val_f1score, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val/miou", self.val_miou, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("val/dice", self.val_dice, on_step=False, on_epoch=True, prog_bar=True)
 
     def on_validation_epoch_end(self) -> None:
         "Lightning hook that is called when a validation epoch ends."
-        batch_res = self.val_miou.compute()
-        self.val_miou.reset()
-        self.log("val/accuracy", batch_res['mAcc'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/precision", batch_res['mPrecision'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/recall", batch_res['mRecall'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/f1score", batch_res['mFscore'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/miou", batch_res['mIoU'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/dice", batch_res['mDice'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("val/kappa", batch_res['kappa'], on_step=False, on_epoch=True, prog_bar=True)
+        miou = self.val_miou.compute()  # get current val acc
+        self.val_miou_best(miou)  # update best so far val acc
+        # log `val_acc_best` as a value through `.compute()` method, instead of as a metric object
+        # otherwise metric would be reset by lightning after each epoch
+        self.log("val/miou_best", self.val_miou_best.compute(), sync_dist=True, prog_bar=True)
 
     def test_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int) -> None:
         """Perform a single test step on a batch of data from the test set.
@@ -169,32 +215,30 @@ class BaseLitModule(LightningModule):
         :param batch_idx: The index of the current batch.
         """
         loss, preds, targets = self.model_step(batch)
+        
+        # update and log metrics
+        self.test_loss(loss)
 
-        batch_res = self.test_miou(preds, targets)
-        self.test_miou.add(preds, targets)
+        # update and log metrics
+        self.test_accuracy(preds, targets)
+        self.test_precision(preds, targets)
+        self.test_recall(preds, targets)
+        self.test_f1score(preds, targets)
+        self.test_miou(preds, targets)
+        self.test_dice(preds, targets)
         
+        self.log("test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True)
         
-        self.log("test/accuracy", batch_res['mAcc'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/precision", batch_res['mPrecision'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/recall", batch_res['mRecall'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/f1score", batch_res['mFscore'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/miou", batch_res['mIoU'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/dice", batch_res['mDice'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/kappa", batch_res['kappa'], on_step=False, on_epoch=True, prog_bar=True)
-        
-        
+        self.log("test/accuracy", self.test_accuracy, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("test/precision", self.test_precision, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("test/recall", self.test_recall, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("test/f1score", self.test_f1score, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("test/miou", self.test_miou, on_step=False, on_epoch=True, prog_bar=True)
+        self.log("test/dice", self.test_dice, on_step=False, on_epoch=True, prog_bar=True)
         
     def on_test_epoch_end(self) -> None:
         """Lightning hook that is called when a test epoch ends."""
-        batch_res = self.test_miou.compute()
-        self.test_miou.reset()
-        self.log("test/accuracy", batch_res['mAcc'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/precision", batch_res['mPrecision'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/recall", batch_res['mRecall'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/f1score", batch_res['mFscore'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/miou", batch_res['mIoU'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/dice", batch_res['mDice'], on_step=False, on_epoch=True, prog_bar=True)
-        self.log("test/kappa", batch_res['kappa'], on_step=False, on_epoch=True, prog_bar=True)
+        pass
 
     def setup(self, stage: str) -> None:
         """Lightning hook that is called at the beginning of fit (train + validate), validate,
