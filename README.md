@@ -89,6 +89,12 @@ cloudseg
 - [MCDNet (JAG 2024)](configs/model/mcdnet)
 - [SCNN (ISPRS 2024)](configs/model/scnn)
 
+## Dataset
+
+- [hrcwhu](configs/data/hrcwhu)
+- [CloudSEN12](configs/data/CloudSEN12)
+
+
 ## Installation
 
 ```bash
