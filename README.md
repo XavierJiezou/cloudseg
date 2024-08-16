@@ -7,12 +7,6 @@
 [![Paper](http://img.shields.io/badge/paper-arxiv.1001.2234-B31B1B.svg)](https://www.nature.com/articles/nature14539)
 [![Conference](http://img.shields.io/badge/AnyConference-year-4b44ce.svg)](https://papers.nips.cc/paper/2020)
 
-## Q
-
-- 数据集与[文档](https://huggingface.co/datasets/csaybar/CloudSEN12-high)描述不一致，如KappaMask，无论是L1C,还是L2A,unique数值都为:0,1,2,3,4,5.
-- hq与其他数据集映射困难，如hq有thin cloud，其他的label大多没有这个类
-- 对于新下载的数据集[T-S2/T-PS](configs/data/T-S2_T-PS/README.md),不清楚image,mask怎么区分，label是怎么一回事
-
 ## TODO
 
 ### 2024.08.11
