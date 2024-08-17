@@ -125,14 +125,12 @@ if __name__ == "__main__":
     # ann_transform = transforms.Compose([
     #     transforms.PILToTensor(),
     # ])
-    train_dataset = Cloud_38(
-        phase="train",
+    train_dataset = Cloud38(
         all_transform=all_transform,
         img_transform=img_transform,
         ann_transform=None,
     )
-    test_dataset = Cloud_38(
-        phase="test",
+    test_dataset = Cloud38(
         all_transform=all_transform,
         img_transform=img_transform,
         ann_transform=None,
