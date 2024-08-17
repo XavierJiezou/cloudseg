@@ -93,6 +93,7 @@ cloudseg
 
 - [hrcwhu](configs/data/hrcwhu)
 - [CloudSEN12](configs/data/CloudSEN12)
+- [38Cloud](configs/data/38Cloud)
 
 
 ## Installation
