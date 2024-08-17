@@ -1,13 +1,12 @@
-import os
+from pathlib import Path
 
 import albumentations
 import numpy as np
 from PIL import Image
-from pathlib import Path
 from torch.utils.data import Dataset
 
 
-class Cloud_38(Dataset):
+class Cloud38(Dataset):
     METAINFO = dict(
         classes=("clear sky", "cloud"),
         palette=((128, 192, 128), (255, 255, 255)),

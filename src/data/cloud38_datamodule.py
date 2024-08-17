@@ -1,11 +1,12 @@
-from typing import Any, Dict, Optional, Tuple, List
+from typing import Dict, Optional, Tuple
 
-import torch.utils
-from src.data.components.cloud38 import Cloud_38
-from src.data.base_datamodule import BaseDataModule
-from albumentations.pytorch.transforms import ToTensorV2
 import albumentations as albu
 import torch
+import torch.utils
+from albumentations.pytorch.transforms import ToTensorV2
+
+from src.data.base_datamodule import BaseDataModule
+from src.data.components.cloud38 import Cloud38
 
 
 class Cloud38DataModule(BaseDataModule):
@@ -35,10 +36,10 @@ class Cloud38DataModule(BaseDataModule):
 
     @property
     def num_classes(self) -> int:
-        return len(Cloud_38.METAINFO["classes"])
+        return len(Cloud38.METAINFO["classes"])
 
     def prepare_data(self) -> None:
-        Cloud_38(
+        Cloud38(
             root=self.hparams.root,
             **self.hparams.train_pipeline,
         )
@@ -57,7 +58,7 @@ class Cloud38DataModule(BaseDataModule):
 
         # load and split datasets only if not loaded already
         if not self.train_dataset and not self.val_dataset and not self.test_dataset:
-            dataset = Cloud_38(
+            dataset = Cloud38(
                 root=self.hparams.root,
                 **self.hparams.train_pipeline,
             )
