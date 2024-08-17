@@ -16,7 +16,7 @@ This paper presents a deep-learning based framework for addressing the problem o
 
 The entire images of these scenes are cropped into multiple 384*384 patches to be proper for deep learning-based semantic segmentation algorithms. There are 8400 patches for training and 9201 patches for testing. Each patch has 4 corresponding spectral channels which are Red (band 4), Green (band 3), Blue (band 2), and Near Infrared (band 5). Unlike other computer vision images, these channels are not combined. Instead, they are in their corresponding directories.
 
-![sample](https://github.com/user-attachments/assets/dd8d9b6c-b8ac-4b3f-bf8b-9c9954e9291f)
+![sample](https://github.com/user-attachments/assets/0068e085-ca7a-4d8e-957c-aa18808384dc)
 
 ```
 name: 38-Cloud: Cloud Segmentation in Satellite Images
