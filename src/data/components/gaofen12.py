@@ -13,8 +13,8 @@ class Gaofen12(Dataset):
     METAINFO = dict(
         classes=("clear sky", "cloud"),
         palette=((128, 192, 128), (255, 255, 255)),
-        img_size=(384, 384),  # H, W
-        ann_size=(384, 384),  # H, W
+        img_size=(250, 250),  # H, W
+        ann_size=(250, 250),  # H, W
     )
 
     def __init__(
