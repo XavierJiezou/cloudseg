@@ -41,7 +41,6 @@ class HRCWHUDataModule(BaseDataModule):
             root=self.hparams.root,
             phase="train",
             **self.hparams.train_pipeline,
-            seed=self.hparams.seed,
         )
         
         # val or test
@@ -49,7 +48,6 @@ class HRCWHUDataModule(BaseDataModule):
             root=self.hparams.root,
             phase="test",
             **self.hparams.test_pipeline,
-            seed=self.hparams.seed,
         )
 
     def setup(self, stage: Optional[str] = None) -> None:
@@ -67,14 +65,12 @@ class HRCWHUDataModule(BaseDataModule):
                 root=self.hparams.root,
                 phase="train",
                 **self.hparams.train_pipeline,
-                seed=self.hparams.seed,
             )
             
             self.val_dataset = self.test_dataset = HRCWHU(
                 root=self.hparams.root,
                 phase="test",
                 **self.hparams.test_pipeline,
-                seed=self.hparams.seed,
             )
 
     
