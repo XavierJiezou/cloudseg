@@ -1,23 +1,21 @@
-from typing import Any, Dict, Optional
+from typing import Optional, Literal
 
-from lightning import LightningDataModule
-from torch.utils.data import DataLoader, Dataset
-
-from src.data.components.gaofen12 import Gaofen12
 from src.data.base_datamodule import BaseDataModule
+from src.data.components.gaofen12 import Gaofen12
 
 
 class GAOFEN12DataModule(BaseDataModule):
     def __init__(
-        self,
-        root: str,
-        train_pipeline: None,
-        val_pipeline: None,
-        test_pipeline: None,
-        batch_size: int = 1,
-        num_workers: int = 0,
-        pin_memory: bool = False,
-        persistent_workers: bool = False,
+            self,
+            root: str,
+            train_pipeline: None,
+            val_pipeline: None,
+            test_pipeline: None,
+            batch_size: int = 1,
+            num_workers: int = 0,
+            pin_memory: bool = False,
+            persistent_workers: bool = False,
+            serial: Literal["gaofen1", "gaofen2", "all"] = "all",
     ) -> None:
         super().__init__(
             root=root,
@@ -28,8 +26,8 @@ class GAOFEN12DataModule(BaseDataModule):
             num_workers=num_workers,
             pin_memory=pin_memory,
             persistent_workers=persistent_workers,
+            serial=serial
         )
-
 
     @property
     def num_classes(self) -> int:
@@ -40,12 +38,14 @@ class GAOFEN12DataModule(BaseDataModule):
         Gaofen12(
             root=self.hparams.root,
             phase="train",
+            serial=self.hparams.serial,
             **self.hparams.train_pipeline,
         )
-        
+
         # val or test
         Gaofen12(
             root=self.hparams.root,
+            serial=self.hparams.serial,
             phase="test",
             **self.hparams.test_pipeline,
         )
@@ -66,14 +66,12 @@ class GAOFEN12DataModule(BaseDataModule):
                 phase="train",
                 **self.hparams.train_pipeline,
             )
-            
+
             self.val_dataset = self.test_dataset = Gaofen12(
                 root=self.hparams.root,
                 phase="test",
                 **self.hparams.test_pipeline,
             )
-
-    
 
 
 if __name__ == "__main__":
