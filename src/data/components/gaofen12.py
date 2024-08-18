@@ -96,8 +96,8 @@ if __name__ == "__main__":
     # ann_transform = transforms.Compose([
     #     transforms.PILToTensor(),
     # ])
-    for serial in ["all", "gaofen1", "gaofen2", "all"]:
-
+    for serial in ["all", "gaofen1", "gaofen2"]:
+        print(f"当前的serial为:{serial}")
         train_dataset = Gaofen12(
             phase="train",
             serial=serial,
