@@ -77,6 +77,54 @@ cloudseg
 │   │   ├── ann_dir
 │   │   │   ├── train
 │   │   │   ├── test
+│   ├── gaofen12
+│   │   ├── GF1MS-WHU
+│   │   │   ├── TestBlock250
+│   │   │   │   ├── 1_Mask.tif
+│   │   │   │   ├── 1.tiff
+│   │   │   │   ├── 2_Mask.tif
+│   │   │   │   ├── 2.tiff
+│   │   │   ├── TrainBlock250
+│   │   │   │   ├── 1_Mask.tif
+│   │   │   │   ├── 1.tiff
+│   │   │   │   ├── 2_Mask.tif
+│   │   │   │   ├── 2.tiff
+│   │   │   ├── TestList.txt
+│   │   │   ├── TrainList.txt
+│   │   ├── GF2MS-WHU
+│   │   │   ├── TestBlock250
+│   │   │   │   ├── 1_Mask.tif
+│   │   │   │   ├── 1.tiff
+│   │   │   │   ├── 2_Mask.tif
+│   │   │   │   ├── 2.tiff
+│   │   │   ├── TrainBlock250
+│   │   │   │   ├── 1_Mask.tif
+│   │   │   │   ├── 1.tiff
+│   │   │   │   ├── 2_Mask.tif
+│   │   │   │   ├── 2.tiff
+│   │   │   ├── TestList.txt
+│   │   │   ├── TrainList.txt
+│   ├── 38-cloud
+│   │   │   ├── 38-Cloud_training
+│   │   │   │   ├── train_blue
+│   │   │   │   │   ├── *.tif
+│   │   │   │   ├── train_green
+│   │   │   │   │   ├── *.tif
+│   │   │   │   ├── train_gt
+│   │   │   │   │   ├── *.tif
+│   │   │   │   ├── train_nir
+│   │   │   │   │   ├── *.tif
+│   │   │   │   ├── train_red
+│   │   │   │   │   ├── *.tif
+│   │   │   ├── 38-Cloud_test
+│   │   │   │   ├── train_blue
+│   │   │   │   │   ├── *.tif
+│   │   │   │   ├── train_green
+│   │   │   │   │   ├── *.tif
+│   │   │   │   ├── train_nir
+│   │   │   │   │   ├── *.tif
+│   │   │   │   ├── train_red
+│   │   │   │   │   ├── *.tif
 ```
 
 ## Methods
@@ -91,9 +139,10 @@ cloudseg
 
 ## Dataset
 
-- [hrcwhu](configs/data/hrcwhu)
-- [CloudSEN12](configs/data/CloudSEN12)
-- [38Cloud](configs/data/38Cloud)
+- [hrcwhu (ISPRS)](configs/data/hrcwhu)
+- [CloudSEN12 (Scientific data)](configs/data/CloudSEN12)
+- [38Cloud (IGARSS MMSP)](configs/data/38Cloud)
+- [gaofen12 (TGRS)](configs/data/GF12-MS-WHU/README.md)
 
 
 ## Installation
