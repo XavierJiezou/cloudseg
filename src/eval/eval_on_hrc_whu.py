@@ -3,6 +3,9 @@ from rich.table import Table
 from typing import Tuple, Dict
 from rich.progress import track
 import csv
+from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+import torchvision
 from rich.console import Console
 import matplotlib.pyplot as plt
 from torchmetrics.wrappers import ClasswiseWrapper
@@ -113,17 +116,26 @@ class EvalOnHRCWHU:
             }
         ).to(self.device)
 
+    def give_colors_to_mask(
+        self, image: torch.Tensor, mask: torch.Tensor, num_classes=2
+    ):
+        mask = to_onehot(mask, num_classes=num_classes).to(torch.bool)[0]
+        mask_colors = (
+            torchvision.utils.draw_segmentation_masks(
+                image, mask, colors=list(HRCWHU.METAINFO["palette"]), alpha=1.0
+            )
+            .permute(1, 2, 0)
+            .cpu()
+            .numpy()
+            .astype(np.uint8)
+        )
+        return mask_colors
+
     def make_table_and_csv(self, model_name: str, filename="hrc_metrics.csv"):
         res = {
             model_name: model_metric.compute()
             for model_name, model_metric in self.model_metrics.items()
         }
-        # res.update(
-        #     {
-        #         f"{model_name}_loss": self.metrics_loss[model_name].compute()
-        #         for model_name in self.model_metrics
-        #     }
-        # )
         columns = list(res[model_name].keys())
         width = 50
         table = Table(title="方法与指标对比")
@@ -151,7 +163,7 @@ class EvalOnHRCWHU:
         with open(filename, "w", newline="", encoding="utf-8") as csvfile:
             writer = csv.writer(csvfile)
             writer.writerows(csv_data)
-
+        Console().print(table)
         return table
 
     def table_to_csv(self, table: Table, filename="hrc_metrics.csv"):
@@ -165,8 +177,41 @@ class EvalOnHRCWHU:
                 print(row)
                 writer.writerow([cell.plain for cell in row.cells])
 
-    def visualize_img(self):
-        pass
+    def visualize_img(self, show_images: np.ndarray):
+        show_images_tensor = torch.from_numpy(show_images).permute(0, 3, 1, 2)
+        show_image = torchvision.utils.make_grid(
+            show_images_tensor, nrow=len(self.models) + 2, padding=4
+        )
+        grid_image = torchvision.transforms.ToPILImage()(show_image)
+
+        # 获取图像尺寸
+        width, height = grid_image.size
+
+        # 创建一个新的图像，为标题留出空间
+        new_height = height + 50
+        new_image = Image.new("RGB", (width, new_height), color="white")
+        new_image.paste(grid_image, (0, 50))
+
+        # 准备绘图
+        draw = ImageDraw.Draw(new_image)
+        font = ImageFont.truetype("resource/Arial.ttf", 50)
+        column_titles = ["Original", "gt"] + list(self.models.keys())
+        num_cols = len(column_titles)
+        col_width = width // num_cols
+
+        for i, title in enumerate(column_titles):
+            # 获取文本大小
+            left, top, right, bottom = draw.textbbox((0, 0), title, font=font)
+            text_width = right - left
+            text_height = bottom - top
+
+            # 计算文本位置（居中）
+            x = (i * col_width) + (col_width - text_width) // 2
+            y = (50 - text_height) // 2
+
+            # 绘制文本
+            draw.text((x, y), title, fill="black", font=font)
+        new_image.save("1.png", dpi=(300, 300))
 
     @torch.no_grad()
     def inference(
@@ -183,19 +228,35 @@ class EvalOnHRCWHU:
         """
         评测模型
         """
+        show_images = None
         for data in track(
             self.eval_dataset, description="evaling...", total=len(self.eval_dataset)
         ):
             img = data["img"].to(self.device)
             ann = data["ann"].to(self.device)
             img_path = data["img_path"][0]
+            # 计算各种指标
+            masks = []
             for model_name, model in self.models.items():
                 pred, loss = self.inference(img, ann, model)
                 self.model_metrics[model_name].update(
                     to_onehot(pred, num_classes=2), to_onehot(ann, num_classes=2)
                 )
                 self.metrics_loss[model_name].update(loss)
+                color_mask = self.give_colors_to_mask(img[0], pred)
+                masks.append(color_mask)
+
+            image = img[0].detach().cpu().permute(1, 2, 0).numpy()
+            gt = self.give_colors_to_mask(img[0], ann)
+            masks = [image] + [gt] + masks
+            masks = np.array(masks)
+            if show_images is None:
+                show_images = masks
+            else:
+                show_images = np.concatenate((show_images, masks), axis=0)
         self.make_table_and_csv(model_name)
+
+        self.visualize_img(show_images)
 
 
 if __name__ == "__main__":
