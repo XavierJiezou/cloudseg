@@ -4,7 +4,7 @@
 
 ### 定量结果（各个方法评估指标对比的表格）
 
-|方法\指标|multiclassaccuracy_clear sky|multiclassaccuracy_cloud|generalizeddicescore_clear sky|generalizeddicescore_cloud|multiclassf1score_clear sky|multiclassf1score_cloud|meaniou_clear sky|meaniou_cloud|multiclassprecision_clear sky|multiclassprecision_cloud|multiclassrecall_clear sky|multiclassrecall_cloud|loss|
+|方法\指标|acc_clear sky|acc_cloud|dice_clear sky|dice_cloud|f1score_clear sky|f1score_cloud|iou_clear sky|iou_cloud|precision_clear sky|precision_cloud|recall_clear sky|recall_cloud|loss|
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 |cdnetv1|0.8432|0.8432|0.8729|0.7254|0.8432|0.8432|23.4255|17.8136|0.8432|0.8432|0.8432|0.8432|0.38|
 |cdnetv2|0.8679|0.8679|0.887|0.7633|0.8679|0.8679|24.0866|19.6749|0.8679|0.8679|0.8679|0.8679|0.3626|
@@ -16,3 +16,5 @@
 |kappamask|0.8582|0.8582|0.8518|0.7914|0.8582|0.8582|22.9917|20.435|0.8582|0.8582|0.8582|0.8582|0.364|
 
 ### 定性结果（各个方法分割效果对比的图片）
+
+![1](https://github.com/user-attachments/assets/35511cf6-f6d8-4668-9bce-df2bf26da1dc)
