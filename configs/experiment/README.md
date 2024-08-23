@@ -6,7 +6,7 @@
 
 1. Total-wise
 
-| Method       | ACC      | Precision | Recall | F1-Score | MIoU | Dice   |
+| Method       | Acc      | Precision | Recall | F1-Score | MIoU | Dice   |
 |-------------|----------|-----------|--------|----------|-------|--------|
 | KappaMask    | 0.8582   | 0.8582    | 0.8582 | 0.8582   | 22.9917| 0.8518|
 | CDNetv1      | 0.8432   | 0.8432    | 0.8432 | 0.8432   | 23.4255| 0.8729|
@@ -22,7 +22,7 @@
 
 - Cloud
 
-| Method       | ACC      | Precision | Recall | F1-Score | MIoU | Dice   |
+| Method       | Acc      | Precision | Recall | F1-Score | MIoU | Dice   |
 |--------------|----------|-----------|--------|----------|-------|--------|
 | KappaMask    | 0.8582   | 0.8582    | 0.8582 | 0.8582   | 20.435 | 0.7914|
 | CDNetv1      | 0.8432   | 0.8432    | 0.8432 | 0.8432   | 17.8136| 0.7254|
@@ -36,7 +36,7 @@
 
 - Clear
 
-| Method       | ACC      | Precision | Recall | F1-Score | MIoU | Dice   |
+| Method       | Acc      | Precision | Recall | F1-Score | MIoU | Dice   |
 |--------------|----------|-----------|--------|----------|-------|--------|
 | KappaMask    | 0.8582   | 0.8582    | 0.8582 | 0.8582   | 22.9917| 0.8518|
 | CDNetv1      | 0.8432   | 0.8432    | 0.8432 | 0.8432   | 23.4255| 0.8729|
