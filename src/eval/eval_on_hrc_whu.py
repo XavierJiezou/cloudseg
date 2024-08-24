@@ -132,7 +132,7 @@ class EvalOnHRCWHU:
     def visualize_img(self, show_images: np.ndarray):
         show_images_tensor = torch.from_numpy(show_images).permute(0, 3, 1, 2)
         show_image = torchvision.utils.make_grid(
-            show_images_tensor, nrow=len(self.models) + 2, padding=4
+            show_images_tensor, nrow=len(self.models) + 2, padding=8
         )
         grid_image = torchvision.transforms.ToPILImage()(show_image)
 
@@ -146,7 +146,7 @@ class EvalOnHRCWHU:
 
         # 准备绘图
         draw = ImageDraw.Draw(new_image)
-        font = ImageFont.truetype("resource/Arial.ttf", 50)
+        font = ImageFont.truetype("resource/Times New Roman.ttf", 50)
         column_titles = ["Input", "Label"] + [
             "UNetMobv2",
             "DBNet",
@@ -171,31 +171,35 @@ class EvalOnHRCWHU:
             y = (50 - text_height) // 2
 
             # 绘制文本
-            draw.text((x, y-10), title, fill="black", font=font)
+            draw.text((x, y - 10), title, fill="black", font=font)
         new_image.save("1.png", dpi=(300, 300))
-        new_image.save("1.pdf",dpi=(300, 300))
+        new_image.save("1.pdf", dpi=(300, 300))
 
     def __get_img_ann(
         self, img_path: str, ann_path: str
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         center_crop = transforms.CenterCrop((256, 256))
         img_to_tensor = transforms.ToTensor()
-        ann_to_tensor = transforms.PILToTensor()
-        img = Image.open(img_path)
-        ann = Image.open(ann_path)
+        img = np.array(Image.open(img_path))
+        ann = np.array(Image.open(ann_path))[:, :, np.newaxis]
 
-        img = center_crop(img)
+        img_ann = np.concatenate((img, ann), axis=-1)
+        img_ann = Image.fromarray(img_ann)
+        img_ann = center_crop(img_ann)
+        img_ann = np.array(img_ann)
+        img = img_ann[:,:,:3]
+        ann = img_ann[:,:,-1]
+
         img = img_to_tensor(img)
         img = img.unsqueeze(0)
 
-        ann = center_crop(ann)
-        ann = ann_to_tensor(ann)
+        ann = torch.tensor(ann).long().unsqueeze(0)
 
         return img.to(self.device), ann.to(self.device)
 
     @torch.no_grad()
     def inference(
-        self, img: torch.Tensor, target: torch.Tensor, model: nn.Module
+        self, img: torch.Tensor, model: nn.Module
     ) -> torch.Tensor:
         logits = model(img)
         if isinstance(logits, tuple):
@@ -260,7 +264,7 @@ class EvalOnHRCWHU:
             model_masks = {}
             for model_name, model in self.models.items():
                 model_name = self.invert_model_mapping[model_name]
-                pred = self.inference(img, ann, model)
+                pred = self.inference(img, model)
                 self.model_metrics[model_name].update(pred, ann)
                 color_mask = self.give_colors_to_mask(img[0], pred)
                 model_masks[model_name] = color_mask
