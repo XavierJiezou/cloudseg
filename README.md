@@ -131,10 +131,10 @@ cloudseg
 
 ## Dataset
 
-- [hrcwhu (ISPRS)](configs/data/hrcwhu)
+- [HRC_WHU (ISPRS)](configs/data/hrcwhu)
 - [CloudSEN12 (Scientific data)](configs/data/CloudSEN12)
 - [38Cloud (IGARSS MMSP)](configs/data/38Cloud)
-- [gaofen12 (TGRS)](configs/data/GF12-MS-WHU/README.md)
+- [Gaofen12 (TGRS)](configs/data/GF12-MS-WHU/README.md)
 
 
 ## Installation
