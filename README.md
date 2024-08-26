@@ -76,16 +76,8 @@ cloudseg
 │   │   │   ├── LABEL_*.data
 │   │   │   ├── S1_*.data
 │   │   │   ├── metadata.csv
-│   ├── hrcwhu
-│   │   ├── train.txt
-│   │   ├── test.txt
-│   │   ├── img_dir
-│   │   │   ├── train
-│   │   │   ├── test
-│   │   ├── ann_dir
-│   │   │   ├── train
-│   │   │   ├── test
-│   ├── gaofen12
+│   ├── l8_biome
+│   ├── gf12ms_whu
 │   │   ├── GF1MS-WHU
 │   │   │   ├── TestBlock250
 │   │   │   │   ├── *_Mask.tif
@@ -104,6 +96,15 @@ cloudseg
 │   │   │   │   ├── *.tiff
 │   │   │   ├── TestList.txt
 │   │   │   ├── TrainList.txt
+│   ├── hrc_whu
+│   │   ├── train.txt
+│   │   ├── test.txt
+│   │   ├── img_dir
+│   │   │   ├── train
+│   │   │   ├── test
+│   │   ├── ann_dir
+│   │   │   ├── train
+│   │   │   ├── test
 │   ├── 38-cloud
 │   │   │   ├── 38-Cloud_training
 │   │   │   │   ├── train_blue
@@ -129,7 +130,6 @@ cloudseg
 
 ## Methods
 
-- [UNet (MICCAI 2016)](configs/model/unet)
 - [CDNetv1 (TGRS 2019)](configs/model/cdnetv1)
 - [CDNetv2 (TGRS 2021)](configs/model/cdnetv2)
 - [DBNet (TGRS 2022)](configs/model/dbnet)
@@ -143,7 +143,6 @@ cloudseg
 - [CloudSEN12 (Scientific data)](configs/data/CloudSEN12)
 - [38Cloud (IGARSS MMSP)](configs/data/38Cloud)
 - [Gaofen12 (TGRS)](configs/data/GF12-MS-WHU/README.md)
-
 
 ## Installation
 
