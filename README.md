@@ -11,6 +11,7 @@
 
 ### 2024.08.26-2024.08.30
 
+- [ ] @zs: hrcwhu改为hrc_whu
 - [ ] @zs: 增加[L8_Biome](https://landsat.usgs.gov/landsat-8-cloud-cover-assessment-validation-data)数据集支持
 - [ ] @wsy: [论文](https://www.overleaf.com/project/6695fd4634d7fee5d0b838e5)中完成数据集章节的撰写
 - [ ] @zs: cloudsen12_high数据集上各方法的定量和定性结果评估
