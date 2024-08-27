@@ -12,7 +12,7 @@
 ### 2024.08.26-2024.08.30
 
 - [ ] @zs:确定使用mmseg计算指标，指标确定使用Acc, F1-Score, IoU, Dice四个指标
-- [ ] @zs: hrcwhu改为hrc_whu
+- [x] @zs: hrcwhu改为hrc_whu
 - [ ] @zs: 增加[L8_Biome](https://landsat.usgs.gov/landsat-8-cloud-cover-assessment-validation-data)数据集支持
 - [ ] @wsy: [论文](https://www.overleaf.com/project/6695fd4634d7fee5d0b838e5)中完成数据集章节的撰写
 - [ ] @zs: cloudsen12_high数据集上各方法的定量和定性结果评估
@@ -140,7 +140,7 @@ cloudseg
 
 ## Dataset
 
-- [HRC_WHU (ISPRS)](configs/data/hrcwhu)
+- [HRC_WHU (ISPRS)](configs/data/hrc_whu)
 - [CloudSEN12 (Scientific data)](configs/data/CloudSEN12)
 - [38Cloud (IGARSS MMSP)](configs/data/38Cloud)
 - [Gaofen12 (TGRS)](configs/data/GF12-MS-WHU/README.md)
@@ -175,7 +175,7 @@ python src/train.py experiment=experiment_name.yaml
 **Tranin Example**
 
 ```bash
-python src/train.py experiment=hrcwhu_cdnetv1.yaml
+python src/train.py experiment=hrc_whu_cdnetv1.yaml
 ```
 
 **You can override any parameter from command line like this**

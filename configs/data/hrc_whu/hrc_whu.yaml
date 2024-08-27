@@ -1,5 +1,5 @@
-_target_: src.data.hrcwhu_datamodule.HRCWHUDataModule
-root: data/hrcwhu
+_target_: src.data.hrc_whu_datamodule.HRC_WHUDataModule
+root: data/hrc_whu
 train_pipeline:
   all_transform:
     _target_: albumentations.Compose

@@ -3,11 +3,11 @@ from typing import Any, Dict, Optional
 from lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 
-from src.data.components.hrcwhu import HRCWHU
+from src.data.components.hrc_whu import HRC_WHU
 from src.data.base_datamodule import BaseDataModule
 
 
-class HRCWHUDataModule(BaseDataModule):
+class HRC_WHUDataModule(BaseDataModule):
     def __init__(
         self,
         root: str,
@@ -33,18 +33,18 @@ class HRCWHUDataModule(BaseDataModule):
 
     @property
     def num_classes(self) -> int:
-        return len(HRCWHU.METAINFO["classes"])
+        return len(HRC_WHU.METAINFO["classes"])
 
     def prepare_data(self) -> None:
         # train
-        HRCWHU(
+        HRC_WHU(
             root=self.hparams.root,
             phase="train",
             **self.hparams.train_pipeline,
         )
         
         # val or test
-        HRCWHU(
+        HRC_WHU(
             root=self.hparams.root,
             phase="test",
             **self.hparams.test_pipeline,
@@ -61,13 +61,13 @@ class HRCWHUDataModule(BaseDataModule):
 
         # load and split datasets only if not loaded already
         if not self.train_dataset and not self.val_dataset and not self.test_dataset:
-            self.train_dataset = HRCWHU(
+            self.train_dataset = HRC_WHU(
                 root=self.hparams.root,
                 phase="train",
                 **self.hparams.train_pipeline,
             )
             
-            self.val_dataset = self.test_dataset = HRCWHU(
+            self.val_dataset = self.test_dataset = HRC_WHU(
                 root=self.hparams.root,
                 phase="test",
                 **self.hparams.test_pipeline,
@@ -77,4 +77,4 @@ class HRCWHUDataModule(BaseDataModule):
 
 
 if __name__ == "__main__":
-    _ = HRCWHUDataModule()
+    _ = HRC_WHUDataModule()

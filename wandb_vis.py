@@ -19,8 +19,8 @@ from matplotlib import pyplot as plt
 from rich.progress import track
 from thop import profile
 
-from src.data.components.hrcwhu import HRCWHU
-from src.data.hrcwhu_datamodule import HRCWHUDataModule
+from src.data.components.hrc_whu import HRC_WHU
+from src.data.hrc_whu_datamodule import HRC_WHUDataModule
 from src.models.components.cdnetv1 import CDnetV1
 from src.models.components.cdnetv2 import CDnetV2
 from src.models.components.dbnet import DBNet
@@ -77,7 +77,7 @@ class WandbVis:
         raise ValueError(f"{self.model_name}模型不存在")
 
     def load_model(self):
-        weight_path = glob(f"logs/train/runs/hrcwhu_{self.model_name}/*/checkpoints/*.ckpt")[0]
+        weight_path = glob(f"logs/train/runs/hrc_whu_{self.model_name}/*/checkpoints/*.ckpt")[0]
         model = self.load_model_by_model_name()
         state_dict = self.load_weight(weight_path)
         model.load_state_dict(state_dict)
@@ -89,8 +89,8 @@ class WandbVis:
         all_transform = albu.Compose(
             [
                 albu.Resize(
-                    height=HRCWHU.METAINFO["img_size"][1],
-                    width=HRCWHU.METAINFO["img_size"][2],
+                    height=HRC_WHU.METAINFO["img_size"][1],
+                    width=HRC_WHU.METAINFO["img_size"][2],
                     always_apply=True
                 )
             ]
@@ -105,8 +105,8 @@ class WandbVis:
             img_transform=img_transform,
             ann_transform=ann_transform,
         )
-        dataloader = HRCWHUDataModule(
-            root="/home/liujie/liumin/cloudseg/data/hrcwhu",
+        dataloader = HRC_WHUDataModule(
+            root="/home/liujie/liumin/cloudseg/data/hrc_whu",
             train_pipeline=val_pipeline,
             val_pipeline=val_pipeline,
             test_pipeline=val_pipeline,

@@ -14,7 +14,7 @@ from torchvision import transforms
 import torch
 from torch import nn as nn
 import os
-from src.data.hrcwhu_datamodule import HRCWHU
+from src.data.hrc_whu_datamodule import HRC_WHU
 from src.models.components.cdnetv1 import CDnetV1
 from src.models.components.cdnetv2 import CDnetV2
 from src.models.components.dbnet import DBNet
@@ -25,7 +25,7 @@ from src.models.components.scnn import SCNN
 from src.models.components.unetmobv2 import UNetMobV2
 
 
-class EvalOnHRCWHU:
+class EvalOnHRC_WHU:
     def __init__(self):
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.models = {
@@ -38,7 +38,7 @@ class EvalOnHRCWHU:
             "unetmobv2": UNetMobV2(num_classes=2).to(self.device),
             "kappamask": KappaMask(num_classes=2, in_channels=3).to(self.device),
         }
-        self.root = "data/hrcwhu"
+        self.root = "data/hrc_whu"
         self.model_names_mapping = {
             "KappaMask": "kappamask",
             "CDNetv1": "cdnetv1",
@@ -65,7 +65,7 @@ class EvalOnHRCWHU:
         """
         for model_name, model in self.models.items():
             weight_path = glob(
-                f"logs/train/runs/hrcwhu_{model_name}*/*/checkpoints/*epoch*.ckpt"
+                f"logs/train/runs/hrc_whu_{model_name}*/*/checkpoints/*epoch*.ckpt"
             )[0]
             weight = torch.load(weight_path, map_location=self.device)
             state_dict = {}
@@ -109,7 +109,7 @@ class EvalOnHRCWHU:
         mask = to_onehot(mask, num_classes=num_classes).to(torch.bool)[0]
         mask_colors = (
             torchvision.utils.draw_segmentation_masks(
-                image, mask, colors=list(HRCWHU.METAINFO["palette"]), alpha=1.0
+                image, mask, colors=list(HRC_WHU.METAINFO["palette"]), alpha=1.0
             )
             .permute(1, 2, 0)
             .cpu()
@@ -282,4 +282,4 @@ class EvalOnHRCWHU:
 
 
 if __name__ == "__main__":
-    EvalOnHRCWHU().run()
+    EvalOnHRC_WHU().run()

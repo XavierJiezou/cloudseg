@@ -5,7 +5,7 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: hrcWhu
+  - override /data: hrc_whu/hrc_whu
   - override /model: unet
   - override /logger: wandb
   - override /callbacks: default
@@ -13,7 +13,7 @@ defaults:
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hrcWhu", "unet"]
+tags: ["hrc_whu", "unet"]
 
 seed: 42
 
@@ -37,7 +37,7 @@ model:
 
 logger:
   wandb:
-    project: "hrcwhu"
+    project: "hrc_whu"
     name: "unet"
   aim:
     experiment: "unet"

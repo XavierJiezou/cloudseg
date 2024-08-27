@@ -5,32 +5,32 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: hrcwhu/hrcwhu
-  - override /model: kappamask/kappamask
+  - override /data: hrc_whu/hrc_whu
+  - override /model: mcdnet/mcdnet
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hrcWhu", "kappamask"]
+tags: ["hrc_whu", "mcdnet"]
 
 seed: 42
 
 
-  # scheduler:
-  #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-  #   _partial_: true
-  #   mode: min
-  #   factor: 0.1
-  #   patience: 10
+#   scheduler:
+#     _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+#     _partial_: true
+#     mode: min
+#     factor: 0.1
+#     patience: 10
 
 logger:
   wandb:
-    project: "hrcwhu"
-    name: "kappamask"
+    project: "hrc_whu"
+    name: "mcdnet"
   aim:
-    experiment: "hrcwhu_kappamask"
+    experiment: "hrc_whu_mcdnet"
 
 callbacks:
   model_checkpoint:

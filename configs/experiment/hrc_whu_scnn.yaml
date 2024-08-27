@@ -5,39 +5,18 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: hrcwhu/hrcwhu
-  - override /model: null
+  - override /data: hrc_whu/hrc_whu
+  - override /model: scnn/scnn
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hrcWhu", "unet"]
+tags: ["hrc_whu", "scnn"]
 
 seed: 42
 
-
-
-model:
-  _target_: src.models.base_module.BaseLitModule
-
-  net:
-    _target_: src.models.components.unet.UNet
-    in_channels: 3
-    out_channels: 2
-
-  num_classes: 2
-
-  criterion:
-    _target_: torch.nn.CrossEntropyLoss
-
-  optimizer:
-    _target_: torch.optim.SGD
-    _partial_: true
-    lr: 0.1
-  
-  scheduler: null
 
   # scheduler:
   #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
@@ -48,10 +27,10 @@ model:
 
 logger:
   wandb:
-    project: "hrcwhu"
-    name: "unet"
+    project: "hrc_whu"
+    name: "scnn"
   aim:
-    experiment: "hrcwhu_unet"
+    experiment: "hrc_whu_scnn"
 
 callbacks:
   model_checkpoint:

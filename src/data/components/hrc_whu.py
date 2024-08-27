@@ -6,7 +6,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 
 
-class HRCWHU(Dataset):
+class HRC_WHU(Dataset):
     METAINFO = dict(
         classes=('clear sky', 'cloud'),
         palette=((128, 192, 128),(255, 255, 255)),
@@ -96,9 +96,9 @@ if __name__ == '__main__':
     # ])
     ann_transform = transforms.PILToTensor()
 
-    train_dataset = HRCWHU(root='data/hrcwhu', phase='train', all_transform=all_transform, img_transform=img_transform,
+    train_dataset = HRC_WHU(root='data/hrc_whu', phase='train', all_transform=all_transform, img_transform=img_transform,
                            ann_transform=ann_transform)
-    test_dataset = HRCWHU(root='data/hrcwhu', phase='test', all_transform=all_transform, img_transform=img_transform,
+    test_dataset = HRC_WHU(root='data/hrc_whu', phase='test', all_transform=all_transform, img_transform=img_transform,
                           ann_transform=ann_transform)
 
     assert len(train_dataset) == train_dataset.METAINFO['train_size']
@@ -120,5 +120,5 @@ if __name__ == '__main__':
         axs[1].set_title('Annotation')
         plt.suptitle(f'Land Cover Type: {train_sample["lac_type"].capitalize()}', y=0.8)
         plt.tight_layout()
-        plt.savefig('HRCWHU_sample.png', bbox_inches="tight")
+        plt.savefig('HRC_WHU_sample.png', bbox_inches="tight")
         # break

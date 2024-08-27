@@ -5,18 +5,17 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: hrcwhu/hrcwhu
-  - override /model: dbnet/dbnet
+  - override /data: hrc_whu/hrc_whu
+  - override /model: hrcloudnet/hrcloudnet
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hrcWhu", "dbnet"]
+tags: ["hrc_whu", "hrcloudnet"]
 
 seed: 42
-
 
 
   # scheduler:
@@ -28,10 +27,10 @@ seed: 42
 
 logger:
   wandb:
-    project: "hrcwhu"
-    name: "dbnet"
+    project: "hrc_whu"
+    name: "hrcloudnet"
   aim:
-    experiment: "hrcwhu_dbnet"
+    experiment: "hrc_whu_hrcloudnet"
 
 callbacks:
   model_checkpoint:

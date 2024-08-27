@@ -5,15 +5,15 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: hrcwhu/hrcwhu
-  - override /model: scnn/scnn
+  - override /data: hrc_whu/hrcwhrc_whuhu
+  - override /model: kappamask/kappamask
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hrcWhu", "scnn"]
+tags: ["hhrc_whurcWhu", "kappamask"]
 
 seed: 42
 
@@ -27,10 +27,10 @@ seed: 42
 
 logger:
   wandb:
-    project: "hrcwhu"
-    name: "scnn"
+    project: "hrc_whu"
+    name: "kappamask"
   aim:
-    experiment: "hrcwhu_scnn"
+    experiment: hrc_whu_kappamask"
 
 callbacks:
   model_checkpoint:
