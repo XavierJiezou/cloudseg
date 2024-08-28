@@ -3,11 +3,11 @@ from typing import Any, Dict, Optional, List
 from lightning import LightningDataModule
 from torch.utils.data import DataLoader, Dataset
 
-from src.data.components.l8_biome import L8_BIOME
+from src.data.components.l8_biome import L8Biome
 from src.data.base_datamodule import BaseDataModule
 
 
-class L8_BIOMEDataModule(BaseDataModule):
+class L8BiomeDataModule(BaseDataModule):
     def __init__(
         self,
         root: str,
@@ -35,11 +35,11 @@ class L8_BIOMEDataModule(BaseDataModule):
 
     @property
     def num_classes(self) -> int:
-        return len(L8_BIOME.METAINFO["classes"])
+        return len(L8Biome.METAINFO["classes"])
 
     def prepare_data(self) -> None:
         # train
-        L8_BIOME(
+        L8Biome(
             root=self.hparams.root,
             phase="train",
             bands=self.hparams.bands,
@@ -47,7 +47,7 @@ class L8_BIOMEDataModule(BaseDataModule):
         )
         
         # val or test
-        L8_BIOME(
+        L8Biome(
             root=self.hparams.root,
             phase="test",
             bands=self.hparams.bands,
@@ -65,14 +65,14 @@ class L8_BIOMEDataModule(BaseDataModule):
 
         # load and split datasets only if not loaded already
         if not self.train_dataset and not self.val_dataset and not self.test_dataset:
-            self.train_dataset = L8_BIOME(
+            self.train_dataset = L8Biome(
                 root=self.hparams.root,
                 bands=self.hparams.bands,
                 phase="train",
                 **self.hparams.train_pipeline,
             )
             
-            self.val_dataset = self.test_dataset = L8_BIOME(
+            self.val_dataset = self.test_dataset = L8Biome(
                 root=self.hparams.root,
                 bands=self.hparams.bands,
                 phase="test",
@@ -83,4 +83,4 @@ class L8_BIOMEDataModule(BaseDataModule):
 
 
 if __name__ == "__main__":
-    _ = L8_BIOMEDataModule()
+    _ = L8BiomeDataModule()

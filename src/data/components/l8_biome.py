@@ -9,7 +9,7 @@ from natsort import natsorted
 from typing import List, Literal
 
 
-class L8_BIOME(Dataset):
+class L8Biome(Dataset):
     METAINFO = dict(
         classes=("fill", "cloud shadow", "clear", "thin cloud", "cloud"),
         palette=(
@@ -126,6 +126,6 @@ class L8_BIOME(Dataset):
 
 if __name__ == "__main__":
     root = "/data/zouxuechao/cloudseg/l8_biome/BC"
-    dataset = L8_BIOME(root=root)
+    dataset = L8Biome(root=root)
     data = dataset[0]
     print(data['img'].shape,data['ann'].shape)
