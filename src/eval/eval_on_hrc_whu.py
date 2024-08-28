@@ -6,10 +6,8 @@ import csv
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import torchvision
-from torchmetrics import MetricCollection
-from torchmetrics.classification import MulticlassAccuracy, F1Score, Precision, Recall
+from mmseg.evaluation.metrics.iou_metric import IoUMetric
 from torchmetrics.utilities.data import to_onehot
-from torchmetrics.segmentation import MeanIoU, GeneralizedDiceScore
 from torchvision import transforms
 import torch
 from torch import nn as nn
@@ -88,20 +86,11 @@ class EvalOnHRC_WHU:
         return data_list
 
     def __get_metrics(self, task: str, num_classes: int):
-        return MetricCollection(
-            {
-                "Acc": MulticlassAccuracy(num_classes=num_classes, average="macro"),
-                "Precision": Precision(
-                    task=task, num_classes=num_classes, average="macro"
-                ),
-                "Recall": Recall(task=task, num_classes=num_classes, average="macro"),
-                "F1-Score": F1Score(
-                    task=task, num_classes=num_classes, average="macro"
-                ),
-                "MIoU": MeanIoU(num_classes=num_classes, per_class=False),
-                "Dice": GeneralizedDiceScore(num_classes=num_classes, per_class=False),
-            }
-        ).to(self.device)
+        collect_device = "gpu" if self.device == "cuda" else "cpu"
+        metric = IoUMetric(iou_metrics=['mIoU','mDice','mFscore'],num_classes=num_classes,collect_device=collect_device)
+        metric._dataset_meta = dict(classes=HRC_WHU.METAINFO['classes'])
+
+        return metric
 
     def give_colors_to_mask(
         self, image: torch.Tensor, mask: torch.Tensor, num_classes=2
