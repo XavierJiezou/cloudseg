@@ -5,14 +5,16 @@ from rich.progress import track
 import csv
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
-import torchvision
+from albumentations.pytorch.transforms import ToTensorV2
 from mmseg.evaluation.metrics.iou_metric import IoUMetric
 from torchmetrics.utilities.data import to_onehot
-from torchvision import transforms
+import albumentations as albu
 import torch
 from torch import nn as nn
+import torchvision
 import os
 from src.data.hrc_whu_datamodule import HRC_WHU
+from src.data.hrc_whu_datamodule import HRC_WHUDataModule
 from src.models.components.cdnetv1 import CDnetV1
 from src.models.components.cdnetv2 import CDnetV2
 from src.models.components.dbnet import DBNet
@@ -51,7 +53,7 @@ class EvalOnHRC_WHU:
             value: key for key, value in self.model_names_mapping.items()
         }
         self.__load_weight()
-        self.data_list = self.__load_data()
+        self.val_dataloader = self.__load_data()
         self.model_metrics = {
             model_name: self.__get_metrics("multiclass", 2)
             for model_name in self.model_names_mapping
@@ -74,21 +76,30 @@ class EvalOnHRC_WHU:
             model.eval()
 
     def __load_data(self):
-        data_list = []
-        split = "test"
-        split_file = os.path.join(self.root, f"{split}.txt")
-        with open(split_file, "r") as f:
-            for line in f:
-                image_file = line.strip()
-                img_path = os.path.join(self.root, "img_dir", split, image_file)
-                ann_path = os.path.join(self.root, "ann_dir", split, image_file)
-                data_list.append((img_path, ann_path))
-        return data_list
+        train_pipeline = val_pipeline = test_pipeline = dict(
+            all_transform=albu.Compose([albu.CenterCrop(256, 256)]),
+            img_transform=albu.Compose([albu.ToFloat(), ToTensorV2()]),
+            ann_transform=None,
+        )
+        data_loader = HRC_WHUDataModule(
+            root=self.root,
+            train_pipeline=train_pipeline,
+            val_pipeline=val_pipeline,
+            test_pipeline=test_pipeline,
+        )
+        data_loader.prepare_data()
+        data_loader.setup()
+        val_dataloader = data_loader.test_dataloader()
+        return val_dataloader
 
     def __get_metrics(self, task: str, num_classes: int):
         collect_device = "gpu" if self.device == "cuda" else "cpu"
-        metric = IoUMetric(iou_metrics=['mIoU','mDice','mFscore'],num_classes=num_classes,collect_device=collect_device)
-        metric._dataset_meta = dict(classes=HRC_WHU.METAINFO['classes'])
+        metric = IoUMetric(
+            iou_metrics=["mIoU", "mDice", "mFscore"],
+            num_classes=num_classes,
+            collect_device=collect_device,
+        )
+        metric._dataset_meta = dict(classes=HRC_WHU.METAINFO["classes"])
 
         return metric
 
@@ -106,17 +117,6 @@ class EvalOnHRC_WHU:
             .astype(np.uint8)
         )
         return mask_colors
-
-    def table_to_csv(self, table: Table, filename="hrc_metrics.csv"):
-        # 将Table数据导出到CSV
-        with open(filename, "w", newline="") as csvfile:
-            writer = csv.writer(csvfile)
-            # 写入表头
-            writer.writerow([column.header for column in table.columns])
-            # 写入数据行
-            for row in table.rows:
-                print(row)
-                writer.writerow([cell.plain for cell in row.cells])
 
     def visualize_img(self, show_images: np.ndarray):
         show_images_tensor = torch.from_numpy(show_images).permute(0, 3, 1, 2)
@@ -164,50 +164,27 @@ class EvalOnHRC_WHU:
         new_image.save("1.png", dpi=(300, 300))
         new_image.save("1.pdf", dpi=(300, 300))
 
-    def __get_img_ann(
-        self, img_path: str, ann_path: str
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
-        center_crop = transforms.CenterCrop((256, 256))
-        img_to_tensor = transforms.ToTensor()
-        img = np.array(Image.open(img_path))
-        ann = np.array(Image.open(ann_path))[:, :, np.newaxis]
-
-        img_ann = np.concatenate((img, ann), axis=-1)
-        img_ann = Image.fromarray(img_ann)
-        img_ann = center_crop(img_ann)
-        img_ann = np.array(img_ann)
-        img = img_ann[:,:,:3]
-        ann = img_ann[:,:,-1]
-
-        img = img_to_tensor(img)
-        img = img.unsqueeze(0)
-
-        ann = torch.tensor(ann).long().unsqueeze(0)
-
-        return img.to(self.device), ann.to(self.device)
-
     @torch.no_grad()
-    def inference(
-        self, img: torch.Tensor, model: nn.Module
-    ) -> torch.Tensor:
+    def inference(self, img: torch.Tensor, model: nn.Module) -> torch.Tensor:
         logits = model(img)
         if isinstance(logits, tuple):
             logits = logits[0]
         pred = torch.argmax(logits, 1).detach()
         return pred
 
-    def make_table_and_csv(self, filename="hrc_metrics.csv"):
+    def show_metrics(self, filename="hrc_metrics.csv"):
         data = {
-            model_name: model_metric.compute()
+            model_name: model_metric.compute_metrics(model_metric.results)
             for model_name, model_metric in self.model_metrics.items()
         }
         metric_weights = {
-            "Acc": 0.2,
-            "Dice": 0.2,
-            "F1-Score": 0.2,
-            "MIoU": 0.2,
-            "Precision": 0.1,
-            "Recall": 0.1,
+            "aAcc": 0,
+            "mIoU": 0.25,
+            "mAcc": 0.25,
+            "mDice": 0.25,
+            "mFscore": 0.25,
+            "mPrecision": 0,
+            "mRecall": 0,
         }
         averages = {
             model: sum(
@@ -216,8 +193,8 @@ class EvalOnHRC_WHU:
             for model, value in data.items()
         }
         sorted_models = sorted(averages, key=averages.get)
-        correct_flow = ["Acc", "Precision", "Recall", "F1-Score", "MIoU", "Dice"]
-        with open("tmp.csv", "w", newline="") as csvfile:
+        correct_flow = list(metric_weights.keys())
+        with open(filename, "w", newline="") as csvfile:
             fieldnames = ["Method"] + list(next(iter(data.values())).keys())
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -231,7 +208,7 @@ class EvalOnHRC_WHU:
                 row.update(row_data)
                 writer.writerow(row)
 
-    def run(self):
+    def run(self, num_classes: int = 2):
         """
         评测模型
         """
@@ -246,15 +223,28 @@ class EvalOnHRC_WHU:
             "MCDNet",
         ]
         show_images = None
-        for img_path, ann_path in track(
-            self.data_list, description="evaling...", total=len(self.data_list)
+        for data in track(
+            self.val_dataloader,
+            description="evaling...",
+            total=len(self.val_dataloader),
         ):
-            img, ann = self.__get_img_ann(img_path, ann_path)
+            img: torch.Tensor = data["img"]
+            ann: torch.Tensor = data["ann"]
+
+            img, ann = img.to(self.device), ann.to(self.device)
             model_masks = {}
             for model_name, model in self.models.items():
                 model_name = self.invert_model_mapping[model_name]
                 pred = self.inference(img, model)
-                self.model_metrics[model_name].update(pred, ann)
+
+                self.model_metrics[model_name].results.append(
+                    self.model_metrics[model_name].intersect_and_union(
+                        pred,
+                        ann,
+                        num_classes=num_classes,
+                        ignore_index=self.model_metrics[model_name].ignore_index,
+                    )
+                )
                 color_mask = self.give_colors_to_mask(img[0], pred)
                 model_masks[model_name] = color_mask
             image = img[0].detach().cpu().permute(1, 2, 0).numpy()
@@ -262,13 +252,15 @@ class EvalOnHRC_WHU:
             masks = [model_masks[mask_name] for mask_name in model_order]
             masks = [image] + [gt] + masks
             masks = np.array(masks)
+            if show_images is not None and show_images.shape[0] > 5:
+                continue
             if show_images is None:
                 show_images = masks
             else:
                 show_images = np.concatenate((show_images, masks), axis=0)
-        # self.make_table_and_csv()
+        # self.show_metrics()
         self.visualize_img(show_images)
 
 
 if __name__ == "__main__":
-    EvalOnHRC_WHU().run()
+    EvalOnHRC_WHU().run(num_classes=2)
