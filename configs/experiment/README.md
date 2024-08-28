@@ -22,5 +22,4 @@
 |  **UNetMobv2** | **82.24** | **90.53** | **90.03** |  **90.03**  |
 
 ### Figure
-
-![vis](https://github.com/user-attachments/assets/5698dfd5-995b-4fbc-b757-ecb84e567afa)
+![vis](https://github.com/user-attachments/assets/a8046f42-68d4-4505-bdc5-91d85095e589)
