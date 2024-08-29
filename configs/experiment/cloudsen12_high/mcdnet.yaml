@@ -5,33 +5,30 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: CloudSEN12/cloudsen12
-  - override /model: dbnet/dbnet
+  - override /data: cloudsen12_high/cloudsen12_high
+  - override /model: mcdnet/mcdnet
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["cloudsen12", "dbnet"]
+tags: ["cloudsen12_high", "mcdnet"]
 
 seed: 42
 
 
-
-  # scheduler:
-  #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-  #   _partial_: true
-  #   mode: min
-  #   factor: 0.1
-  #   patience: 10
+#   scheduler:
+#     _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+#     _partial_: true
+#     mode: min
+#     factor: 0.1
+#     patience: 10
 
 logger:
   wandb:
-    project: "cloudsen12"
-    name: "dbnet"
-  aim:
-    experiment: "cloudsen12_dbnet"
+    project: "cloudsen12_high"
+    name: "mcdnet"
 
 callbacks:
   model_checkpoint:

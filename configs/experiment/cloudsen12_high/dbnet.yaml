@@ -5,17 +5,18 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: hrc_whu/hrc_whu
-  - override /model: cdnetv2/cdnetv2
+  - override /data: cloudsen12_high/cloudsen12_high
+  - override /model: dbnet/dbnet
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hrc_whu", "cdnetv2"]
+tags: ["cloudsen12_high", "dbnet"]
 
 seed: 42
+
 
 
   # scheduler:
@@ -27,10 +28,8 @@ seed: 42
 
 logger:
   wandb:
-    project: "hrc_whu"
-    name: "cdnetv2"
-  aim:
-    experiment: "hrc_whu_cdnetv2"
+    project: "cloudsen12_high"
+    name: "dbnet"
 
 callbacks:
   model_checkpoint:

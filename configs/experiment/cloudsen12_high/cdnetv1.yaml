@@ -5,15 +5,15 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: CloudSEN12/cloudsen12
-  - override /model: scnn/scnn
+  - override /data: cloudsen12_high/cloudsen12_high
+  - override /model: cdnetv1/cdnetv1
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["cloudsen12", "scnn"]
+tags: ["cloudsen12_high", "cdnetv1"]
 
 seed: 42
 
@@ -27,10 +27,8 @@ seed: 42
 
 logger:
   wandb:
-    project: "cloudsen12"
-    name: "scnn"
-  aim:
-    experiment: "cloudsen12_scnn"
+    project: "cloudsen12_high"
+    name: "cdnetv1"
 
 callbacks:
   model_checkpoint:

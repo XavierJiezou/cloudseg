@@ -5,15 +5,15 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: CloudSEN12/cloudsen12
-  - override /model: unetmobv2/unetmobv2
+  - override /data: cloudsen12_high/cloudsen12_high
+  - override /model: hrcloudnet/hrcloudnet
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["cloudsen12", "unetmobv2"]
+tags: ["cloudsen12_high", "hrcloudnet"]
 
 seed: 42
 
@@ -27,10 +27,8 @@ seed: 42
 
 logger:
   wandb:
-    project: "cloudsen12"
-    name: "unetmobv2"
-  aim:
-    experiment: "cloudsen12_unetmobv2"
+    project: "cloudsen12_high"
+    name: "hrcloudnet"
 
 callbacks:
   model_checkpoint:

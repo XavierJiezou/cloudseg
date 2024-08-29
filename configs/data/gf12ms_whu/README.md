@@ -1,4 +1,4 @@
-# GaoFen12
+# GF12MS_WHU
 
 > [Transferring Deep Models for Cloud Detection in Multisensor Images via Weakly Supervised Learning](https://ieeexplore.ieee.org/document/10436637)
 

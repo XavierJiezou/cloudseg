@@ -6,31 +6,29 @@
 defaults:
   - override /trainer: gpu
   - override /data: hrc_whu/hrc_whu
-  - override /model: scnn/scnn
+  - override /model: mcdnet/mcdnet
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hrc_whu", "scnn"]
+tags: ["hrc_whu", "mcdnet"]
 
 seed: 42
 
 
-  # scheduler:
-  #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-  #   _partial_: true
-  #   mode: min
-  #   factor: 0.1
-  #   patience: 10
+#   scheduler:
+#     _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+#     _partial_: true
+#     mode: min
+#     factor: 0.1
+#     patience: 10
 
 logger:
   wandb:
     project: "hrc_whu"
-    name: "scnn"
-  aim:
-    experiment: "hrc_whu_scnn"
+    name: "mcdnet"
 
 callbacks:
   model_checkpoint:

@@ -1,4 +1,4 @@
-# CloudSEN12
+# CloudSEN12_High
 
 > [CloudSEN12, a global dataset for semantic understanding of cloud and cloud shadow in Sentinel-2](https://www.nature.com/articles/s41597-022-01878-2)
 

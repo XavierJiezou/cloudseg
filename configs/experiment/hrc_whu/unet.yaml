@@ -50,8 +50,6 @@ logger:
   wandb:
     project: "hrc_whu"
     name: "unet"
-  aim:
-    experiment: "hrc_whu_unet"
 
 callbacks:
   model_checkpoint:

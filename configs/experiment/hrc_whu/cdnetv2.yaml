@@ -5,32 +5,30 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: CloudSEN12/cloudsen12
-  - override /model: mcdnet/mcdnet
+  - override /data: hrc_whu/hrc_whu
+  - override /model: cdnetv2/cdnetv2
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["cloudsen12", "mcdnet"]
+tags: ["hrc_whu", "cdnetv2"]
 
 seed: 42
 
 
-#   scheduler:
-#     _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-#     _partial_: true
-#     mode: min
-#     factor: 0.1
-#     patience: 10
+  # scheduler:
+  #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  #   _partial_: true
+  #   mode: min
+  #   factor: 0.1
+  #   patience: 10
 
 logger:
   wandb:
-    project: "cloudsen12"
-    name: "mcdnet"
-  aim:
-    experiment: "cloudsen12_mcdnet"
+    project: "hrc_whu"
+    name: "cdnetv2"
 
 callbacks:
   model_checkpoint:

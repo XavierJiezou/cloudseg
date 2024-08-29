@@ -463,7 +463,7 @@ class HRCloudNet(nn.Module):
             nn.BatchNorm2d(512),
             nn.ReLU(inplace=True),
             nn.Dropout2d(p=0.1),
-            nn.Conv2d(512, 2, kernel_size=1)
+            nn.Conv2d(512, num_classes, kernel_size=1)
         )
 
     '''

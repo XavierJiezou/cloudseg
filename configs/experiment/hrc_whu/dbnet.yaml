@@ -5,17 +5,18 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: hrc_whu/hrcwhrc_whuhu
-  - override /model: kappamask/kappamask
+  - override /data: hrc_whu/hrc_whu
+  - override /model: dbnet/dbnet
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["hhrc_whurcWhu", "kappamask"]
+tags: ["hrc_whu", "dbnet"]
 
 seed: 42
+
 
 
   # scheduler:
@@ -28,9 +29,7 @@ seed: 42
 logger:
   wandb:
     project: "hrc_whu"
-    name: "kappamask"
-  aim:
-    experiment: hrc_whu_kappamask"
+    name: "dbnet"
 
 callbacks:
   model_checkpoint:

@@ -1,4 +1,4 @@
-# 38-Cloud: Cloud Segmentation in Satellite Images
+# 38-Cloud
 
 > [38-Cloud: Cloud Segmentation in Satellite Images](https://www.kaggle.com/datasets/sorour/38cloud-cloud-segmentation-in-satellite-images/data)
 

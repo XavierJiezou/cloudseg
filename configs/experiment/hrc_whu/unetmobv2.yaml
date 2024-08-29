@@ -5,15 +5,15 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: CloudSEN12/cloudsen12
-  - override /model: kappamask/kappamask
+  - override /data: hrc_whu/hrc_whu
+  - override /model: unetmobv2/unetmobv2
   - override /logger: wandb
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
 # this allows you to overwrite only specified parameters
 
-tags: ["cloudsen12", "kappamask"]
+tags: ["hrc_whu", "unetmobv2"]
 
 seed: 42
 
@@ -27,10 +27,8 @@ seed: 42
 
 logger:
   wandb:
-    project: "cloudsen12"
-    name: "kappamask"
-  aim:
-    experiment: "cloudsen12_kappamask"
+    project: "hrc_whu"
+    name: "unetmobv2"
 
 callbacks:
   model_checkpoint:
