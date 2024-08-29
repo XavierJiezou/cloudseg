@@ -141,8 +141,8 @@ class EvalOnHRC_WHU:
             "DBNet",
             "CDNetv1",
             "HRCloudNet",
-            "KappaMask",
             "CDNetv2",
+            "KappaMask",
             "SCNN",
             "MCDNet",
         ]
@@ -217,8 +217,8 @@ class EvalOnHRC_WHU:
             "DBNet",
             "CDNetv1",
             "HRCloudNet",
-            "KappaMask",
             "CDNetv2",
+            "KappaMask",
             "SCNN",
             "MCDNet",
         ]
