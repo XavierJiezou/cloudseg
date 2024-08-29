@@ -1,0 +1,39 @@
+_target_: src.models.sam_module.SamLitModule
+
+net:
+  _target_: src.models.components.rsam_seg.sam.SAM
+  inp_size: 256
+  embed_dim: 768
+  patch_size: 16
+  depth: 12
+  num_heads: 16
+  mlp_ratio: 4
+  out_chans: 256
+  qkv_bias: true
+  use_rel_pos: true
+  window_size: 14
+  global_attn_indexes:
+      - 5
+      - 11
+      - 17
+      - 23
+  prompt_embed_dim: 256
+  name: "sam"
+  loss: "iou"
+
+
+num_classes: 2
+
+criterion:
+  _target_: torch.nn.CrossEntropyLoss
+
+optimizer:
+  _target_: torch.optim.SGD
+  _partial_: true
+  lr: 0.0001
+scheduler: null
+
+#scheduler:
+#  _target_: torch.optim.lr_scheduler.LambdaLR
+#  _partial_: true
+#  lr_lambda: src.models.components.mcdnet.lr_lambda
