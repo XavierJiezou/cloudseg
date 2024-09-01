@@ -11,7 +11,8 @@
 
 ### 2024.08.26-2024.08.30
 
-- [x] @zs: [RSAM-Seg](https://github.com/Chief-byte/RSAM-Seg)方法支持
+- [ ] @zs: gaofen12数据集全面改名为gf12ms_whu，对应的类名分别改为GF12MSWHU,……
+- [ ] @zs: [RSAM-Seg](https://github.com/Chief-byte/RSAM-Seg)方法支持
 - [x] @zs:确定使用mmseg计算指标，指标确定使用Acc, F1-Score, IoU, Dice四个指标
 - [x] @zs: hrcwhu改为hrc_whu
 - [x] @zs: 增加[L8_Biome](https://landsat.usgs.gov/landsat-8-cloud-cover-assessment-validation-data)数据集支持
