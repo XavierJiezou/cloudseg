@@ -45,13 +45,19 @@ class L8Biome(Dataset):
         dirs = natsorted(dirs)
         length = len(dirs)
 
-        ratio = 0.8
+        train_ratio = 0.8
+        val_ratio = 0.1
+        test_ratio = 0.1
+        
+        train_end = int(length * train_ratio)
+        val_end = train_end + int(length * val_ratio)
+
         if self.phase == "train":
-            dirs = dirs[: int(length * ratio)]
+            dirs = dirs[: train_end]
         elif self.phase == "val":
-            dirs = dirs[int(length * ratio) :]
+            dirs = dirs[train_end :val_end]
         elif self.phase == "test":
-            dirs = dirs[int(length * ratio) :]
+            dirs = dirs[val_end :]
         else:
             raise ValueError(
                 "phase must be train, val or test,but got {}".format(self.phase)
