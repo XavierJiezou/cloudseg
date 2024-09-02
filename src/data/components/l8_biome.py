@@ -135,3 +135,6 @@ if __name__ == "__main__":
     dataset = L8Biome(root=root)
     data = dataset[0]
     print(data['img'].shape,data['ann'].shape)
+    for phase in ["train","val","test"]:
+        dataset = L8Biome(root=root,phase=phase)
+        print(f"{phase}:{len(dataset)}")
