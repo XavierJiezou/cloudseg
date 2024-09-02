@@ -9,6 +9,15 @@
 
 ## TODO
 
+### 2024.09.02-2024.09.09
+- [ ] @zs: l8数据集目录信息增加至README
+- [ ] @zs: l8数据集可视化，增加场景信息
+- [ ] @zs: 训练时使用torchmetrics
+- [ ] @zs: cloudsen12 数据集level参数增加all选项
+- [ ] @zs: cloudsen12 需要重新跑
+- [ ] @zs: cloudsen12 mcdnet重新训练一次
+- [ ] @zs: cloudsen12 数据集跑完后做个验证
+
 ### 2024.08.26-2024.08.30
 
 - [x] @zs: gaofen12数据集全面改名为gf12ms_whu，对应的类名分别改为GF12MSWHU,……
