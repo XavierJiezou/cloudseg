@@ -4,7 +4,7 @@ from src.data.base_datamodule import BaseDataModule
 from src.data.components.gaofen12 import Gaofen12
 
 
-class GAOFEN12DataModule(BaseDataModule):
+class GF12MSWHUDataModule(BaseDataModule):
     def __init__(
             self,
             root: str,
@@ -75,4 +75,4 @@ class GAOFEN12DataModule(BaseDataModule):
 
 
 if __name__ == "__main__":
-    _ = GAOFEN12DataModule()
+    _ = GF12MSWHUDataModule()

@@ -9,7 +9,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 
 
-class Gaofen12(Dataset):
+class GF12MSWHU(Dataset):
     METAINFO = dict(
         classes=("clear sky", "cloud"),
         palette=((128, 192, 128), (255, 255, 255)),
@@ -19,7 +19,7 @@ class Gaofen12(Dataset):
 
     def __init__(
             self,
-            root="/data/zouxuechao/cloudseg/gaofen12",
+            root="/data/zouxuechao/cloudseg/gf12ms_whu",
             phase: Literal["train", "val", "test"] = "train",
             serial: Literal["gaofen1", "gaofen2", "all"] = "all",
             all_transform: albumentations.Compose = None,
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     # ])
     for serial in ["all", "gaofen1", "gaofen2"]:
         print(f"当前的serial为:{serial}")
-        train_dataset = Gaofen12(
+        train_dataset = GF12MSWHU(
             phase="train",
             serial=serial,
             all_transform=all_transform,
@@ -119,7 +119,7 @@ if __name__ == "__main__":
                 mask_path.split(os.path.sep)[:-1]
             ), f"{image_path} nor equal {mask_path}"
 
-        test_dataset = Gaofen12(
+        test_dataset = GF12MSWHU(
             phase="test",
             serial=serial,
             all_transform=all_transform,
