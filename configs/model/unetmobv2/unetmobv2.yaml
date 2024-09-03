@@ -3,6 +3,7 @@ _target_: src.models.base_module.BaseLitModule
 net:
   _target_: src.models.components.unetmobv2.UNetMobV2
   num_classes: 2
+  in_channels: 3
 
 num_classes: 2
 

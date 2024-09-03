@@ -387,7 +387,7 @@ blocks_dict = {
 
 class HRCloudNet(nn.Module):
 
-    def __init__(self, num_classes=2, base_c=48, **kwargs):
+    def __init__(self, in_channels=3,num_classes=2, base_c=48, **kwargs):
         global ALIGN_CORNERS
         extra = HRNET_48
         super(HRCloudNet, self).__init__()
@@ -395,7 +395,7 @@ class HRCloudNet(nn.Module):
         # ALIGN_CORNERS = config.MODEL.ALIGN_CORNERS
         self.num_classes = num_classes
         # stem net
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=1,
+        self.conv1 = nn.Conv2d(in_channels, 64, kernel_size=3, stride=2, padding=1,
                                bias=False)
         self.bn1 = BatchNorm2d(64, momentum=BN_MOMENTUM)
         self.conv2 = nn.Conv2d(64, 64, kernel_size=3, stride=2, padding=1,

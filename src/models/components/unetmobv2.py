@@ -10,12 +10,12 @@ from torch import nn as nn
 
 
 class UNetMobV2(nn.Module):
-    def __init__(self,num_classes):
+    def __init__(self,num_classes,in_channels=3):
         super().__init__()
         self.backbone = smp.Unet(
             encoder_name='mobilenet_v2',
             encoder_weights='imagenet',
-            in_channels=3,
+            in_channels=in_channels,
             classes=num_classes,
         )
 

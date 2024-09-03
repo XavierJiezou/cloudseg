@@ -236,14 +236,14 @@ class BR(nn.Module):
 
 
 class CDnetV1(nn.Module):
-    def __init__(self, block=Bottleneck, layers=[3, 4, 6, 3], num_classes=21, aux=True):
+    def __init__(self, in_channels=3,block=Bottleneck, layers=[3, 4, 6, 3], num_classes=21, aux=True):
         self.inplanes = 64
         self.aux = aux
         super().__init__()
         # self.conv1 = nn.Conv2d(3, 64, kernel_size=7, stride=2, padding=3, bias=False)
         # self.bn1 = nn.BatchNorm2d(64, affine = affine_par)
 
-        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=2, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(in_channels, 64, kernel_size=3, stride=2, padding=1, bias=False)
         self.bn1 = nn.BatchNorm2d(64, affine=affine_par)
         self.conv2 = nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(64, affine=affine_par)
