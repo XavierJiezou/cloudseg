@@ -1,5 +1,5 @@
 import os
-
+from rich.progress import track
 import albumentations as albu
 import numpy as np
 from torch.utils.data import Dataset
@@ -125,12 +125,12 @@ class CloudSEN12High(Dataset):
 
 if __name__ == "__main__":
 
-    for phase in ['train','val','test']:
-        print(f"phase:{phase}")
-        dataset = CloudSEN12High(bands=["B4","B3","B2"],level="all",phase=phase)
-        data = dataset[0]
-        print(data['img'].shape,data['ann'].shape)
-        print(len(dataset))
+    # for phase in ['train','val','test']:
+    #     print(f"phase:{phase}")
+    #     dataset = CloudSEN12High(bands=["B4","B3","B2"],level="all",phase=phase)
+    #     data = dataset[0]
+    #     print(data['img'].shape,data['ann'].shape)
+    #     print(len(dataset))
     
     # phase:train
     # (6, 512, 512) (512, 512)
@@ -141,6 +141,14 @@ if __name__ == "__main__":
     # phase:test
     # (6, 512, 512) (512, 512)
     # 975
+
+    dataset = CloudSEN12High(bands=["B4","B3","B2"],level="all",phase="train")
+    for data in track(dataset,total=len(dataset)):
+        img = data['img']
+        ann = data['ann']
+        assert np.sum(np.isnan(img)) == 0
+        assert np.sum(np.isnan(ann)) == 0
+
     
 
 
