@@ -7,7 +7,7 @@ defaults:
   - override /trainer: gpu
   - override /data: cloudsen12_high/cloudsen12_high
   - override /model: hrcloudnet/hrcloudnet
-  - override /logger: wandb
+  - override /logger: tensorboard
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
