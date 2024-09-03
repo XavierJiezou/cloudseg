@@ -22,7 +22,7 @@ class CloudSEN12High(Dataset):
         self,
         root: str = "/data/zouxuechao/cloudseg/cloudsen12_high",
         phase: Literal["train", "val", "test"] = "train",
-        level: Literal["l1c", "l2a"] = "l1c",
+        level: Literal["l1c", "l2a","all"] = "l1c",
         bands: List[str] = None,  # ["b02", "b03", "b04", "b08", "vv", "vh", "angle"]
         all_transform: albu.Compose = None,
         img_transform: albu.Compose = None,
@@ -43,9 +43,15 @@ class CloudSEN12High(Dataset):
         channel_dtype_list = []
         for bands in self.bands:
             level_name = None if bands.startswith("S1_") else self.level
-            data, data_type = self.__load_channel_data(level_name, bands)
-            channel_list.append(data)
-            channel_dtype_list.append(data_type)
+            if level_name == "ALL":
+                for tmp_level_name in ["L1C","L2A"]:
+                    data, data_type = self.__load_channel_data(tmp_level_name, bands)
+                    channel_list.append(data)
+                    channel_dtype_list.append(data_type)
+            else:
+                data, data_type = self.__load_channel_data(level_name, bands)
+                channel_list.append(data)
+                channel_dtype_list.append(data_type)
         label_path = os.path.join(self.root, self.phase, "LABEL_manual_hq.dat")
         label_data = np.memmap(filename=label_path, dtype=np.int8, mode="r").reshape(-1, *self.METAINFO["ann_size"])
         return channel_list, channel_dtype_list, label_data
@@ -118,65 +124,86 @@ class CloudSEN12High(Dataset):
 
 
 if __name__ == "__main__":
-    bands = ["B4", "B3", "B2"] # RGB
+
+    for phase in ['train','val','test']:
+        print(f"phase:{phase}")
+        dataset = CloudSEN12High(bands=["B4","B3","B2"],level="all",phase=phase)
+        data = dataset[0]
+        print(data['img'].shape,data['ann'].shape)
+        print(len(dataset))
     
-    all_transform = albu.Compose([
-        albu.RandomCrop(512,512),
-    ])
+    # phase:train
+    # (6, 512, 512) (512, 512)
+    # 8490
+    # phase:val
+    # (6, 512, 512) (512, 512)
+    # 535
+    # phase:test
+    # (6, 512, 512) (512, 512)
+    # 975
+    
 
-    from albumentations import Lambda
 
-    for phase in ["train", "val", "test"]:
-        dataset = CloudSEN12High(phase=phase, level='l2a', bands=bands, all_transform=all_transform)
-        assert len(dataset)==CloudSEN12High.METAINFO[f"{phase}_size"]
-        assert dataset[0]["img"].shape == (len(bands), *CloudSEN12High.METAINFO["ann_size"])
-        assert dataset[0]["ann"].shape == CloudSEN12High.METAINFO["ann_size"]
+    # print(dataset.channel_data.shape)
+    # bands = ["B4", "B3", "B2"] # RGB
+    
+    # all_transform = albu.Compose([
+    #     albu.RandomCrop(512,512),
+    # ])
+
+    # from albumentations import Lambda
+
+    # for phase in ["train", "val", "test"]:
+    #     dataset = CloudSEN12High(phase=phase, level='l2a', bands=bands, all_transform=all_transform)
+    #     assert len(dataset)==CloudSEN12High.METAINFO[f"{phase}_size"]
+    #     assert dataset[0]["img"].shape == (len(bands), *CloudSEN12High.METAINFO["ann_size"])
+    #     assert dataset[0]["ann"].shape == CloudSEN12High.METAINFO["ann_size"]
 
     
-    import matplotlib.pyplot as plt
-    from src.utils.stretch import linear_stretch
+    # import matplotlib.pyplot as plt
+    # from src.utils.stretch import linear_stretch
     
-    dataset = CloudSEN12High(phase="train", level='l1c', bands=bands, all_transform=all_transform)
-    data = dataset[-1]['img']
-    data = (np.transpose(data,(1,2,0))*255).astype(np.uint8)
-    data = linear_stretch(data)
+    # dataset = CloudSEN12High(phase="train", level='l1c', bands=bands, all_transform=all_transform)
+    # data = dataset[-1]['img']
+    # data = (np.transpose(data,(1,2,0))*255).astype(np.uint8)
+    # data = linear_stretch(data)
 
-    plt.figure(figsize=(16, 4))
+    # plt.figure(figsize=(16, 4))
 
-    plt.subplot(1, 4, 1)
-    plt.title("L1C_RGB")
-    plt.axis("off")
-    plt.imshow(data)
+    # plt.subplot(1, 4, 1)
+    # plt.title("L1C_RGB")
+    # plt.axis("off")
+    # plt.imshow(data)
 
-    # L1C L2A S1 ANN
-    plt.subplot(1,4,2)
+    # # L1C L2A S1 ANN
+    # plt.subplot(1,4,2)
 
-    dataset = CloudSEN12High(phase="train", level="l2a", bands=bands, all_transform=all_transform)
-    data = dataset[-1]['img']
-    data = (np.transpose(data,(1,2,0))*255).astype(np.uint8)
-    data = linear_stretch(data)
+    # dataset = CloudSEN12High(phase="train", level="l2a", bands=bands, all_transform=all_transform)
+    # data = dataset[-1]['img']
+    # data = (np.transpose(data,(1,2,0))*255).astype(np.uint8)
+    # data = linear_stretch(data)
 
-    plt.title("L2A_RGB")
-    plt.axis("off")
-    plt.imshow(data)
+    # plt.title("L2A_RGB")
+    # plt.axis("off")
+    # plt.imshow(data)
 
-    plt.subplot(1,4,3)
+    # plt.subplot(1,4,3)
 
-    dataset = CloudSEN12High(phase="train", level="l1c", bands=["S1_VV","S1_VH","S1_angle"], all_transform=all_transform)
-    data = dataset[-1]['img']
-    data = (np.transpose(data,(1,2,0))*255).astype(np.uint8)
-    data = linear_stretch(data)
+    # dataset = CloudSEN12High(phase="train", level="l1c", bands=["S1_VV","S1_VH","S1_angle"], all_transform=all_transform)
+    # data = dataset[-1]['img']
+    # data = (np.transpose(data,(1,2,0))*255).astype(np.uint8)
+    # data = linear_stretch(data)
 
 
-    plt.title("S1")
-    plt.axis("off")
-    plt.imshow(data)
+    # plt.title("S1")
+    # plt.axis("off")
+    # plt.imshow(data)
 
-    plt.subplot(1,4,4)
+    # plt.subplot(1,4,4)
 
-    ann = dataset[-1]['ann']
+    # ann = dataset[-1]['ann']
 
-    plt.axis("off")
-    plt.title("ANN")
-    plt.imshow(ann, cmap="gray")
-    plt.savefig("cloudsen12_high.png", bbox_inches="tight", pad_inches=0)
+    # plt.axis("off")
+    # plt.title("ANN")
+    # plt.imshow(ann, cmap="gray")
+    # plt.savefig("cloudsen12_high.png", bbox_inches="tight", pad_inches=0)

@@ -8,7 +8,7 @@ class CloudSEN12HighDataModule(BaseDataModule):
     def __init__(
         self,
         root: str = "data/cloudsen12_high",
-        level: Literal["l1c", "l2a"] = "l1c",
+        level: Literal["l1c", "l2a","all"] = "l1c",
         bands: List[str] = ["B4", "B3", "B2"],
         train_pipeline: Dict = None,
         val_pipeline: Dict = None,

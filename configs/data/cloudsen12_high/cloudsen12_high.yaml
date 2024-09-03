@@ -44,6 +44,12 @@ test_pipeline:
   img_transform: null
   ann_transform: null
 
+level: all
+bands:
+  - B4
+  - B3
+  - B2
+
 batch_size: 32
 num_workers: 4
 pin_memory: True
