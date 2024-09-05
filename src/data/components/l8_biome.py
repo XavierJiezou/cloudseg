@@ -88,6 +88,16 @@ class L8Biome(Dataset):
 
     def __len__(self):
         return len(self.data)
+    
+    def __process_ann(self,ann:np.ndarray):
+        """
+        对ann中的像素做一个映射
+        """
+        ann[ann == 64] = 1
+        ann[ann == 128] = 2
+        ann[ann == 192] = 3
+        ann[ann == 255] = 4
+        return ann
 
     def __get_img_ann(self, img_path: str, filename: str, index: str):
         image = None
@@ -106,6 +116,7 @@ class L8Biome(Dataset):
         ).replace("img_crop", "seg_crop")
 
         ann = np.array(Image.open(ann_path))
+        ann = self.__process_ann(ann)
         return image, ann
 
     def __getitem__(self, idx):
