@@ -98,6 +98,15 @@ class L8Biome(Dataset):
         ann[ann == 192] = 3
         ann[ann == 255] = 4
         return ann
+    
+    def __normalize_image(self,image:np.ndarray):
+        max_val = np.max(image)
+        min_val = np.min(image)
+        if max_val == 0 and min_val == 0:
+            return image.astype(np.float32)
+        image = (image - min_val) / (max_val - min_val)
+        image = image.astype(np.float32)
+        return image
 
     def __get_img_ann(self, img_path: str, filename: str, index: str):
         image = None
@@ -134,6 +143,7 @@ class L8Biome(Dataset):
         if self.ann_transform:
             ann = self.ann_transform(image=img)["image"]
 
+        image = self.__normalize_image(image)
         return {
             "img": img,
             "ann": np.int64(ann),
