@@ -88,6 +88,7 @@ class L8Biome(Dataset):
     def __normalize_image(self,image:np.ndarray):
         max_val = np.max(image)
         min_val = np.min(image)
+        image = np.transpose(image,(2,0,1))
         if max_val == 0 and min_val == 0:
             return image.astype(np.float32)
         image = (image - min_val) / (max_val - min_val)
