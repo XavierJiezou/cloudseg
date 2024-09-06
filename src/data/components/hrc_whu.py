@@ -33,7 +33,7 @@ class HRC_WHU(Dataset):
 
 
     def load_data(self):
-        data_list = []
+        data = []
         split = 'train' if self.phase == 'train' else 'test'
         split_file = os.path.join(self.root, f'{split}.txt')
         with open(split_file, 'r') as f:
@@ -42,8 +42,8 @@ class HRC_WHU(Dataset):
                 img_path = os.path.join(self.root, 'img_dir', split, image_file)
                 ann_path = os.path.join(self.root, 'ann_dir', split, image_file)
                 lac_type = image_file.split('_')[0]
-                data_list.append((img_path, ann_path, lac_type))
-        return data_list
+                data.append((img_path, ann_path, lac_type))
+        return data
 
     def __len__(self):
         return len(self.data)
