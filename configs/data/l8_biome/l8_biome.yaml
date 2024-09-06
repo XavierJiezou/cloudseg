@@ -1,34 +1,20 @@
 _target_: src.data.l8_biome_datamodule.L8BiomeDataModule
-root: /data/zouxuechao/cloudseg/l8_biome/BC
+root: /data/zouxuechao/cloudseg/l8_biome
 train_pipeline:
   all_transform:
     _target_: albumentations.Compose
     transforms:
       - _target_: albumentations.HorizontalFlip
         p: 0.5
-      - _target_: albumentations.ShiftScaleRotate
-        p: 1
 
-  img_transform:
-    _target_: albumentations.Compose
-    transforms:
-      - _target_: albumentations.pytorch.transforms.ToTensorV2
-
+  img_transform: null
   ann_transform: null
-val_pipeline: null
-
-  img_transform:
-    _target_: albumentations.Compose
-    transforms:
-      - _target_: albumentations.pytorch.transforms.ToTensorV2
+val_pipeline: 
+  img_transform: null
   ann_transform: null
 
-test_pipeline: null
-
-  img_transform:
-    _target_: albumentations.Compose
-    transforms:
-      - _target_: albumentations.pytorch.transforms.ToTensorV2
+test_pipeline:
+  img_transform: null
   ann_transform: null
 
 bands:
