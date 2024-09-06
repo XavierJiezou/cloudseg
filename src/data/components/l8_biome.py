@@ -40,28 +40,15 @@ class L8Biome(Dataset):
         self.ann_transform = ann_transform
         self.data = self.load_data()
 
+    def __get_dirs(self):
+        assert self.phase in ["train","val","test"], f"phase must is 'train','val','test',but got {self.phase}"
+        filename = os.path.join(self.root,f"{self.phase}.txt")
+        with open(filename,"r",encoding="utf-8") as f:
+            dirs = f.read().split("\n")[:-1]
+        return dirs
+
     def load_data(self):
-        dirs = os.listdir(os.path.join(self.root, "img_dir"))
-        dirs = natsorted(dirs)
-        length = len(dirs)
-
-        train_ratio = 0.8
-        val_ratio = 0.1
-        
-        train_end = int(length * train_ratio)
-        val_end = train_end + int(length * val_ratio)
-
-        if self.phase == "train":
-            dirs = dirs[: train_end]
-        elif self.phase == "val":
-            dirs = dirs[train_end :val_end]
-        elif self.phase == "test":
-            dirs = dirs[val_end :]
-        else:
-            raise ValueError(
-                "phase must be train, val or test,but got {}".format(self.phase)
-            )
-
+        dirs = self.__get_dirs()
         assert len(dirs) > 0, "No data found in {}".format(self.root)
         images_path = os.path.join(
             self.root, "img_dir", dirs[0], f"{dirs[0].split('_')[1]}*_B{self.bands[0]}*.tif"
