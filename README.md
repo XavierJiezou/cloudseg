@@ -1,4 +1,4 @@
-# Cloud Segmentation for Remote Sensing
+# Cloud Segmentation for Remote Sensing Images
 
 [![demo](https://img.shields.io/badge/🤗HugginngFace-Spaces-orange)](https://huggingface.co/spaces/caixiaoshun/cloudseg)
 [![license](https://img.shields.io/badge/License-MIT-green.svg?labelColor=gray)](https://github.com/XavierJiezou/cloudseg#license)
