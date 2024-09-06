@@ -10,8 +10,8 @@
 ## TODO
 
 ### 2024.09.02-2024.09.09
-- [ ] @zs: l8数据集目录信息增加至README
-- [ ] @zs: l8数据集可视化，增加场景信息
+- [x] @zs: l8数据集目录信息增加至README
+- [x] @zs: l8数据集可视化，增加场景信息
 - [x] @zs: 训练时使用torchmetrics
 - [x] @zs: cloudsen12 数据集level参数增加all选项
 - [ ] @zs: cloudsen12 需要重新跑
@@ -88,6 +88,12 @@ cloudseg
 │   │   │   ├── S1_*.data
 │   │   │   ├── metadata.csv
 │   ├── l8_biome
+│   │   │   ├── img_dir
+│   │   │   │   ├── Barren_LC80010112014080LGN00*.tif
+│   │   │   │   ├── Barren_LC80010732013109LGN00*.tif
+│   │   │   ├── ann_dir
+│   │   │   │   ├── Barren_LC80010112014080LGN00*.tif
+│   │   │   │   ├── Barren_LC80010732013109LGN00*.tif
 │   ├── gf12ms_whu
 │   │   ├── GF1MS-WHU
 │   │   │   ├── TestBlock250

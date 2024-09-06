@@ -41,13 +41,12 @@ class L8Biome(Dataset):
         self.data = self.load_data()
 
     def load_data(self):
-        dirs = os.listdir(os.path.join(self.root, "img_crop"))
+        dirs = os.listdir(os.path.join(self.root, "img_dir"))
         dirs = natsorted(dirs)
         length = len(dirs)
 
         train_ratio = 0.8
         val_ratio = 0.1
-        test_ratio = 0.1
         
         train_end = int(length * train_ratio)
         val_end = train_end + int(length * val_ratio)
@@ -65,7 +64,7 @@ class L8Biome(Dataset):
 
         assert len(dirs) > 0, "No data found in {}".format(self.root)
         images_path = os.path.join(
-            self.root, "img_crop", dirs[0], f"{dirs[0]}*_B{self.bands[0]}*.tif"
+            self.root, "img_dir", dirs[0], f"{dirs[0].split('_')[1]}*_B{self.bands[0]}*.tif"
         )
 
         file_indexs = []
@@ -80,7 +79,7 @@ class L8Biome(Dataset):
             file_indexs.append(index)
         data_list = []
         for dir in dirs:
-            img_path = os.path.join(self.root, "img_crop", dir)
+            img_path = os.path.join(self.root, "img_dir", dir)
             filename = dir
             for index in file_indexs:
                 data_list.append([img_path, filename, index])
@@ -107,6 +106,11 @@ class L8Biome(Dataset):
         image = (image - min_val) / (max_val - min_val)
         image = image.astype(np.float32)
         return image
+    
+    def __get_mask_path(self,img_path):
+        path_list = img_path.split(os.path.sep)
+        path_list[-1] = path_list[-1].split("_")[1]
+        return os.path.sep + os.path.join(*path_list)
 
     def __get_img_ann(self, img_path: str, filename: str, index: str):
         image = None
@@ -122,14 +126,14 @@ class L8Biome(Dataset):
 
         ann_path = os.path.join(
             img_path, f"{filename}_fixedmask_{index}.tif"
-        ).replace("img_crop", "seg_crop")
-
+        ).replace("img_dir", "ann_dir")
         ann = np.array(Image.open(ann_path))
         ann = self.__process_ann(ann)
         return image, ann
 
     def __getitem__(self, idx):
         img_path, filename, index = self.data[idx]
+        scene,filename = filename.split("_")
         img, ann = self.__get_img_ann(img_path, filename, index)
 
         if self.all_transform:
@@ -143,19 +147,20 @@ class L8Biome(Dataset):
         if self.ann_transform:
             ann = self.ann_transform(image=img)["image"]
 
-        image = self.__normalize_image(image)
+        img = self.__normalize_image(img)
         return {
             "img": img,
             "ann": np.int64(ann),
             "img_path": filename,
+            "scene":scene
         }
 
 
 if __name__ == "__main__":
-    root = "/data/zouxuechao/cloudseg/l8_biome/BC"
+    root = "/data/zouxuechao/cloudseg/l8_biome"
     dataset = L8Biome(root=root)
     data = dataset[0]
-    print(data['img'].shape,data['ann'].shape)
+    print(data['img'].shape,data['ann'].shape,data["img_path"],data["scene"])
     for phase in ["train","val","test"]:
         dataset = L8Biome(root=root,phase=phase)
         print(f"{phase}:{len(dataset)}")

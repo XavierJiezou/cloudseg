@@ -46,7 +46,15 @@ class L8BiomeDataModule(BaseDataModule):
             **self.hparams.train_pipeline,
         )
         
-        # val or test
+        # val
+        L8Biome(
+            root=self.hparams.root,
+            phase="val",
+            bands=self.hparams.bands,
+            **self.hparams.val_pipeline,
+        )
+
+        # test
         L8Biome(
             root=self.hparams.root,
             phase="test",
@@ -71,8 +79,13 @@ class L8BiomeDataModule(BaseDataModule):
                 phase="train",
                 **self.hparams.train_pipeline,
             )
-            
-            self.val_dataset = self.test_dataset = L8Biome(
+            self.val_dataset = L8Biome(
+                root=self.hparams.root,
+                bands=self.hparams.bands,
+                phase="val",
+                **self.hparams.val_pipeline,
+            )
+            self.test_dataset = L8Biome(
                 root=self.hparams.root,
                 bands=self.hparams.bands,
                 phase="test",
