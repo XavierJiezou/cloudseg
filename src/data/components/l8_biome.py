@@ -41,7 +41,7 @@ class L8Biome(Dataset):
         self.data = self.load_data()
 
     def load_data(self):
-        dirs = os.listdir(os.path.join(self.root, "img_crop"))
+        dirs = os.listdir(os.path.join(self.root, "img_dir"))
         dirs = natsorted(dirs)
         length = len(dirs)
 
@@ -64,7 +64,7 @@ class L8Biome(Dataset):
 
         assert len(dirs) > 0, "No data found in {}".format(self.root)
         images_path = os.path.join(
-            self.root, "img_crop", dirs[0], f"{dirs[0].split('_')[1]}*_B{self.bands[0]}*.tif"
+            self.root, "img_dir", dirs[0], f"{dirs[0].split('_')[1]}*_B{self.bands[0]}*.tif"
         )
 
         file_indexs = []
@@ -79,7 +79,7 @@ class L8Biome(Dataset):
             file_indexs.append(index)
         data_list = []
         for dir in dirs:
-            img_path = os.path.join(self.root, "img_crop", dir)
+            img_path = os.path.join(self.root, "img_dir", dir)
             filename = dir
             for index in file_indexs:
                 data_list.append([img_path, filename, index])
@@ -125,8 +125,8 @@ class L8Biome(Dataset):
                 image = np.concatenate((image, im), axis=-1)
 
         ann_path = os.path.join(
-            self.__get_mask_path(img_path), f"{filename}_fixedmask_{index}.tif"
-        ).replace("img_crop", "seg_crop")
+            img_path, f"{filename}_fixedmask_{index}.tif"
+        ).replace("img_dir", "ann_dir")
         ann = np.array(Image.open(ann_path))
         ann = self.__process_ann(ann)
         return image, ann
@@ -157,7 +157,7 @@ class L8Biome(Dataset):
 
 
 if __name__ == "__main__":
-    root = "/data/zouxuechao/cloudseg/l8_biome/BC"
+    root = "/data/zouxuechao/cloudseg/l8_biome"
     dataset = L8Biome(root=root)
     data = dataset[0]
     print(data['img'].shape,data['ann'].shape,data["img_path"],data["scene"])
