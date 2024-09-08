@@ -1,14 +1,13 @@
-from typing import Any, Dict, Optional, Literal, List
+from typing import Dict, Optional, Literal, List
 from src.data.components.cloudsen12_high import CloudSEN12High
 from src.data.base_datamodule import BaseDataModule
-import albumentations as albu
 
 
 class CloudSEN12HighDataModule(BaseDataModule):
     def __init__(
         self,
         root: str = "data/cloudsen12_high",
-        level: Literal["l1c", "l2a","all"] = "l1c",
+        level: Literal["l1c", "l2a"] = "l1c",
         bands: List[str] = ["B4", "B3", "B2"],
         train_pipeline: Dict = None,
         val_pipeline: Dict = None,
@@ -61,7 +60,6 @@ class CloudSEN12HighDataModule(BaseDataModule):
         )
 
     def setup(self, stage: Optional[str] = None) -> None:
-
         # Divide batch size by the number of devices.
         if self.trainer is not None:
             if self.hparams.batch_size % self.trainer.world_size != 0:
@@ -100,15 +98,4 @@ class CloudSEN12HighDataModule(BaseDataModule):
 
 
 if __name__ == "__main__":
-    pass
-    # root="/data/zouxuechao/cloudseg/cloudsen12_high",
-    # dataloader = CloudSEN12HighDataModule(root=root, bands=bands)
-    # dataloader.prepare_data()
-    # train_dataloader = dataloader.train_dataloader()
-    # for data in train_dataloader:
-    #     print(data['img'].shape, data['ann'].shape)
-    #     break
-    # CloudSEN12HighDataModule(
-    #     root="/data/zouxuechao/cloudseg/cloudsen12_high",
-    #     bands = ["B02", "B03", "B04", "B08", "VV", "VH", "angle"]
-    # )
+    CloudSEN12HighDataModule()
