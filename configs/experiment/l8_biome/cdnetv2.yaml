@@ -18,6 +18,7 @@ tags: ["l8_biome", "cdnetv2"]
 seed: 42
 
 model:
+  _target_: src.models.l8_biome_module.L8BiomeLitModule
   num_classes: 5
   net:
     num_classes: 5
