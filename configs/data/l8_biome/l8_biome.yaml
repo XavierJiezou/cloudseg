@@ -1,26 +1,42 @@
 _target_: src.data.l8_biome_datamodule.L8BiomeDataModule
-root: /data/zouxuechao/cloudseg/l8_biome
+root: data/l8_biome
+bands: ["B4", "B3", "B2"]
+split: [0.6, 0.2, 0.2]
+patch_size: 512
+seed: 42
 train_pipeline:
   all_transform:
     _target_: albumentations.Compose
     transforms:
       - _target_: albumentations.HorizontalFlip
-        p: 0.5
+        p: 1
 
-  img_transform: null
+  img_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.ToFloat
+        max_value: 255
+
   ann_transform: null
-val_pipeline: 
-  img_transform: null
+val_pipeline:
+  all_transform: null
+
+  img_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.ToFloat
+        max_value: 255
   ann_transform: null
 
 test_pipeline:
-  img_transform: null
+  all_transform: null
+  img_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.ToFloat
+        max_value: 255
   ann_transform: null
 
-bands:
-  - "4"
-  - "3"
-  - "2"
 batch_size: 8
 num_workers: 4
 pin_memory: True
