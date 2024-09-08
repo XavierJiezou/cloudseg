@@ -10,7 +10,7 @@
 ## TODO
 
 ### 2024.09.02-2024.09.09
-- [x] @zs: 适配torchgeo的[l8biome](https://torchgeo.readthedocs.io/en/v0.6.0/api/datamodules.html#torchgeo.datamodules.L8BiomeDataModule)
+- [ ] @zs: 适配torchgeo的[l8biome](https://torchgeo.readthedocs.io/en/v0.6.0/api/datamodules.html#torchgeo.datamodules.L8BiomeDataModule)
 - [x] @zs: l8数据集目录信息增加至README
 - [x] @zs: l8数据集可视化，增加场景信息
 - [x] @zs: 训练时使用torchmetrics
