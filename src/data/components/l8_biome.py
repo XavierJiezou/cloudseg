@@ -17,6 +17,7 @@ import re
 import glob
 from rasterio.crs import CRS
 from matplotlib.figure import Figure
+import sys
 import matplotlib.pyplot as plt
 from torchgeo.datasets.errors import DatasetNotFoundError, RGBBandsMissingError
 from torchgeo.datasets.utils import BoundingBox, Path, download_url, extract_archive
@@ -24,6 +25,22 @@ from torchgeo.datasets.utils import BoundingBox, Path, download_url, extract_arc
 
 class RasterDataset(RasterDatasetBase):
     """RasterDataset with added landcover information in the sample."""
+
+    def __init__(
+        self,
+        paths: Path | Iterable[Path] = "data",
+        crs: CRS | None = None,
+        res: float | None = None,
+        bands: Sequence[str] | None = ("B4", "B3", "B2"),
+        all_transform=None,
+        img_transform=None,
+        ann_transform=None,
+        cache: bool = True,
+    ):
+        super().__init__(paths=paths, crs=crs, res=res, bands=bands, transforms=None, cache=cache)
+        self.all_transform = all_transform
+        self.img_transform = img_transform
+        self.ann_transform = ann_transform
 
     def __getitem__(self, query: BoundingBox) -> dict[str, Any]:
         """Retrieve image/mask, metadata, and landcover information indexed by query.
@@ -42,7 +59,7 @@ class RasterDataset(RasterDatasetBase):
 
         if not filepaths:
             raise IndexError(
-                f'query: {query} not found in index with bounds: {self.bounds}'
+                f"query: {query} not found in index with bounds: {self.bounds}"
             )
 
         if self.separate_files:
@@ -55,9 +72,9 @@ class RasterDataset(RasterDatasetBase):
                     directory = os.path.dirname(filepath)
                     match = re.match(filename_regex, filename)
                     if match:
-                        if 'band' in match.groupdict():
-                            start = match.start('band')
-                            end = match.end('band')
+                        if "band" in match.groupdict():
+                            start = match.start("band")
+                            end = match.end("band")
                             filename = filename[:start] + band + filename[end:]
                     filepath = os.path.join(directory, filename)
                     band_filepaths.append(filepath)
@@ -69,23 +86,30 @@ class RasterDataset(RasterDatasetBase):
         # Get landcover value from the file path (third last folder)
         landcover = filepaths[0].split(os.path.sep)[-3]
 
-        if landcover=="grass_crops":
+        if landcover == "grass_crops":
             landcover = "Grass/Crops"
-        elif landcover=="snow_ice":
+        elif landcover == "snow_ice":
             landcover = "Snow/Ice"
         else:
             landcover = landcover.capitalize()
-        
-        sample = {'crs': self.crs, 'bounds': query, 'landcover': landcover}
+
+        sample = {"crs": self.crs, "bounds": query, "landcover": landcover}
 
         data = data.to(self.dtype)
         if self.is_image:
-            sample['image'] = data
+            sample["image"] = data
         else:
-            sample['mask'] = data.squeeze(0)
+            sample["mask"] = data.squeeze(0)
 
-        if self.transforms is not None:
-            sample = self.transforms(sample)
+        if self.all_transform is not None:
+            transforms = self.all_transform(image=sample["image"], mask=sample["mask"])
+            sample["image"], sample["mask"] = transforms["image"], transforms["mask"]
+
+        if self.img_transform is not None:
+            sample["image"] = self.img_transform(image=sample["image"])["image"]
+
+        if self.ann_transform is not None:
+            sample["mask"] = self.img_transform(image=sample["mask"])["image"]
 
         return sample
 
@@ -94,7 +118,7 @@ class L8BiomeImage(RasterDataset):
     """Images from the L8 Biome dataset."""
 
     # https://gisgeography.com/landsat-file-naming-convention/
-    filename_glob = 'LC8*.TIF'
+    filename_glob = "LC8*.TIF"
     filename_regex = r"""
         ^LC8
         (?P<wrs_path>\d{3})
@@ -104,17 +128,17 @@ class L8BiomeImage(RasterDataset):
         (?P<version>\d{2})
         \.TIF$
     """
-    date_format = '%Y%j'
+    date_format = "%Y%j"
     is_image = True
-    rgb_bands = ('B4', 'B3', 'B2')
-    all_bands = ('B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11')
+    rgb_bands = ("B4", "B3", "B2")
+    all_bands = ("B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10", "B11")
 
 
 class L8BiomeMask(RasterDataset):
     """Masks from the L8 Biome dataset."""
 
     # https://gisgeography.com/landsat-file-naming-convention/
-    filename_glob = 'LC8*_fixedmask.TIF'
+    filename_glob = "LC8*_fixedmask.TIF"
     filename_regex = r"""
         ^LC8
         (?P<wrs_path>\d{3})
@@ -125,9 +149,9 @@ class L8BiomeMask(RasterDataset):
         _fixedmask
         \.TIF$
     """
-    date_format = '%Y%j'
+    date_format = "%Y%j"
     is_image = False
-    classes = ('Fill', 'Cloud Shadow', 'Clear', 'Thin Cloud', 'Cloud')
+    classes = ("Fill", "Cloud Shadow", "Clear", "Thin Cloud", "Cloud")
     ordinal_map = torch.zeros(256, dtype=torch.long)
     ordinal_map[64] = 1
     ordinal_map[128] = 2
@@ -145,9 +169,9 @@ class L8BiomeMask(RasterDataset):
             IndexError: if query is not found in the index
         """
         sample = super().__getitem__(query)
-        sample['mask'] = self.ordinal_map[sample['mask']]
+        sample["mask"] = self.ordinal_map[sample["mask"]]
         return sample
-    
+
 
 class L8Biome(IntersectionDataset):
     """L8 Biome dataset.
@@ -187,6 +211,7 @@ class L8Biome(IntersectionDataset):
 
     .. versionadded:: 0.5
     """
+
     METAINFO = dict(
         classes=("fill", "cloud shadow", "clear", "thin cloud", "cloud"),
         palette=(
@@ -200,24 +225,26 @@ class L8Biome(IntersectionDataset):
         ann_size=(512, 512),  # H, W
     )
 
-    url = 'https://hf.co/datasets/torchgeo/l8biome/resolve/f76df19accce34d2acc1878d88b9491bc81f94c8/{}.tar.gz'
+    url = "https://hf.co/datasets/torchgeo/l8biome/resolve/f76df19accce34d2acc1878d88b9491bc81f94c8/{}.tar.gz"
 
     md5s: ClassVar[dict[str, str]] = {
-        'barren': '0eb691822d03dabd4f5ea8aadd0b41c3',
-        'forest': '4a5645596f6bb8cea44677f746ec676e',
-        'grass_crops': 'a69ed5d6cb227c5783f026b9303cdd3c',
-        'shrubland': '19df1d0a604faf6aab46d6a7a5e6da6a',
-        'snow_ice': 'af8b189996cf3f578e40ee12e1f8d0c9',
-        'urban': '5450195ed95ee225934b9827bea1e8b0',
-        'water': 'a81153415eb662c9e6812c2a8e38c743',
-        'wetlands': '1f86cc354631ca9a50ce54b7cab3f557',
+        "barren": "0eb691822d03dabd4f5ea8aadd0b41c3",
+        "forest": "4a5645596f6bb8cea44677f746ec676e",
+        "grass_crops": "a69ed5d6cb227c5783f026b9303cdd3c",
+        "shrubland": "19df1d0a604faf6aab46d6a7a5e6da6a",
+        "snow_ice": "af8b189996cf3f578e40ee12e1f8d0c9",
+        "urban": "5450195ed95ee225934b9827bea1e8b0",
+        "water": "a81153415eb662c9e6812c2a8e38c743",
+        "wetlands": "1f86cc354631ca9a50ce54b7cab3f557",
     }
 
     def __init__(
         self,
         root: Path | Iterable[Path] = "data/l8_biome",
         bands: Sequence[str] = ("B4", "B3", "B2"),
-        transforms: Callable[[dict[str, Any]], dict[str, Any]] | None = None,
+        all_transform=None,
+        img_transform=None,
+        ann_transform=None,
         crs: CRS | None = CRS.from_epsg(3857),
         res: float | None = None,
         cache: bool = True,
@@ -247,9 +274,29 @@ class L8Biome(IntersectionDataset):
         self.checksum = checksum
 
         self._verify()
-
-        self.image = L8BiomeImage(root, crs, res, bands, transforms, cache)
-        self.mask = L8BiomeMask(root, crs, res, None, transforms, cache)
+        self.all_transform = all_transform
+        self.img_transform = img_transform
+        self.ann_transform = ann_transform
+        self.image = L8BiomeImage(
+            paths=root,
+            crs=crs,
+            res=res,
+            bands=bands,
+            all_transform=self.all_transform,
+            img_transform=self.img_transform,
+            ann_transform=self.ann_transform,
+            cache=cache
+        )
+        self.mask = L8BiomeMask(
+            paths=root,
+            crs=crs,
+            res=res,
+            bands=None,
+            all_transform=self.all_transform,
+            img_transform=self.img_transform,
+            ann_transform=self.ann_transform,
+            cache=cache
+        )
 
         super().__init__(self.image, self.mask)
 
@@ -260,14 +307,14 @@ class L8Biome(IntersectionDataset):
             return
 
         for classname in [L8BiomeImage, L8BiomeMask]:
-            pathname = os.path.join(self.paths, '**', classname.filename_glob)
+            pathname = os.path.join(self.paths, "**", classname.filename_glob)
             if not glob.glob(pathname, recursive=True):
                 break
         else:
             return
 
         # Check if the tar.gz files have already been downloaded
-        pathname = os.path.join(self.paths, '*.tar.gz')
+        pathname = os.path.join(self.paths, "*.tar.gz")
         if glob.glob(pathname):
             self._extract()
             return
@@ -290,7 +337,7 @@ class L8Biome(IntersectionDataset):
     def _extract(self) -> None:
         """Extract the dataset."""
         assert isinstance(self.paths, str | pathlib.Path)
-        pathname = os.path.join(self.paths, '*.tar.gz')
+        pathname = os.path.join(self.paths, "*.tar.gz")
         for tarfile in glob.iglob(pathname):
             extract_archive(tarfile)
 
@@ -320,34 +367,34 @@ class L8Biome(IntersectionDataset):
             else:
                 raise RGBBandsMissingError()
 
-        image = sample['image'][rgb_indices].permute(1, 2, 0) # CxHxW -> HxWxC
+        image = sample["image"][rgb_indices].permute(1, 2, 0)  # CxHxW -> HxWxC
 
         # Stretch to the full range
         image = (image - image.min()) / (image.max() - image.min())
 
-        mask = sample['mask'].numpy().astype('uint8').squeeze()
+        mask = sample["mask"].numpy().astype("uint8").squeeze()
 
         num_panels = 2
-        showing_predictions = 'prediction' in sample
+        showing_predictions = "prediction" in sample
         if showing_predictions:
-            predictions = sample['prediction'].numpy().astype('uint8').squeeze()
+            predictions = sample["prediction"].numpy().astype("uint8").squeeze()
             num_panels += 1
 
-        kwargs = {'cmap': 'gray', 'vmin': 0, 'vmax': 4, 'interpolation': 'none'}
+        kwargs = {"cmap": "gray", "vmin": 0, "vmax": 4, "interpolation": "none"}
         fig, axs = plt.subplots(1, num_panels, figsize=(num_panels * 4, 5))
         axs[0].imshow(image)
-        axs[0].axis('off')
+        axs[0].axis("off")
         axs[1].imshow(mask, **kwargs)
-        axs[1].axis('off')
+        axs[1].axis("off")
         if show_titles:
-            axs[0].set_title('Image')
-            axs[1].set_title('Mask')
+            axs[0].set_title("Image")
+            axs[1].set_title("Mask")
 
         if showing_predictions:
             axs[2].imshow(predictions, **kwargs)
-            axs[2].axis('off')
+            axs[2].axis("off")
             if show_titles:
-                axs[2].set_title('Predictions')
+                axs[2].set_title("Predictions")
 
         if suptitle is not None:
             plt.suptitle(suptitle)

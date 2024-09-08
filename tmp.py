@@ -9,19 +9,20 @@ from torchgeo.datasets import CDL, Landsat7, Landsat8, VHR10, stack_samples
 from torchgeo.samplers import RandomGeoSampler, RandomBatchGeoSampler
 from torchgeo.trainers import SemanticSegmentationTask
 from src.data.components.l8_biome import L8Biome
+# from torchgeo.datasets.l8biome import L8Biome
 # Initialize the dataset
 dataset = L8Biome(
-    root="/data/zouxuechao/cloudseg/l8_biome",
+    root="data/l8_biome",
     bands=("B4", "B3", "B2") # default: ('B1', 'B2', 'B3', 'B4', 'B5', 'B6', 'B7', 'B8', 'B9', 'B10', 'B11')
 )
 
 import torch
 generator = torch.Generator().manual_seed(0)
 (train_dataset, val_dataset, test_dataset) = (
-    random_bbox_assignment(dataset, [0.6, 0.2, 0.2], generator)
+    random_bbox_assignment(dataset, [0.8, 0.1, 0.1], generator)
 )
 
-sampler = RandomBatchGeoSampler(train_dataset, 512, 1)
+sampler = RandomBatchGeoSampler(train_dataset, 512,1)
 
 dataloader = DataLoader(train_dataset, batch_size=1, sampler=None, batch_sampler=sampler, collate_fn=stack_samples)
 
@@ -41,13 +42,17 @@ for batch in dataloader:
     # train a model, or make predictions using a pre-trained model
 
 
-# datamodule = L8BiomeDataModule(
-#     patch_size=512,
-#     paths="/data/zouxuechao/cloudseg/l8_biome",
-#     batch_size=1,           # Adjust batch size as needed
-#     num_workers=0,           # Adjust the number of workers for parallel data loading
-# )
-
+datamodule = L8BiomeDataModule(
+    patch_size=512,
+    paths="/data/zouxuechao/cloudseg/l8_biome",
+    batch_size=1,           # Adjust batch size as needed
+    num_workers=0,           # Adjust the number of workers for parallel data loading
+)
+datamodule.setup("fit")
+datamodule.setup("test")
+print(len(datamodule.train_dataloader()))
+print(len(datamodule.val_dataloader()))
+print(len(datamodule.test_dataloader()))
 
 
 # datamodule.prepare_data()

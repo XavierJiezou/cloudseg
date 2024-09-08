@@ -17,7 +17,10 @@ tags: ["l8_biome", "cdnetv2"]
 
 seed: 42
 
-
+model:
+  num_classes: 5
+  net:
+    num_classes: 5
   # scheduler:
   #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
   #   _partial_: true
