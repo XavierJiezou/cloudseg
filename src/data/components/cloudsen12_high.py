@@ -1,12 +1,15 @@
 import os
 os.environ["NO_ALBUMENTATIONS_UPDATE"] = "1"
 import albumentations as albu
+import albumentations.pytorch
 import numpy as np
 from torch.utils.data import Dataset
 import numpy as np
 from typing import Literal, List, Tuple
 import matplotlib.pyplot as plt
 from src.utils.stretch import gaussian_stretch
+import torch
+from lightning import seed_everything
 
 
 class CloudSEN12High(Dataset):
@@ -70,7 +73,7 @@ class CloudSEN12High(Dataset):
         return len(self.label_data)
 
     def __getitem__(self, idx):
-        img = np.stack([self.image_data[band][idx] for band in self.bands])
+        img = np.stack([self.image_data[band][idx] for band in self.bands], axis=-1)
         img = img.astype(np.float32)
         img = (img - img.min()) / (img.max() - img.min() + 1e-6) # 1e-6 to avoid division by zero
         ann = self.label_data[idx]
@@ -96,48 +99,64 @@ def test_cloudsen12_high():
     for phase in ["train", "val", "test"]:
         dataset = CloudSEN12High(phase=phase)
         assert len(dataset)==CloudSEN12High.METAINFO[f"{phase}_size"]
-        assert dataset[0]["img"].shape == (len(["B4", "B3", "B2"]), *CloudSEN12High.METAINFO["ann_size"])
+        assert dataset[0]["img"].shape == (*CloudSEN12High.METAINFO["ann_size"], len(["B4", "B3", "B2"]))
         assert dataset[0]["ann"].shape == CloudSEN12High.METAINFO["ann_size"]
 
 
 def show_cloudsen12_high():
-    all_transform = None
+    all_transform = albu.Compose([
+        albu.PadIfNeeded(min_height=512, min_width=512, p=1, always_apply=True),
+        albu.OneOf([
+            albu.HorizontalFlip(p=0.5),
+            albu.VerticalFlip(p=0.5),
+            albu.RandomRotate90(p=0.5),
+            albu.Transpose(p=0.5),
+        ], p=1),
+        albu.pytorch.transforms.ToTensorV2(),
+    ])
     
     plt.figure(figsize=(16, 4))
+    
+    index = -1
     
     plt.subplot(1, 4, 1)
     plt.title("L1C")
     plt.axis("off")
+    seed_everything(42)
     dataset = CloudSEN12High(phase="train", level="l1c", bands=["B4", "B3", "B2"], all_transform=all_transform)
-    data = dataset[-1]["img"]
-    data = (np.transpose(data, (1, 2, 0)) * 255).astype(np.uint8)
+    data = dataset[index]["img"]
+    data = data.permute(1, 2, 0).numpy()
     data = gaussian_stretch(data)
     plt.imshow(data)
     
     plt.subplot(1, 4, 2)
     plt.title("L2A")
     plt.axis("off")
+    seed_everything(42)
     dataset = CloudSEN12High(phase="train", level="l2a", bands=["B4", "B3", "B2"], all_transform=all_transform)
-    data = dataset[-1]["img"]
-    data = (np.transpose(data, (1, 2, 0)) * 255).astype(np.uint8)
+    data = dataset[index]["img"]
+    data = data.permute(1, 2, 0).numpy()
     data = gaussian_stretch(data)
     plt.imshow(data)
     
     plt.subplot(1, 4, 3)
     plt.title("SAR")
     plt.axis("off")
+    seed_everything(42)
     dataset = CloudSEN12High(phase="train", level="l1c", bands=["S1_VV", "S1_VH"], all_transform=all_transform)
-    data = dataset[-1]["img"]
+    data = dataset[index]["img"]
     new_channel = (data[0] + data[1]) / 2
-    data = np.stack([data[0], data[1], new_channel])
-    data = (np.transpose(data, (1, 2, 0)) * 255).astype(np.uint8)
+    data = torch.stack([data[0], data[1], new_channel])
+    data = data.permute(1, 2, 0).numpy()
     data = gaussian_stretch(data)
     plt.imshow(data)
     
     plt.subplot(1, 4, 4)
     plt.title("ANN")
     plt.axis("off")
-    ann = dataset[-1]["ann"]
+    seed_everything(42)
+    dataset = CloudSEN12High(phase="train", level="l1c", bands=["B4", "B3", "B2"], all_transform=all_transform)
+    ann = dataset[index]["ann"]
     plt.imshow(ann)
     
     plt.savefig("cloudsen12_high.png", bbox_inches="tight", pad_inches=0)

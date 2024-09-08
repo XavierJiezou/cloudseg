@@ -5,6 +5,11 @@ train_pipeline:
   all_transform:
     _target_: albumentations.Compose
     transforms:
+      # - _target_: albumentations.PadIfNeeded
+      #   min_height: 512
+      #   min_width: 512
+      #   p: 1
+      #   always_apply: True
       - _target_: albumentations.OneOf
         transforms:
           - _target_: albumentations.HorizontalFlip
@@ -21,13 +26,19 @@ train_pipeline:
   img_transform: null
   ann_transform: null
 val_pipeline:
-  all_transform: null
+  all_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
 
   img_transform: null
   ann_transform: null
 
 test_pipeline:
-  all_transform: null
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
 
   img_transform: null
   ann_transform: null

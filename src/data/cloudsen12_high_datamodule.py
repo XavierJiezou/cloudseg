@@ -9,9 +9,9 @@ class CloudSEN12HighDataModule(BaseDataModule):
         root: str = "data/cloudsen12_high",
         level: Literal["l1c", "l2a"] = "l1c",
         bands: List[str] = ["B4", "B3", "B2"],
-        train_pipeline: Dict = None,
-        val_pipeline: Dict = None,
-        test_pipeline: Dict = None,
+        train_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
+        val_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
+        test_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
         batch_size: int = 2,
         num_workers: int = 0,
         pin_memory: bool = False,
@@ -98,4 +98,42 @@ class CloudSEN12HighDataModule(BaseDataModule):
 
 
 if __name__ == "__main__":
-    CloudSEN12HighDataModule()
+#     train_pipeline:
+#   all_transform:
+#     _target_: albumentations.Compose
+#     transforms:
+#       - _target_: albumentations.OneOf
+#         transforms:
+#           - _target_: albumentations.HorizontalFlip
+#             p: 0.5
+#           - _target_: albumentations.VerticalFlip
+#             p: 0.5
+#           - _target_: albumentations.RandomRotate90
+#             p: 0.5
+#           - _target_: albumentations.Transpose
+#             p: 0.5
+#         p: 1
+#     is_check_shapes: False
+
+#   img_transform: null
+#   ann_transform: null
+    import albumentations as A
+    train_pipeline = {
+        "all_transform": A.Compose([
+            A.OneOf([
+                A.HorizontalFlip(p=0.5),
+                A.VerticalFlip(p=0.5),
+                A.RandomRotate90(p=0.5),
+                A.Transpose(p=0.5),
+            ], p=1)
+        ]),
+        "img_transform": None,
+        "ann_transform": None,
+    }
+    datamodule = CloudSEN12HighDataModule(train_pipeline=train_pipeline)
+    datamodule.setup()
+    train_dataloader = datamodule.train_dataloader()
+    for batch in train_dataloader:
+        assert batch["img"].shape == (2, 3, 512, 512)
+        assert batch["ann"].shape == (2, 512, 512)
+    
