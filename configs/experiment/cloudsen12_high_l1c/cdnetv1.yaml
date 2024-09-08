@@ -17,6 +17,10 @@ tags: ["cloudsen12_high_l1c", "cdnetv1"]
 
 seed: 42
 
+trainer:
+  max_epochs: 100
+  devices: [8]
+
 
   # scheduler:
   #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
@@ -24,6 +28,11 @@ seed: 42
   #   mode: min
   #   factor: 0.1
   #   patience: 10
+
+model:
+  num_classes: 4
+  net:
+    num_classes: 4 
 
 logger:
   wandb:
