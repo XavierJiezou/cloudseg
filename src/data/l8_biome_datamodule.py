@@ -5,12 +5,14 @@ from torch.utils.data import DataLoader, Dataset
 
 from src.data.components.l8_biome import L8Biome
 from src.data.base_datamodule import BaseDataModule
+from torchgeo.datamodules import L8BiomeDataModule as L8BiomeDataModuleBase
 
 
-class L8BiomeDataModule(BaseDataModule):
+class L8BiomeDataModule(BaseDataModule, L8BiomeDataModuleBase):
     def __init__(
         self,
         root: str,
+        bands: List[str] = ["2", "3", "4"],
         train_pipeline: None,
         val_pipeline: None,
         test_pipeline: None,
@@ -18,7 +20,6 @@ class L8BiomeDataModule(BaseDataModule):
         num_workers: int = 0,
         pin_memory: bool = False,
         persistent_workers: bool = False,
-        bands: List[str] = ["2", "3", "4"],
     ) -> None:
         super().__init__(
             root=root,
