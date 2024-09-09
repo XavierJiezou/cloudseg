@@ -42,7 +42,6 @@ class BaseLitModule(LightningModule):
     def __init__(
         self,
         net: torch.nn.Module,
-        classes:List[str],
         criterion: torch.nn.Module,
         optimizer: torch.optim.Optimizer,
         scheduler: torch.optim.lr_scheduler,
@@ -56,19 +55,10 @@ class BaseLitModule(LightningModule):
 
         self.net = net
         
-        self.train_metrics = MMSeg(classes=self.hparams.classes,prefix="train")
-        
-        self.val_metrics = MMSeg(classes=self.hparams.classes,prefix="val")
-        
-        self.test_metrics = MMSeg(classes=self.hparams.classes,prefix="test")
-        
         # for averaging loss across batches
         self.train_loss = MeanMetric()
         self.val_loss = MeanMetric()
         self.test_loss = MeanMetric()
-
-        # for tracking best so far validation accuracy
-        self.val_miou_best = MaxMetric()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         """Perform a forward pass through the model `self.net`.
@@ -84,9 +74,9 @@ class BaseLitModule(LightningModule):
         # so it's worth to make sure validation metrics don't store results from these checks
         self.val_loss.reset()
         
-        self.val_metrics.reset()
-        
-        self.val_miou_best.reset()
+        self.train_loss.reset()
+
+        self.test_loss.reset()
 
     def model_step(
         self, batch: Tuple[torch.Tensor, torch.Tensor]
@@ -124,11 +114,8 @@ class BaseLitModule(LightningModule):
         # update and log metrics
         self.train_loss(loss)
 
-        res = self.train_metrics(preds,targets)
         
         self.log("train/loss", self.train_loss, on_step=False, on_epoch=True, prog_bar=True)
-
-        self.log_dict(res, on_step=False, on_epoch=True, prog_bar=True)
 
         # return loss or backpropagation will fail
         return loss
@@ -149,21 +136,11 @@ class BaseLitModule(LightningModule):
         # update and log metrics
         self.val_loss(loss)
         
-        res = self.val_metrics(preds,targets)
-
-        self.val_miou_best(res["val/mIoU"])
-        
         self.log("val/loss", self.val_loss, on_step=False, on_epoch=True, prog_bar=True)
-        
-        self.log_dict(res,on_step=False, on_epoch=True, prog_bar=True)
 
     def on_validation_epoch_end(self) -> None:
         "Lightning hook that is called when a validation epoch ends."
-        res = self.val_metrics.compute()
-        self.val_miou_best(res["val/mIoU"])  # update best so far val acc
-        # log `val_acc_best` as a value through `.compute()` method, instead of as a metric object
-        # otherwise metric would be reset by lightning after each epoch
-        self.log("val/miou_best", self.val_miou_best.compute(), sync_dist=True, prog_bar=True)
+        pass
 
     def test_step(self, batch: Tuple[torch.Tensor, torch.Tensor], batch_idx: int) -> None:
         """Perform a single test step on a batch of data from the test set.
@@ -172,17 +149,17 @@ class BaseLitModule(LightningModule):
             labels.
         :param batch_idx: The index of the current batch.
         """
+
         loss, preds, targets = self.model_step(batch)
         
         # update and log metrics
         self.test_loss(loss)
 
         # update and log metrics
-        res = self.test_metrics(preds,targets)
+        # res = self.test_metrics(preds,targets)
         
         self.log("test/loss", self.test_loss, on_step=False, on_epoch=True, prog_bar=True)
         
-        self.log_dict(res,on_step=False, on_epoch=True, prog_bar=True)
         
     def on_test_epoch_end(self) -> None:
         """Lightning hook that is called when a test epoch ends."""

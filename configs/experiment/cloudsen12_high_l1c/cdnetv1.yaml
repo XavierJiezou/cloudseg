@@ -21,18 +21,9 @@ trainer:
   max_epochs: 100
   devices: [8]
 
-
-  # scheduler:
-  #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-  #   _partial_: true
-  #   mode: min
-  #   factor: 0.1
-  #   patience: 10
-
 model:
-  num_classes: 4
   net:
-    num_classes: 4 
+    num_classes: 4
 
 logger:
   wandb:

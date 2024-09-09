@@ -19,16 +19,9 @@ seed: 42
 
 model:
   _target_: src.models.l8_biome_module.L8BiomeLitModule
-  num_classes: 5
-  classes: ["fill", "cloud shadow", "clear", "thin cloud", "cloud"]
   net:
     num_classes: 5
-  # scheduler:
-  #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-  #   _partial_: true
-  #   mode: min
-  #   factor: 0.1
-  #   patience: 10
+
 
 logger:
   wandb:
