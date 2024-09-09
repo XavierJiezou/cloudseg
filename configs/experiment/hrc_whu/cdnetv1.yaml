@@ -25,6 +25,9 @@ seed: 42
   #   factor: 0.1
   #   patience: 10
 
+model:
+  classes: ['clear sky', 'cloud']
+
 logger:
   wandb:
     project: "hrc_whu"

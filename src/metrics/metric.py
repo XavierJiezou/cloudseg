@@ -110,7 +110,7 @@ class BUAscore(Metric):
         return self.container / self.total * 100
 
 
-class MIoU(Metric):
+class MMSeg(Metric):
     def __init__(
         self,
         classes,
@@ -123,6 +123,7 @@ class MIoU(Metric):
     ):
         super().__init__()
         self.add_state("results", default=[])
+        self.prefix = prefix
         self.ignore_index = ignore_index
         self.nan_to_num = nan_to_num
         self.beta = beta
@@ -179,9 +180,9 @@ class MIoU(Metric):
         metrics = dict()
         for key, val in ret_metrics_summary.items():
             if key == "aAcc":
-                metrics[key] = val
+                metrics[self.prefix + "/"+key] = val
             else:
-                metrics["m" + key] = val
+                metrics[self.prefix+"/"+"m" + key] = val
 
         # each class table
         ret_metrics.pop("aAcc", None)
@@ -205,13 +206,13 @@ class MIoU(Metric):
 # 测试代码
 if __name__ == "__main__":
     classes = ["class_0", "class_1", "class_2", "class_3", "class_4"]
-    miou_metric = MIoU(
+    miou_metric = MMSeg(
         classes=classes, iou_metrics=["mIoU", "mDice", "mFscore"], per_classses=True
     )
 
     # 模拟预测和目标
-    preds = torch.tensor([[0, 1, 2], [1, 2, 0]])
-    target = torch.tensor([[0, 1, 1], [1, 2, 0]])
+    preds = torch.tensor([[0, 1, 2], [1, 2, 0]]).to("cuda:3")
+    target = torch.tensor([[0, 1, 1], [1, 2, 0]]).to("cuda:3")
 
     miou_metric.update(preds, target)
     result, table = miou_metric.compute()

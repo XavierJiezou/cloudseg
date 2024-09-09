@@ -26,7 +26,6 @@ class L8BiomeLitModule(BaseLitModule):
         logits = self.forward(x)
         loss = self.hparams.criterion(logits, y)
         preds = torch.argmax(logits, dim=1)
-        print(preds.shape,"preds max val:",torch.max(preds).item()," preds min val:",torch.min(preds).item(),"targets max val:",torch.max(y).item()," targets min val:",torch.min(y).item())
         return loss, preds, y
 
     
