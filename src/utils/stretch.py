@@ -33,7 +33,7 @@ def equalization_stretch(image):
 def gaussian_stretch(image):
     mean = np.mean(image)
     std_dev = np.std(image)
-    stretched = 127 + (image - mean) * (128.0 / (3 * std_dev))
+    stretched = 127 + (image - mean) * (128.0 / (3 * std_dev + 1e-6)) # 1e-6 to avoid division by zero
     return np.clip(stretched, 0, 255).astype(np.uint8)
 
 def square_root_stretch(image):
