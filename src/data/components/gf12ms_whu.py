@@ -19,7 +19,7 @@ class GF12MSWHU(Dataset):
 
     def __init__(
             self,
-            root="/data/zouxuechao/cloudseg/gf12ms_whu",
+            root="data/gf12ms_whu",
             phase: Literal["train", "val", "test"] = "train",
             serial: Literal["gaofen1", "gaofen2", "all"] = "all",
             all_transform: albumentations.Compose = None,
