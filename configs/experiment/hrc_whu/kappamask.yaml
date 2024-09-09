@@ -5,7 +5,7 @@
 
 defaults:
   - override /trainer: gpu
-  - override /data: hrc_whu/hrcwhrc_whuhu
+  - override /data: hrc_whu/hrc_whu
   - override /model: kappamask/kappamask
   - override /logger: wandb
   - override /callbacks: default
