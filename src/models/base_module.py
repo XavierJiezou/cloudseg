@@ -42,7 +42,6 @@ class BaseLitModule(LightningModule):
     def __init__(
         self,
         net: torch.nn.Module,
-        num_classes: int,
         classes:List[str],
         criterion: torch.nn.Module,
         optimizer: torch.optim.Optimizer,
