@@ -7,7 +7,7 @@ defaults:
   - override /trainer: gpu
   - override /data: gf12ms_whu/gf12ms_whu_gf1
   - override /model: cdnetv2/cdnetv2
-  - override /logger: wandb
+  - override /logger: tensorboard
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
