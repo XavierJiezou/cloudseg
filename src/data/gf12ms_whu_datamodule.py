@@ -11,7 +11,7 @@ class GF12MSWHUDataModule(BaseDataModule):
             train_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
             val_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
             test_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
-            batch_size: int = 1,
+            batch_size: int = 2,
             num_workers: int = 0,
             pin_memory: bool = False,
             persistent_workers: bool = False,
@@ -26,7 +26,7 @@ class GF12MSWHUDataModule(BaseDataModule):
             num_workers=num_workers,
             pin_memory=pin_memory,
             persistent_workers=persistent_workers,
-            serial=serial
+            serial=serial,
         )
 
     @property
