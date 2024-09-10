@@ -111,6 +111,12 @@ class RasterDataset(RasterDatasetBase):
         if self.ann_transform is not None:
             sample["mask"] = self.img_transform(image=sample["mask"])["image"]
 
+        if self.is_image:
+            sample["img"] = sample["image"]
+        else:
+            sample["ann"] = sample["mask"]
+        sample["ldc"] = sample["landcover"]
+
         return sample
 
 

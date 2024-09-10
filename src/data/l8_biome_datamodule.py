@@ -18,9 +18,9 @@ class L8BiomeDataModule(GeoDataModule):
         split=[0.6, 0.2, 0.2],
         patch_size=512,
         seed=42,
-        train_pipeline = None,
-        val_pipeline = None,
-        test_pipeline = None,
+        train_pipeline = {"all_transform": None, "img_transform": None, "ann_transform": None},
+        val_pipeline = {"all_transform": None, "img_transform": None, "ann_transform": None},
+        test_pipeline = {"all_transform": None, "img_transform": None, "ann_transform": None},
         batch_size: int = 2,
         num_workers: int = 0,
         pin_memory: bool = False,
@@ -127,18 +127,27 @@ class L8BiomeDataModule(GeoDataModule):
 
 
 if __name__ == "__main__":
+    import albumentations as A
+    import albumentations.pytorch
+    train_pipeline = {
+        "all_transform": A.Compose([
+            A.OneOf([
+                A.HorizontalFlip(p=0.5),
+                A.VerticalFlip(p=0.5),
+                A.RandomRotate90(p=0.5),
+                A.Transpose(p=0.5),
+            ], p=1),
+            # A.pytorch.transforms.ToTensorV2(),
+        ]),
+        "img_transform": None,
+        "ann_transform": None,
+    }
     data_module = L8BiomeDataModule(root="data/l8_biome",batch_size=1)
     data_module.setup("fit")
     data_module.setup("test")
     train_daloader = data_module.train_dataloader()
 
-    for index,data in enumerate(train_daloader):
-        print(data["image"].shape, data["mask"].shape, data["landcover"])
-        print(torch.max(data["image"]),torch.min(data["image"]),data["image"].dtype)
-        print(data["mask"].dtype)
-        if index >= 10:
-            break
-
-    print(len(train_daloader))
-    print(len(data_module.val_dataloader()))
-    print(len(data_module.test_dataloader()))
+    for index, data in enumerate(train_daloader):
+        print(f"data['img'].dtype: {data['img'].dtype}, data['img'].shape: {data['img'].shape}, data['img'].min: {data['img'].min()}, data['img'].max: {data['img'].max()}")
+        print(f"data['ann'].dtype: {data['ann'].dtype}, data['ann'].shape: {data['ann'].shape}, data['ann'].min: {data['ann'].min()}, data['ann'].max: {data['ann'].max()}")
+        break
