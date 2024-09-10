@@ -21,6 +21,7 @@ seed: 42
 model:
   net:
     num_classes: 4
+    img_size: 512
 
 logger:
   wandb:
