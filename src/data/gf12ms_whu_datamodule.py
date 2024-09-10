@@ -1,4 +1,4 @@
-from typing import Optional, Literal
+from typing import Optional, Literal, Dict
 
 from src.data.base_datamodule import BaseDataModule
 from src.data.components.gf12ms_whu import GF12MSWHU
@@ -7,10 +7,10 @@ from src.data.components.gf12ms_whu import GF12MSWHU
 class GF12MSWHUDataModule(BaseDataModule):
     def __init__(
             self,
-            root: str,
-            train_pipeline: None,
-            val_pipeline: None,
-            test_pipeline: None,
+            root: str="data/gf12ms_whu",
+            train_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
+            val_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
+            test_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
             batch_size: int = 1,
             num_workers: int = 0,
             pin_memory: bool = False,
