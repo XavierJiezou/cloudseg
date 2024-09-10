@@ -17,6 +17,9 @@ tags: ["gf12ms_whu_gf2", "cdnetv2"]
 
 seed: 42
 
+model:
+  net:
+    num_classes: 2
 
 logger:
   wandb:
