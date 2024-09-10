@@ -17,6 +17,10 @@ tags: ["gf12ms_whu_gf2", "scnn"]
 
 seed: 42
 
+model:
+  net:
+    num_classes: 2
+
 logger:
   wandb:
     project: "gf12ms_whu_gf2"
