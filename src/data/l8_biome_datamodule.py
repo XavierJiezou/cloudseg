@@ -1,13 +1,16 @@
-from typing import Any, Dict, Optional, List
-
-from lightning import LightningDataModule
-from torch.utils.data import DataLoader, Dataset
+from typing import List
+from torch.utils.data import DataLoader
 import torch
 from torchgeo.datasets import random_bbox_assignment
 from torchgeo.samplers import GridGeoSampler, RandomBatchGeoSampler, BatchGeoSampler
 from src.data.components.l8_biome import L8Biome
 from torchgeo.datamodules import GeoDataModule
+import matplotlib.pyplot as plt
+import albumentations as A
+import albumentations.pytorch
 from torch import Tensor
+from src.utils.stretch import gaussian_stretch
+import numpy as np
 
 
 class L8BiomeDataModule(GeoDataModule):
@@ -126,9 +129,7 @@ class L8BiomeDataModule(GeoDataModule):
         )
 
 
-if __name__ == "__main__":
-    import albumentations as A
-    import albumentations.pytorch
+def show_l8_biome():
     train_pipeline = {
         "all_transform": A.Compose([
             A.OneOf([
@@ -137,17 +138,46 @@ if __name__ == "__main__":
                 A.RandomRotate90(p=0.5),
                 A.Transpose(p=0.5),
             ], p=1),
-            # A.pytorch.transforms.ToTensorV2(),
+            A.pytorch.transforms.ToTensorV2(),
         ]),
-        "img_transform": None,
+        "img_transform": A.Compose([
+            A.ToFloat(255),
+        ]),
         "ann_transform": None,
     }
-    data_module = L8BiomeDataModule(root="data/l8_biome",batch_size=1)
-    data_module.setup("fit")
-    data_module.setup("test")
-    train_daloader = data_module.train_dataloader()
+    datamodule = L8BiomeDataModule(batch_size=1, train_pipeline=train_pipeline)
+    datamodule.setup("fit")
+    datamodule.setup("test")
+    train_daloader = datamodule.train_dataloader()
 
-    for index, data in enumerate(train_daloader):
-        print(f"data['img'].dtype: {data['img'].dtype}, data['img'].shape: {data['img'].shape}, data['img'].min: {data['img'].min()}, data['img'].max: {data['img'].max()}")
-        print(f"data['ann'].dtype: {data['ann'].dtype}, data['ann'].shape: {data['ann'].shape}, data['ann'].min: {data['ann'].min()}, data['ann'].max: {data['ann'].max()}")
-        break
+    for data in train_daloader:
+        img = data["img"].squeeze(0)
+        ann = data["ann"].squeeze(0)
+        ldc = data["ldc"][0]
+    
+        plt.figure(figsize=(16, 8))
+        
+        plt.title(f"{ldc}")
+        plt.axis("off")
+        
+        plt.subplot(1, 2, 1)
+        plt.title(f"img")
+        plt.axis("off")
+        img = (img.permute(1, 2, 0).numpy()*255).astype(np.uint8)
+        img = gaussian_stretch(img)
+        plt.imshow(img)
+        
+        plt.subplot(1, 2, 2)
+        plt.title(f"ann")
+        plt.axis("off")
+        ann = ann.numpy()
+        plt.imshow(ann)
+        
+        plt.savefig("l8_biome.png", bbox_inches="tight", pad_inches=0)
+        
+        import time
+        time.sleep(3)
+
+
+if __name__ == "__main__":
+    show_l8_biome()
