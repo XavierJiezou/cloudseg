@@ -192,8 +192,9 @@ cloudseg
 ```bash
 git clone https://github.com/XavierJiezou/cloudseg.git
 cd cloudseg
-conda env create -f environment.yml
+conda create -n cloudseg python=3.11.7
 conda activate cloudseg
+pip install -r requirements.txt
 ```
 
 ## Usage
