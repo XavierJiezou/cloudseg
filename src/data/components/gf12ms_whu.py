@@ -76,7 +76,7 @@ class GF12MSWHU(Dataset):
         if len(self.bands)>4:
             raise ValueError("The number of bands must be less than 4")
         else:
-            tmp = np.zeros((image.shape[0], image.shape[1], len(self.bands)))
+            tmp = np.zeros((image.shape[0], image.shape[1], len(self.bands)), dtype=np.float32)
             for i, band in enumerate(self.bands):
                 if band == "B1":
                     tmp[:,:,i] = image[:,:,0]

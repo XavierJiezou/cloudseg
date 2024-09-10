@@ -18,20 +18,26 @@ train_pipeline:
         p: 1
 
   img_transform: 
-    - _target_: albumentations.pytorch.transforms.ToTensorV2
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 val_pipeline:
   all_transform: null
 
   img_transform: 
-    - _target_: albumentations.pytorch.transforms.ToTensorV2
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 
 test_pipeline:
   all_transform: null
 
   img_transform: 
-    - _target_: albumentations.pytorch.transforms.ToTensorV2
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 
 serial: "gf1"

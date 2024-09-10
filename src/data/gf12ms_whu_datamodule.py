@@ -1,4 +1,4 @@
-from typing import Optional, Literal, Dict
+from typing import Optional, Literal, Dict, List
 
 from src.data.base_datamodule import BaseDataModule
 from src.data.components.gf12ms_whu import GF12MSWHU
@@ -16,6 +16,7 @@ class GF12MSWHUDataModule(BaseDataModule):
             pin_memory: bool = False,
             persistent_workers: bool = False,
             serial: Literal["gf1", "gf2", "all"] = "all",
+            bands: List[str] = ["B3", "B2", "B1"],
     ) -> None:
         super().__init__(
             root=root,
