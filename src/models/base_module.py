@@ -3,7 +3,6 @@ from typing import Any, Dict, Tuple,List
 import torch
 from lightning import LightningModule
 from torchmetrics import MaxMetric, MeanMetric
-from src.metrics.metric import MMSeg
 
 
 class BaseLitModule(LightningModule):
