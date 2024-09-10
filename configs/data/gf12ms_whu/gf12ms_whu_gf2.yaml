@@ -5,11 +5,6 @@ train_pipeline:
   all_transform:
     _target_: albumentations.Compose
     transforms:
-      # - _target_: albumentations.PadIfNeeded
-      #   min_height: 512
-      #   min_width: 512
-      #   p: 1
-      #   always_apply: True
       - _target_: albumentations.OneOf
         transforms:
           - _target_: albumentations.HorizontalFlip
@@ -21,29 +16,25 @@ train_pipeline:
           - _target_: albumentations.Transpose
             p: 0.5
         p: 1
-      - _target_: albumentations.pytorch.transforms.ToTensorV2
 
-  img_transform: null
+  img_transform: 
+    - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 val_pipeline:
-  all_transform: 
-    _target_: albumentations.Compose
-    transforms:
-      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  all_transform: null
 
-  img_transform: null
+  img_transform: 
+    - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 
 test_pipeline:
-  all_transform:
-    _target_: albumentations.Compose
-    transforms:
-      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  all_transform: null
 
-  img_transform: null
+  img_transform: 
+    - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 
-serial: "gaofen2"
+serial: "gf2"
 batch_size: 8
 num_workers: 4
 pin_memory: True

@@ -19,12 +19,11 @@ train_pipeline:
           - _target_: albumentations.Transpose
             p: 0.5
         p: 1
-      - _target_: albumentations.pytorch.transforms.ToTensorV2
-
 
   img_transform:
     _target_: albumentations.Compose
     transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
       - _target_: albumentations.ToFloat
         max_value: 255
 
@@ -35,6 +34,7 @@ val_pipeline:
   img_transform:
     _target_: albumentations.Compose
     transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
       - _target_: albumentations.ToFloat
         max_value: 255
   ann_transform: null
@@ -44,6 +44,7 @@ test_pipeline:
   img_transform:
     _target_: albumentations.Compose
     transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
       - _target_: albumentations.ToFloat
         max_value: 255
   ann_transform: null

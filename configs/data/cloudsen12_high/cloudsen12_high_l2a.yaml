@@ -16,20 +16,28 @@ train_pipeline:
           - _target_: albumentations.Transpose
             p: 0.5
         p: 1
-      - _target_: albumentations.pytorch.transforms.ToTensorV2
 
-  img_transform: null
+  img_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 val_pipeline:
   all_transform: null
 
-  img_transform: null
+  img_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 
 test_pipeline:
   all_transform: null
 
-  img_transform: null
+  img_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 
 level: l2a
