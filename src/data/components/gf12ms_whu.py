@@ -70,12 +70,7 @@ class GF12MSWHU(Dataset):
         image_path = self.image_paths[idx]
         mask_path = self.mask_paths[idx]
 
-        try:
-            image = tf.imread(image_path).transpose(1, 2, 0) # (C, H, W) -> (H, W, C)
-        except Exception as e:
-            print(e)
-            print(image_path)
-            raise
+        image = tf.imread(image_path).transpose(1, 2, 0) # (C, H, W) -> (H, W, C)
         
         # bands
         if len(self.bands)>4:
