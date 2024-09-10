@@ -1,7 +1,7 @@
 from typing import Optional, Literal
 
 from src.data.base_datamodule import BaseDataModule
-from src.data.components.gaofen12 import Gaofen12
+from src.data.components.gf12ms_whu import GF12MSWHU
 
 
 class GF12MSWHUDataModule(BaseDataModule):
@@ -31,11 +31,11 @@ class GF12MSWHUDataModule(BaseDataModule):
 
     @property
     def num_classes(self) -> int:
-        return len(Gaofen12.METAINFO["classes"])
+        return len(GF12MSWHU.METAINFO["classes"])
 
     def prepare_data(self) -> None:
         # train
-        Gaofen12(
+        GF12MSWHU(
             root=self.hparams.root,
             phase="train",
             serial=self.hparams.serial,
@@ -43,7 +43,7 @@ class GF12MSWHUDataModule(BaseDataModule):
         )
 
         # val or test
-        Gaofen12(
+        GF12MSWHU(
             root=self.hparams.root,
             serial=self.hparams.serial,
             phase="test",
@@ -61,13 +61,13 @@ class GF12MSWHUDataModule(BaseDataModule):
 
         # load and split datasets only if not loaded already
         if not self.train_dataset and not self.val_dataset and not self.test_dataset:
-            self.train_dataset = Gaofen12(
+            self.train_dataset = GF12MSWHU(
                 root=self.hparams.root,
                 phase="train",
                 **self.hparams.train_pipeline,
             )
 
-            self.val_dataset = self.test_dataset = Gaofen12(
+            self.val_dataset = self.test_dataset = GF12MSWHU(
                 root=self.hparams.root,
                 phase="test",
                 **self.hparams.test_pipeline,
