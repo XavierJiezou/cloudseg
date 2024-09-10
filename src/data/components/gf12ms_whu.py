@@ -1,6 +1,6 @@
 import os
 from glob import glob
-from typing import Literal
+from typing import Literal, List
 
 import albumentations
 import numpy as np
@@ -25,12 +25,14 @@ class GF12MSWHU(Dataset):
             root: str = "data/gf12ms_whu",
             phase: Literal["train", "val", "test"] = "train",
             serial: Literal["gf1", "gf2", "all"] = "all",
+            bands: List[str] = ["B3", "B2", "B1"], # only B1, B2, B3, B4 are available, B4 is nir, and B3, B2, B1 are rgb
             all_transform: albumentations.Compose = None,
             img_transform: albumentations.Compose = None,
             ann_transform: albumentations.Compose = None,
     ) -> None:
         super().__init__()
         self.image_paths, self.mask_paths = self.__load_data(root, phase,serial)
+        self.bands = bands
         self.all_transform = all_transform
         self.img_transform = img_transform
         self.ann_transform = ann_transform
@@ -69,7 +71,27 @@ class GF12MSWHU(Dataset):
         mask_path = self.mask_paths[idx]
 
         image = tf.imread(image_path).transpose(1, 2, 0) # (C, H, W) -> (H, W, C)
+        
+        # bands
+        if len(self.bands)>4:
+            raise ValueError("The number of bands must be less than 4")
+        else:
+            tmp = np.zeros((image.shape[0], image.shape[1], len(self.bands)))
+            for i, band in enumerate(self.bands):
+                if band == "B1":
+                    tmp[:,:,i] = image[:,:,0]
+                elif band == "B2":
+                    tmp[:,:,i] = image[:,:,1]
+                elif band == "B3":
+                    tmp[:,:,i] = image[:,:,2]
+                elif band == "B4":
+                    tmp[:,:,i] = image[:,:,3]
+                else:
+                    raise ValueError("The band must be one of 'B1','B2','B3','B4', but got {}".format(band))
+            image = tmp
+            
         image = (image - image.min()) / (image.max() - image.min() + 1e-6) # normalize
+        
         mask = np.array(Image.open(mask_path)) # (H, W)
 
         if self.all_transform:
@@ -87,7 +109,6 @@ class GF12MSWHU(Dataset):
 def show_gf12ms_whu():
     all_transform = albumentations.Compose([
             albumentations.OneOf([
-                albumentations.Resize(250, 250),
                 albumentations.HorizontalFlip(p=0.5),
                 albumentations.VerticalFlip(p=0.5),
                 albumentations.RandomRotate90(p=0.5),
@@ -104,30 +125,30 @@ def show_gf12ms_whu():
     gf2_train_dataset = GF12MSWHU(phase="train", serial="gf2", all_transform=all_transform, img_transform=img_transform)
     
     for gf1, gf2 in zip(gf1_train_dataset, gf2_train_dataset):
-        plt.figure(figsize=(10, 10))
+        plt.figure(figsize=(12, 12))
     
         plt.subplot(2, 2, 1)
-        img = gf1["img"].permute(1, 2, 0)[:,:,[2,1,0]]
+        img = gf1["img"].permute(1, 2, 0)
         img = (img*255).numpy().astype(np.uint8)
         plt.imshow(gaussian_stretch(img))
-        plt.title("GF1")
+        plt.title("GF1_img")
         plt.axis("off")
         
         plt.subplot(2, 2, 2)
         plt.imshow(gf1["ann"])
-        plt.title("GF1")
+        plt.title("GF1_ann")
         plt.axis("off")
         
         plt.subplot(2, 2, 3)
-        img = gf2["img"].permute(1, 2, 0)[:,:,[2,1,0]]
+        img = gf2["img"].permute(1, 2, 0)
         img = (img*255).numpy().astype(np.uint8)
         plt.imshow(gaussian_stretch(img))
-        plt.title("GF2")
+        plt.title("GF2_img")
         plt.axis("off")
         
         plt.subplot(2, 2, 4)
         plt.imshow(gf2["ann"])
-        plt.title("GF2")
+        plt.title("GF2_ann")
         plt.axis("off")
         
         plt.savefig("gf12ms_whu.png", bbox_inches="tight", pad_inches=0)
