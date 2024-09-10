@@ -7,7 +7,7 @@ defaults:
   - override /trainer: gpu
   - override /data: hrc_whu/hrc_whu
   - override /model: unetmobv2/unetmobv2
-  - override /logger: wandb
+  - override /logger: tensorboard
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above

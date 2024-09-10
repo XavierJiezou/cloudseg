@@ -7,7 +7,7 @@ defaults:
   - override /trainer: gpu
   - override /data: hrc_whu/hrc_whu
   - override /model: rsam_seg/rsam_seg
-  - override /logger: wandb
+  - override /logger: tensorboard
   - override /callbacks: default
 
 # all parameters below will be merged with parameters from default configurations set above
@@ -16,14 +16,6 @@ defaults:
 tags: ["hrc_whu", "rsam_seg"]
 
 seed: 42
-
-
-  # scheduler:
-  #   _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
-  #   _partial_: true
-  #   mode: min
-  #   factor: 0.1
-  #   patience: 10
 
 logger:
   wandb:
