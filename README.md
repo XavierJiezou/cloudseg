@@ -9,14 +9,19 @@
 
 ## TODO
 
+### 2024.09.09-2024.09.13
+
+- [ ] 先测试各个数据集能否跑通
+- [ ] 在hrc_whu数据集上跑各个方法，然后评估
+- [ ] 在其他三个数据集上跑各个方法，然后评估
+- [ ] 将评估的结果放到https://github.com/XavierJiezou/cloudseg/blob/main/configs/experiment/README.md
+
 ### 2024.09.02-2024.09.09
-- [ ] @zs: 适配torchgeo的[l8biome](https://torchgeo.readthedocs.io/en/v0.6.0/api/datamodules.html#torchgeo.datamodules.L8BiomeDataModule)
+- [x] @zs: 适配torchgeo的[l8biome](https://torchgeo.readthedocs.io/en/v0.6.0/api/datamodules.html#torchgeo.datamodules.L8BiomeDataModule)
 - [x] @zs: l8数据集目录信息增加至README
 - [x] @zs: l8数据集可视化，增加场景信息
 - [x] @zs: 训练时使用torchmetrics
 - [x] @zs: cloudsen12 数据集level参数增加all选项
-- [ ] @zs: cloudsen12 需要重新跑
-- [ ] @zs: cloudsen12 数据集跑完后做个验证
 
 ### 2024.08.26-2024.08.30
 
@@ -34,7 +39,6 @@
 - [x] 评估指标计算框架由torchmetrics改为[mmeval](https://github.com/open-mmlab/mmeval/blob/main/mmeval/metrics/mean_iou.py)或[mmseg](https://github.com/open-mmlab/mmsegmentation/blob/main/mmseg/evaluation/metrics/iou_metric.py)
 - [x] 验证新的评估指标计算和原计算的结果是否基本一致
 - [x] 评估指标增加classwise支持
-- [ ] cloudsen12_high数据集上各个方法的测试集结果
 
 ### 2024.08.10
 
