@@ -18,7 +18,6 @@ tags: ["l8_biome", "dbnet"]
 seed: 42
 
 model:
-  _target_: src.models.l8_biome_module.L8BiomeLitModule
   net:
     num_classes: 5
 
