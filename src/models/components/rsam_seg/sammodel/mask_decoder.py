@@ -10,7 +10,7 @@ from torch.nn import functional as F
 
 from typing import List, Tuple, Type
 
-from src.models.components.rsam_seg.sammodel.common import LayerNorm2d
+from .common import LayerNorm2d
 
 
 class MaskDecoder(nn.Module):
