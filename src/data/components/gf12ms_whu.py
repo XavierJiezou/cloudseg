@@ -21,7 +21,7 @@ class GF12MSWHU(Dataset):
             self,
             root="data/gf12ms_whu",
             phase: Literal["train", "val", "test"] = "train",
-            serial: Literal["gaofen1", "gaofen2", "all"] = "all",
+            serial: Literal["gf1", "gf2", "all"] = "all",
             all_transform: albumentations.Compose = None,
             img_transform: albumentations.Compose = None,
             ann_transform: albumentations.Compose = None,
@@ -44,9 +44,9 @@ class GF12MSWHU(Dataset):
             )
         if serial == "all":
             serial = "*"
-        elif serial == "gaofen1":
+        elif serial == "gf1":
             serial = "GF1MS-WHU"
-        elif serial == "gaofen2":
+        elif serial == "gf2":
             serial = "GF2MS-WHU"
         else:
             raise ValueError("serial must be one of 'gaofen1','gaofen2','all', but got {}".format(serial))
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     # ann_transform = transforms.Compose([
     #     transforms.PILToTensor(),
     # ])
-    for serial in ["all", "gaofen1", "gaofen2"]:
+    for serial in ["all", "gf1", "gf2"]:
         print(f"当前的serial为:{serial}")
         train_dataset = GF12MSWHU(
             phase="train",

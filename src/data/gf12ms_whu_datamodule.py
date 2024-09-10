@@ -15,7 +15,7 @@ class GF12MSWHUDataModule(BaseDataModule):
             num_workers: int = 0,
             pin_memory: bool = False,
             persistent_workers: bool = False,
-            serial: Literal["gaofen1", "gaofen2", "all"] = "all",
+            serial: Literal["gf1", "gf2", "all"] = "all",
     ) -> None:
         super().__init__(
             root=root,
