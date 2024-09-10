@@ -176,6 +176,7 @@ class L8BiomeMask(RasterDataset):
         """
         sample = super().__getitem__(query)
         sample["mask"] = self.ordinal_map[sample["mask"]]
+        sample["ann"] = self.ordinal_map[sample["ann"]]
         return sample
 
 
