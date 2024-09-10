@@ -66,12 +66,14 @@ class GF12MSWHUDataModule(BaseDataModule):
                 root=self.hparams.root,
                 phase="train",
                 **self.hparams.train_pipeline,
+                serial=self.hparams.serial,
             )
 
             self.val_dataset = self.test_dataset = GF12MSWHU(
                 root=self.hparams.root,
                 phase="test",
                 **self.hparams.test_pipeline,
+                serial=self.hparams.serial,
             )
 
 
