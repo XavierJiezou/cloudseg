@@ -1,6 +1,5 @@
 import torch
 from torchmetrics import Metric
-from mmseg.evaluation.metrics.iou_metric import IoUMetric
 from sklearn.metrics import fbeta_score, recall_score, precision_score
 import numpy as np
 from collections import OrderedDict
