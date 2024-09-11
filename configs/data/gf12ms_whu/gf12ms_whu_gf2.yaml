@@ -5,6 +5,11 @@ train_pipeline:
   all_transform:
     _target_: albumentations.Compose
     transforms:
+      - _target_: albumentations.PadIfNeeded
+        min_height: 256
+        min_width: 256
+        p: 1
+        always_apply: True
       - _target_: albumentations.OneOf
         transforms:
           - _target_: albumentations.HorizontalFlip
@@ -23,7 +28,14 @@ train_pipeline:
       - _target_: albumentations.pytorch.transforms.ToTensorV2
   ann_transform: null
 val_pipeline:
-  all_transform: null
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.PadIfNeeded
+        min_height: 256
+        min_width: 256
+        p: 1
+        always_apply: True
 
   img_transform: 
     _target_: albumentations.Compose
@@ -32,7 +44,14 @@ val_pipeline:
   ann_transform: null
 
 test_pipeline:
-  all_transform: null
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.PadIfNeeded
+        min_height: 256
+        min_width: 256
+        p: 1
+        always_apply: True
 
   img_transform: 
     _target_: albumentations.Compose
