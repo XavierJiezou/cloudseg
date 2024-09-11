@@ -16,4 +16,5 @@ gpustat==1.1.1
 image-dehazer==0.0.9
 numpy==1.26.2
 yacs==0.1.8
+scikit-learn==1.5.1
 -e .
