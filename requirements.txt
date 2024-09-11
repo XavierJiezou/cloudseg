@@ -13,7 +13,7 @@ torchgeo==0.6.0
 rootutils==1.0.7
 natsort==8.4.0
 gpustat==1.1.1
-image-dehazer==0.0.9
+git+https://github.com/XavierJiezou/Single-Image-Dehazing-Python.git
 numpy==1.26.2
 yacs==0.1.8
 scikit-learn==1.5.1
