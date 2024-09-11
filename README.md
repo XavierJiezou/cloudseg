@@ -182,10 +182,10 @@ cloudseg
 
 ## Dataset
 
-- [HRC_WHU (ISPRS 2019)](configs/data/hrc_whu)
 - [CloudSEN12_High (Scientific Data 2022)](configs/data/cloudsen12_high)
 - [L8_Biome (RSE 2017)](configs/data/l8_biome)
-- [Gaofen12MS_WHU (TGRS 2024)](configs/data/gf12ms_whu)
+- [GF12MS_WHU (TGRS 2024)](configs/data/gf12ms_whu)
+- [HRC_WHU (ISPRS 2019)](configs/data/hrc_whu)
 
 ## Installation
 
