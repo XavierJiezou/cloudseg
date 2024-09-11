@@ -1,6 +1,6 @@
 # Refercence: https://github.com/cloudsen12/models/blob/master/unet_mobilenetv2/cloudsen12_unet.ipynb
 _target_: src.data.gf12ms_whu_datamodule.GF12MSWHUDataModule
-root: data/cloudsen12_high
+root: data/gf12ms_whu
 train_pipeline:
   all_transform:
     _target_: albumentations.Compose
