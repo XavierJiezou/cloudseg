@@ -11,6 +11,7 @@ from torchmetrics.utilities.data import to_onehot
 import albumentations as albu
 import torch
 from torch import nn as nn
+from copy import deepcopy
 import torchvision
 import os
 from src.data.hrc_whu_datamodule import HRC_WHU
@@ -27,7 +28,7 @@ from src.models.components.unetmobv2 import UNetMobV2
 
 class EvalOnHRC_WHU:
     def __init__(self):
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.device = "cuda:7" if torch.cuda.is_available() else "cpu"
         self.models = {
             "cdnetv1": CDnetV1(num_classes=2).to(self.device),
             "cdnetv2": CDnetV2(num_classes=2).to(self.device),
@@ -65,7 +66,7 @@ class EvalOnHRC_WHU:
         """
         for model_name, model in self.models.items():
             weight_path = glob(
-                f"logs/train/runs/hrc_whu_{model_name}*/*/checkpoints/*epoch*.ckpt"
+                f"logs/hrc_whu/{model_name}/*/checkpoints/*epoch*.ckpt"
             )[0]
             weight = torch.load(weight_path, map_location=self.device)
             state_dict = {}
@@ -106,6 +107,7 @@ class EvalOnHRC_WHU:
     def give_colors_to_mask(
         self, image: torch.Tensor, mask: torch.Tensor, num_classes=2
     ):
+        image = (deepcopy(image) * 255).to(torch.uint8)
         mask = to_onehot(mask, num_classes=num_classes).to(torch.bool)[0]
         mask_colors = (
             torchvision.utils.draw_segmentation_masks(
@@ -258,7 +260,7 @@ class EvalOnHRC_WHU:
                 show_images = masks
             else:
                 show_images = np.concatenate((show_images, masks), axis=0)
-        # self.show_metrics()
+        self.show_metrics()
         self.visualize_img(show_images)
 
 
