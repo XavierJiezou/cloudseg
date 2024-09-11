@@ -7,7 +7,8 @@ import csv
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 from albumentations.pytorch.transforms import ToTensorV2
-from mmseg.evaluation.metrics.iou_metric import IoUMetric
+# from mmseg.evaluation.metrics.iou_metric import IoUMetric
+from src.metrics.metric import IoUMetric
 from torchmetrics.utilities.data import to_onehot
 import albumentations as albu
 import torch
@@ -47,6 +48,7 @@ class Eval:
         self.num_classes, self.image_size,self.colors = self.__get_num_classes_image_shape_colors(
             experiment_name
         )
+        self.experiment_name = experiment_name
         self.models = {
             "cdnetv1": CDnetV1(num_classes=self.num_classes).to(self.device),
             "cdnetv2": CDnetV2(num_classes=self.num_classes).to(self.device),
@@ -80,7 +82,7 @@ class Eval:
         self.__load_weight(experiment_name)
         self.val_dataloader = self.__load_data(experiment_name)
         self.model_metrics = {
-            model_name: self.__get_metrics("multiclass", 2)
+            model_name: self.__get_metrics(self.num_classes)
             for model_name in self.model_names_mapping
         }
 
@@ -217,14 +219,11 @@ class Eval:
         val_dataloader = data_loader.test_dataloader()
         return val_dataloader
 
-    def __get_metrics(self, task: str, num_classes: int):
-        collect_device = "gpu" if self.device == "cuda" else "cpu"
+    def __get_metrics(self, num_classes: int):
         metric = IoUMetric(
             iou_metrics=["mIoU", "mDice", "mFscore"],
             num_classes=num_classes,
-            collect_device=collect_device,
         )
-        metric._dataset_meta = dict(classes=HRC_WHU.METAINFO["classes"])
 
         return metric
 
@@ -287,8 +286,8 @@ class Eval:
 
             # 绘制文本
             draw.text((x, y - 10), title, fill="black", font=font)
-        new_image.save("1.png", dpi=(300, 300))
-        new_image.save("1.pdf", dpi=(300, 300))
+        new_image.save(f"{self.experiment_name}.png", dpi=(300, 300))
+        new_image.save(f"{self.experiment_name}.pdf", dpi=(300, 300))
 
     @torch.no_grad()
     def inference(self, img: torch.Tensor, model: nn.Module) -> torch.Tensor:
@@ -299,6 +298,7 @@ class Eval:
         return pred
 
     def show_metrics(self, filename="hrc_metrics.csv"):
+        filename = f"{self.experiment_name}_metrics.csv"
         data = {
             model_name: model_metric.compute_metrics(model_metric.results)
             for model_name, model_metric in self.model_metrics.items()
@@ -334,7 +334,7 @@ class Eval:
                 row.update(row_data)
                 writer.writerow(row)
 
-    def run(self, num_classes: int = 2):
+    def run(self):
         """
         评测模型
         """
@@ -367,14 +367,14 @@ class Eval:
                     self.model_metrics[model_name].intersect_and_union(
                         pred,
                         ann,
-                        num_classes=num_classes,
+                        num_classes=self.num_classes,
                         ignore_index=self.model_metrics[model_name].ignore_index,
                     )
                 )
-                color_mask = self.give_colors_to_mask(img[0], pred)
+                color_mask = self.give_colors_to_mask(img[0], pred,num_classes=self.num_classes)
                 model_masks[model_name] = color_mask
             image = img[0].detach().cpu().permute(1, 2, 0).numpy()
-            gt = self.give_colors_to_mask(img[0], ann)
+            gt = self.give_colors_to_mask(img[0], ann,num_classes=self.num_classes)
             masks = [model_masks[mask_name] for mask_name in model_order]
             masks = [image] + [gt] + masks
             masks = np.array(masks)
