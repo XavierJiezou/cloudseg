@@ -1,4 +1,4 @@
-from typing import Optional, Literal
+from typing import Optional, Literal, Dict, List
 
 from src.data.base_datamodule import BaseDataModule
 from src.data.components.gf12ms_whu import GF12MSWHU
@@ -7,15 +7,16 @@ from src.data.components.gf12ms_whu import GF12MSWHU
 class GF12MSWHUDataModule(BaseDataModule):
     def __init__(
             self,
-            root: str,
-            train_pipeline: None,
-            val_pipeline: None,
-            test_pipeline: None,
-            batch_size: int = 1,
+            root: str="data/gf12ms_whu",
+            train_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
+            val_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
+            test_pipeline: Dict = {"all_transform": None, "img_transform": None, "ann_transform": None},
+            batch_size: int = 2,
             num_workers: int = 0,
             pin_memory: bool = False,
             persistent_workers: bool = False,
             serial: Literal["gf1", "gf2", "all"] = "all",
+            bands: List[str] = ["B3", "B2", "B1"],
     ) -> None:
         super().__init__(
             root=root,
@@ -26,7 +27,7 @@ class GF12MSWHUDataModule(BaseDataModule):
             num_workers=num_workers,
             pin_memory=pin_memory,
             persistent_workers=persistent_workers,
-            serial=serial
+            serial=serial,
         )
 
     @property
@@ -65,12 +66,14 @@ class GF12MSWHUDataModule(BaseDataModule):
                 root=self.hparams.root,
                 phase="train",
                 **self.hparams.train_pipeline,
+                serial=self.hparams.serial,
             )
 
             self.val_dataset = self.test_dataset = GF12MSWHU(
                 root=self.hparams.root,
                 phase="test",
                 **self.hparams.test_pipeline,
+                serial=self.hparams.serial,
             )
 
 

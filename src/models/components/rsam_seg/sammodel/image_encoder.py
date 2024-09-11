@@ -10,7 +10,7 @@ import torch.nn.functional as F
 
 from typing import Optional, Tuple, Type
 
-from src.models.components.rsam_seg.sammodel.common import LayerNorm2d, MLPBlock,Adapter
+from .common import LayerNorm2d, MLPBlock,Adapter
 import math
 import warnings
 from itertools import repeat

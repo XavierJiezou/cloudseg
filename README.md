@@ -182,18 +182,19 @@ cloudseg
 
 ## Dataset
 
-- [HRC_WHU (ISPRS)](configs/data/hrc_whu)
-- [CloudSEN12 (Scientific data)](configs/data/CloudSEN12)
-- [38Cloud (IGARSS MMSP)](configs/data/38Cloud)
-- [Gaofen12 (TGRS)](configs/data/GF12-MS-WHU/README.md)
+- [HRC_WHU (ISPRS 2019)](configs/data/hrc_whu)
+- [CloudSEN12_High (Scientific Data 2022)](configs/data/cloudsen12_high)
+- [L8_Biome (RSE 2017)](configs/data/l8_biome)
+- [Gaofen12MS_WHU (TGRS 2024)](configs/data/gf12ms_whu)
 
 ## Installation
 
 ```bash
 git clone https://github.com/XavierJiezou/cloudseg.git
 cd cloudseg
-conda env create -f environment.yml
+conda create -n cloudseg python=3.11.7
 conda activate cloudseg
+pip install -r requirements.txt
 ```
 
 ## Usage
