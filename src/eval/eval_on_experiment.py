@@ -1,4 +1,5 @@
 from glob import glob
+import argparse
 from rich.table import Table
 from typing import Tuple, Dict
 from rich.progress import track
@@ -16,6 +17,9 @@ import torchvision
 import os
 from src.data.hrc_whu_datamodule import HRC_WHU
 from src.data.hrc_whu_datamodule import HRC_WHUDataModule
+from src.data.cloudsen12_high_datamodule import CloudSEN12HighDataModule
+from src.data.gf12ms_whu_datamodule import GF12MSWHUDataModule
+from src.data.l8_biome_datamodule import L8BiomeDataModule
 from src.models.components.cdnetv1 import CDnetV1
 from src.models.components.cdnetv2 import CDnetV2
 from src.models.components.dbnet import DBNet
@@ -26,20 +30,40 @@ from src.models.components.scnn import SCNN
 from src.models.components.unetmobv2 import UNetMobV2
 
 
-class EvalOnHRC_WHU:
-    def __init__(self):
-        self.device = "cuda:7" if torch.cuda.is_available() else "cpu"
+def get_args():
+    parser = argparse.ArgumentParser(description="获取实验名称和使用的显卡信息")
+    parser.add_argument(
+        "--experiment_name", type=str, help="实验的名称", default="hrc_whu"
+    )
+    parser.add_argument("--gpu", type=str, help="使用的设备", default="cuda:0")
+
+    args = parser.parse_args()
+    return args.experiment_name, args.gpu
+
+
+class Eval:
+    def __init__(self, experiment_name: str, device: str):
+        self.device = device
+        self.num_classes, self.image_size,self.colors = self.__get_num_classes_image_shape_colors(
+            experiment_name
+        )
         self.models = {
-            "cdnetv1": CDnetV1(num_classes=2).to(self.device),
-            "cdnetv2": CDnetV2(num_classes=2).to(self.device),
-            "hrcloudnet": HRCloudNet(num_classes=2).to(self.device),
-            "mcdnet": MCDNet(in_channels=3, num_classes=2).to(self.device),
-            "scnn": SCNN(num_classes=2).to(self.device),
-            "dbnet": DBNet(img_size=256, in_channels=3, num_classes=2).to(self.device),
-            "unetmobv2": UNetMobV2(num_classes=2).to(self.device),
-            "kappamask": KappaMask(num_classes=2, in_channels=3).to(self.device),
+            "cdnetv1": CDnetV1(num_classes=self.num_classes).to(self.device),
+            "cdnetv2": CDnetV2(num_classes=self.num_classes).to(self.device),
+            "hrcloudnet": HRCloudNet(num_classes=self.num_classes).to(self.device),
+            "mcdnet": MCDNet(in_channels=3, num_classes=self.num_classes).to(
+                self.device
+            ),
+            "scnn": SCNN(num_classes=self.num_classes).to(self.device),
+            "dbnet": DBNet(
+                img_size=self.image_size, in_channels=3, num_classes=self.num_classes
+            ).to(self.device),
+            "unetmobv2": UNetMobV2(num_classes=self.num_classes).to(self.device),
+            "kappamask": KappaMask(num_classes=self.num_classes, in_channels=3).to(
+                self.device
+            ),
         }
-        self.root = "data/hrc_whu"
+        self.root = self.__get_root(experiment_name)
         self.model_names_mapping = {
             "KappaMask": "kappamask",
             "CDNetv1": "cdnetv1",
@@ -53,20 +77,52 @@ class EvalOnHRC_WHU:
         self.invert_model_mapping = {
             value: key for key, value in self.model_names_mapping.items()
         }
-        self.__load_weight()
-        self.val_dataloader = self.__load_data()
+        self.__load_weight(experiment_name)
+        self.val_dataloader = self.__load_data(experiment_name)
         self.model_metrics = {
             model_name: self.__get_metrics("multiclass", 2)
             for model_name in self.model_names_mapping
         }
 
-    def __load_weight(self):
+    def __get_root(self, experiment_name: str):
+        experiment_root_mapping = {
+            "cloudsen12_high_l1c": "data/cloudsen12_high",
+            "cloudsen12_high_l2a": "data/cloudsen12_high",
+            "gf12ms_whu_gf1": "data/gf12ms_whu",
+            "gf12ms_whu_gf2": "data/gf12ms_whu",
+            "hrc_whu": "data/hrc_whu",
+            "l8_biome": "data/l8_biome",
+        }
+        return experiment_root_mapping[experiment_name]
+
+    def __get_num_classes_image_shape_colors(self, experiment_name: str):
+        if experiment_name in ["cloudsen12_high_l1c", "cloudsen12_high_l2a"]:
+            return 4, 512, ((31, 119, 18), (255, 127, 14), (44, 160, 44), (214, 39, 40))
+        elif experiment_name in ["gf12ms_whu_gf1", "gf12ms_whu_gf2"]:
+            return 2, 250, ((128, 192, 128), (255, 255, 255))
+        elif experiment_name in ["hrc_whu"]:
+            return 2, 256, ((128, 192, 128), (255, 255, 255))
+        elif experiment_name in ["l8_biome"]:
+            return (
+                5,
+                512,
+                (
+                    (31, 119, 180),
+                    (255, 127, 14),
+                    (44, 160, 44),
+                    (214, 39, 40),
+                    (148, 103, 189),
+                ),
+            )
+        raise ValueError(f"Experiment name {experiment_name} is not recognized.")
+
+    def __load_weight(self, experiment_name):
         """
         将模型权重加载进来
         """
         for model_name, model in self.models.items():
             weight_path = glob(
-                f"logs/hrc_whu/{model_name}/*/checkpoints/*epoch*.ckpt"
+                f"logs/{experiment_name}/{model_name}/*/checkpoints/*epoch*.ckpt"
             )[0]
             weight = torch.load(weight_path, map_location=self.device)
             state_dict = {}
@@ -76,18 +132,86 @@ class EvalOnHRC_WHU:
             model.load_state_dict(state_dict)
             model.eval()
 
-    def __load_data(self):
+    def __get_data_module(self, experiment_name):
         train_pipeline = val_pipeline = test_pipeline = dict(
-            all_transform=albu.Compose([albu.CenterCrop(256, 256)]),
-            img_transform=albu.Compose([albu.ToFloat(), ToTensorV2()]),
+            all_transform=albu.Compose(
+                [albu.CenterCrop(self.image_size, self.image_size)]
+            ),
+            img_transform=albu.Compose([ToTensorV2()]),
             ann_transform=None,
         )
-        data_loader = HRC_WHUDataModule(
-            root=self.root,
-            train_pipeline=train_pipeline,
-            val_pipeline=val_pipeline,
-            test_pipeline=test_pipeline,
-        )
+        if experiment_name == "cloudsen12_high_l1c":
+            return CloudSEN12HighDataModule(
+                root=self.root,
+                level="l1c",
+                train_pipeline=train_pipeline,
+                val_pipeline=val_pipeline,
+                test_pipeline=test_pipeline,
+                batch_size=1,
+            )
+
+        elif experiment_name == "cloudsen12_high_l2a":
+            return CloudSEN12HighDataModule(
+                root=self.root,
+                level="l2a",
+                train_pipeline=train_pipeline,
+                val_pipeline=val_pipeline,
+                test_pipeline=test_pipeline,
+                batch_size=1,
+            )
+        elif experiment_name == "gf12ms_whu_gf1":
+            return GF12MSWHUDataModule(
+                root=self.root,
+                train_pipeline=train_pipeline,
+                val_pipeline=val_pipeline,
+                test_pipeline=test_pipeline,
+                batch_size=1,
+                serial="gf1",
+            )
+        elif experiment_name == "gf12ms_whu_gf2":
+            return GF12MSWHUDataModule(
+                root=self.root,
+                train_pipeline=train_pipeline,
+                val_pipeline=val_pipeline,
+                test_pipeline=test_pipeline,
+                batch_size=1,
+                serial="gf2",
+            )
+        elif experiment_name == "hrc_whu":
+            train_pipeline = val_pipeline = test_pipeline = dict(
+                all_transform=albu.Compose(
+                    [albu.CenterCrop(self.image_size, self.image_size)]
+                ),
+                img_transform=albu.Compose([albu.ToFloat(255), ToTensorV2()]),
+                ann_transform=None,
+            )
+            return HRC_WHUDataModule(
+                root=self.root,
+                train_pipeline=train_pipeline,
+                val_pipeline=val_pipeline,
+                test_pipeline=test_pipeline,
+                batch_size=1,
+            )
+        elif experiment_name == "l8_biome":
+            train_pipeline = val_pipeline = test_pipeline = dict(
+                all_transform=albu.Compose(
+                    [albu.CenterCrop(self.image_size, self.image_size)]
+                ),
+                img_transform=albu.Compose([albu.ToFloat(255), ToTensorV2()]),
+                ann_transform=None,
+            )
+            return L8BiomeDataModule(
+                root=self.root,
+                train_pipeline=train_pipeline,
+                val_pipeline=val_pipeline,
+                test_pipeline=test_pipeline,
+                batch_size=1,
+            )
+        raise ValueError(f"Experiment name {experiment_name} is not recognized.")
+
+    def __load_data(self, experiment_name: str):
+
+        data_loader = self.__get_data_module(experiment_name)
         data_loader.prepare_data()
         data_loader.setup()
         val_dataloader = data_loader.test_dataloader()
@@ -111,7 +235,7 @@ class EvalOnHRC_WHU:
         mask = to_onehot(mask, num_classes=num_classes).to(torch.bool)[0]
         mask_colors = (
             torchvision.utils.draw_segmentation_masks(
-                image, mask, colors=list(HRC_WHU.METAINFO["palette"]), alpha=1.0
+                image, mask, colors=list(self.colors), alpha=1.0
             )
             .permute(1, 2, 0)
             .cpu()
@@ -265,4 +389,7 @@ class EvalOnHRC_WHU:
 
 
 if __name__ == "__main__":
-    EvalOnHRC_WHU().run(num_classes=2)
+    # 使用示例 python src/eval/eval_on_experiment.py --experiment_name "hrc_whu" --gpu "cuda:3"
+    experiment_name, device = get_args()
+    eval_dataset = Eval(experiment_name, device)
+    eval_dataset.run()
