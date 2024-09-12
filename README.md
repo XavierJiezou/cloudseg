@@ -171,6 +171,129 @@ cloudseg
 │   │   │   ├── test
 ```
 
+<details>
+<summary>CloudSEN12_High</summary>
+
+```bash
+triain
+├── EXTRA_*.dat
+├── L1C_B*.dat
+├── L2A_*.dat
+├── LABEL_*.data
+├── S1_*.data
+├── metadata.csv
+val
+├── EXTRA_*.dat
+├── L1C_B*.dat
+├── L2A_*.dat
+├── LABEL_*.data
+├── S1_*.data
+├── metadata.csv
+test
+├── EXTRA_*.dat
+├── L1C_B*.dat
+├── L2A_*.dat
+├── LABEL_*.data
+├── S1_*.data
+├── metadata.csv
+```
+</details>
+
+<details>
+<summary>L8_Biome</summary>
+
+```bash
+barren
+├── LC8*
+│   ├── LC8*_BQA.TIF
+│   ├── LC8*_fixedmask.TIF
+│   ├── LC8*_MTL.txt
+│   ├── LC8*.TIF
+forest
+├── LC8*
+│   ├── LC8*_BQA.TIF
+│   ├── LC8*_fixedmask.TIF
+│   ├── LC8*_MTL.txt
+│   ├── LC8*.TIF
+grass_crops
+├── LC8*
+│   ├── LC8*_BQA.TIF
+│   ├── LC8*_fixedmask.TIF
+│   ├── LC8*_MTL.txt
+│   ├── LC8*.TIF
+shrubland
+├── LC8*
+│   ├── LC8*_BQA.TIF
+│   ├── LC8*_fixedmask.TIF
+│   ├── LC8*_MTL.txt
+│   ├── LC8*.TIF
+snow_ice
+├── LC8*
+│   ├── LC8*_BQA.TIF
+│   ├── LC8*_fixedmask.TIF
+│   ├── LC8*_MTL.txt
+│   ├── LC8*.TIF
+urban
+├── LC8*
+│   ├── LC8*_BQA.TIF
+│   ├── LC8*_fixedmask.TIF
+│   ├── LC8*_MTL.txt
+│   ├── LC8*.TIF
+water
+├── LC8*
+│   ├── LC8*_BQA.TIF
+│   ├── LC8*_fixedmask.TIF
+│   ├── LC8*_MTL.txt
+│   ├── LC8*.TIF
+wetlands
+├── LC8*
+│   ├── LC8*_BQA.TIF
+│   ├── LC8*_fixedmask.TIF
+│   ├── LC8*_MTL.txt
+│   ├── LC8*.TIF
+```
+</details>
+
+<details>
+<summary>GF12MS_WHU</summary>
+
+```bash
+GF1MS-WHU
+├── TestBlock250
+│   ├── *_Mask.tif
+│   ├── *.tiff
+├── TrainBlock250
+│   ├── *_Mask.tif
+│   ├── *.tiff
+├── TestList.txt
+├── TrainList.txt
+GF2MS-WHU
+├── TestBlock250
+│   ├── *_Mask.tif
+│   ├── *.tiff
+├── TrainBlock250
+│   ├── *_Mask.tif
+│   ├── *.tiff
+├── TestList.txt
+├── TrainList.txt
+```
+</details>
+
+<details>
+<summary>HRC_WHU</summary>
+
+```bash
+train.txt
+test.txt
+img_dir
+├── train
+├── test
+ann_dir
+├── train
+├── test
+```
+</details>
+
 ## Methods
 
 - [CDNetv1 (TGRS 2019)](configs/model/cdnetv1)
