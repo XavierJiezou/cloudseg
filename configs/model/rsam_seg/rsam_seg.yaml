@@ -28,12 +28,11 @@ criterion:
   _target_: torch.nn.CrossEntropyLoss
 
 optimizer:
-  _target_: torch.optim.SGD
+  _target_: torch.optim.AdamW
   _partial_: true
-  lr: 0.0001
-scheduler: null
-
-#scheduler:
-#  _target_: torch.optim.lr_scheduler.LambdaLR
-#  _partial_: true
-#  lr_lambda: src.models.components.mcdnet.lr_lambda
+  lr: 0.0002
+scheduler: 
+  _target_: torch.optim.lr_scheduler.MultiStepLR
+  _partial_: true
+  milestones: [1]
+  gamma: 0.1
