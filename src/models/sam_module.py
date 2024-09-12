@@ -3,8 +3,6 @@ from typing import Any, Dict, Tuple
 import torch
 from lightning import LightningModule
 
-from mmeval import MeanIoU
-
 
 class SamLitModule(LightningModule):
     def __init__(
