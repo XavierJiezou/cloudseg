@@ -7,6 +7,7 @@ import csv
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 from albumentations.pytorch.transforms import ToTensorV2
+
 # from mmseg.evaluation.metrics.iou_metric import IoUMetric
 from src.metrics.metric import IoUMetric
 from torchmetrics.utilities.data import to_onehot
@@ -45,8 +46,8 @@ def get_args():
 class Eval:
     def __init__(self, experiment_name: str, device: str):
         self.device = device
-        self.num_classes, self.image_size,self.colors = self.__get_num_classes_image_shape_colors(
-            experiment_name
+        self.num_classes, self.image_size, self.colors = (
+            self.__get_num_classes_image_shape_colors(experiment_name)
         )
         self.experiment_name = experiment_name
         self.models = {
@@ -82,7 +83,7 @@ class Eval:
         self.__load_weight(experiment_name)
         self.val_dataloader = self.__load_data(experiment_name)
         self.model_metrics = {
-            model_name: self.__get_metrics(self.num_classes,model_name=model_name)
+            model_name: self.__get_metrics(self.num_classes, model_name=model_name)
             for model_name in self.model_names_mapping
         }
 
@@ -101,7 +102,7 @@ class Eval:
         if experiment_name in ["cloudsen12_high_l1c", "cloudsen12_high_l2a"]:
             return 4, 512, ((31, 119, 18), (255, 127, 14), (44, 160, 44), (214, 39, 40))
         elif experiment_name in ["gf12ms_whu_gf1", "gf12ms_whu_gf2"]:
-            return 2, 250, ((128, 192, 128), (255, 255, 255))
+            return 2, 256, ((128, 192, 128), (255, 255, 255))
         elif experiment_name in ["hrc_whu"]:
             return 2, 256, ((128, 192, 128), (255, 255, 255))
         elif experiment_name in ["l8_biome"]:
@@ -137,7 +138,12 @@ class Eval:
     def __get_data_module(self, experiment_name):
         train_pipeline = val_pipeline = test_pipeline = dict(
             all_transform=albu.Compose(
-                [albu.CenterCrop(self.image_size, self.image_size)]
+                [
+                    albu.PadIfNeeded(
+                        self.image_size, self.image_size, p=1, always_apply=True
+                    ),
+                    albu.CenterCrop(self.image_size, self.image_size),
+                ]
             ),
             img_transform=albu.Compose([ToTensorV2()]),
             ann_transform=None,
@@ -219,11 +225,11 @@ class Eval:
         val_dataloader = data_loader.test_dataloader()
         return val_dataloader
 
-    def __get_metrics(self, num_classes: int,model_name=None):
+    def __get_metrics(self, num_classes: int, model_name=None):
         metric = IoUMetric(
             iou_metrics=["mIoU", "mDice", "mFscore"],
             num_classes=num_classes,
-            model_name=model_name
+            model_name=model_name,
         )
 
         return metric
@@ -244,7 +250,7 @@ class Eval:
         )
         return mask_colors
 
-    def visualize_img(self, show_images: np.ndarray):
+    def visualize_img(self, show_images: np.ndarray, index=None, column_titles=None):
         show_images_tensor = torch.from_numpy(show_images).permute(0, 3, 1, 2)
         show_image = torchvision.utils.make_grid(
             show_images_tensor, nrow=len(self.models) + 2, padding=8
@@ -262,16 +268,17 @@ class Eval:
         # 准备绘图
         draw = ImageDraw.Draw(new_image)
         font = ImageFont.truetype("resource/Times New Roman.ttf", 50)
-        column_titles = ["Input", "Label"] + [
-            "UNetMobv2",
-            "DBNet",
-            "CDNetv1",
-            "HRCloudNet",
-            "CDNetv2",
-            "KappaMask",
-            "SCNN",
-            "MCDNet",
-        ]
+        if column_titles is None:
+            column_titles = ["Input", "Label"] + [
+                "UNetMobv2",
+                "DBNet",
+                "CDNetv1",
+                "HRCloudNet",
+                "CDNetv2",
+                "KappaMask",
+                "SCNN",
+                "MCDNet",
+            ]
         num_cols = len(column_titles)
         col_width = width // num_cols
 
@@ -287,8 +294,13 @@ class Eval:
 
             # 绘制文本
             draw.text((x, y - 10), title, fill="black", font=font)
-        new_image.save(f"{self.experiment_name}.png", dpi=(300, 300))
-        new_image.save(f"{self.experiment_name}.pdf", dpi=(300, 300))
+        if index:
+            filename = os.path.join("images",f"{self.experiment_name}")
+            os.makedirs(filename,exist_ok=True)
+            new_image.save(f"{filename}{os.path.sep}{index}.pdf", dpi=(300, 300))
+        else:
+            filename = f"{self.experiment_name}"
+            new_image.save(f"{filename}.pdf", dpi=(300, 300))
 
     @torch.no_grad()
     def inference(self, img: torch.Tensor, model: nn.Module) -> torch.Tensor:
@@ -350,6 +362,7 @@ class Eval:
             "MCDNet",
         ]
         show_images = None
+        index = 0
         for data in track(
             self.val_dataloader,
             description="evaling...",
@@ -372,21 +385,19 @@ class Eval:
                         ignore_index=self.model_metrics[model_name].ignore_index,
                     )
                 )
-                color_mask = self.give_colors_to_mask(img[0], pred,num_classes=self.num_classes)
+                color_mask = self.give_colors_to_mask(
+                    img[0], pred, num_classes=self.num_classes
+                )
                 model_masks[model_name] = color_mask
             image = img[0].detach().cpu().permute(1, 2, 0).numpy()
-            gt = self.give_colors_to_mask(img[0], ann,num_classes=self.num_classes)
+            gt = self.give_colors_to_mask(img[0], ann, num_classes=self.num_classes)
             masks = [model_masks[mask_name] for mask_name in model_order]
             masks = [image] + [gt] + masks
             masks = np.array(masks)
-            if show_images is not None and show_images.shape[0] > 5:
-                continue
-            if show_images is None:
-                show_images = masks
-            else:
-                show_images = np.concatenate((show_images, masks), axis=0)
+            self.visualize_img(masks, index=index,column_titles=["Input","Label"] + list(model_masks.keys()))
+            index += 1
+
         self.show_metrics()
-        self.visualize_img(show_images)
 
 
 if __name__ == "__main__":
