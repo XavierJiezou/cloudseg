@@ -82,7 +82,7 @@ class Eval:
         self.__load_weight(experiment_name)
         self.val_dataloader = self.__load_data(experiment_name)
         self.model_metrics = {
-            model_name: self.__get_metrics(self.num_classes)
+            model_name: self.__get_metrics(self.num_classes,model_name=model_name)
             for model_name in self.model_names_mapping
         }
 
@@ -219,10 +219,11 @@ class Eval:
         val_dataloader = data_loader.test_dataloader()
         return val_dataloader
 
-    def __get_metrics(self, num_classes: int):
+    def __get_metrics(self, num_classes: int,model_name=None):
         metric = IoUMetric(
             iou_metrics=["mIoU", "mDice", "mFscore"],
             num_classes=num_classes,
+            model_name=model_name
         )
 
         return metric
