@@ -18,8 +18,8 @@ class HRC_WHU(Dataset):
 
     def __init__(
         self, 
-        root, 
-        phase, 
+        root: str = "data/hrc_whu", 
+        phase: str = "train", 
         all_transform: albumentations.Compose = None,
         img_transform: albumentations.Compose = None,
         ann_transform: albumentations.Compose = None
