@@ -19,6 +19,7 @@ class L8BiomeDataModule(GeoDataModule):
         root: str = "data/l8_biome",
         bands: List[str] = ["B4", "B3", "B2"],
         split=[0.6, 0.2, 0.2],
+        length=None,
         patch_size=512,
         seed=42,
         train_pipeline = {"all_transform": None, "img_transform": None, "ann_transform": None},
@@ -34,6 +35,7 @@ class L8BiomeDataModule(GeoDataModule):
             L8Biome,
             batch_size=batch_size,
             patch_size=patch_size,
+            length=length,
             num_workers=num_workers,
             pin_memory = pin_memory,
             persistent_workers = persistent_workers
@@ -147,10 +149,18 @@ def show_l8_biome():
         ]),
         "ann_transform": None,
     }
-    datamodule = L8BiomeDataModule(batch_size=1, train_pipeline=train_pipeline)
+    datamodule = L8BiomeDataModule(batch_size=1, train_pipeline=train_pipeline, length=3000)
     datamodule.setup("fit")
     datamodule.setup("test")
     train_daloader = datamodule.train_dataloader()
+    val_daloader = datamodule.val_dataloader()
+    test_daloader = datamodule.test_dataloader()
+    
+    print(len(train_daloader))
+    print(len(val_daloader))
+    print(len(test_daloader))
+    
+    import pdb; pdb.set_trace()
 
     for data in train_daloader:
         img = data["img"].squeeze(0)
