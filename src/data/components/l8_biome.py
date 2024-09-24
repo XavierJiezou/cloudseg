@@ -160,9 +160,9 @@ class L8BiomeMask(RasterDataset):
     classes = ("Fill", "Cloud Shadow", "Clear", "Thin Cloud", "Cloud")
     ordinal_map = torch.zeros(256, dtype=torch.long)
     ordinal_map[64] = 1
-    ordinal_map[128] = 2
-    ordinal_map[192] = 3
-    ordinal_map[255] = 4
+    ordinal_map[128] = 0 # Fill is respected as clear
+    ordinal_map[192] = 2
+    ordinal_map[255] = 3
 
     def __getitem__(self, query: BoundingBox) -> dict[str, Any]:
         """Retrieve image/mask and metadata indexed by query.
@@ -220,11 +220,10 @@ class L8Biome(IntersectionDataset):
     """
 
     METAINFO = dict(
-        classes=("fill", "cloud shadow", "clear", "thin cloud", "cloud"),
+        classes=("clear", "cloud shadow", "thin cloud", "cloud"),
         palette=(
             (31, 119, 180),
             (255, 127, 14),
-            (44, 160, 44),
             (214, 39, 40),
             (148, 103, 189),
         ),

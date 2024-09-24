@@ -19,7 +19,7 @@ seed: 42
 
 model:
   net:
-    num_classes: 5
+    num_classes: 4
 
 logger:
   wandb:
