@@ -28,6 +28,7 @@ class L8BiomeDataModule(GeoDataModule):
         num_workers: int = 0,
         pin_memory: bool = False,
         persistent_workers: bool = False,
+        cache = False,
     ) -> None:
         super().__init__(
             L8Biome,
@@ -45,6 +46,7 @@ class L8BiomeDataModule(GeoDataModule):
         self.train_pipeline = train_pipeline
         self.test_pipeline = test_pipeline
         self.val_pipeline = val_pipeline
+        self.cache = cache
 
     @property
     def num_classes(self) -> int:
@@ -52,7 +54,7 @@ class L8BiomeDataModule(GeoDataModule):
 
     def prepare_data(self) -> None:
         # train
-        L8Biome(root=self.root, bands=self.bands)
+        L8Biome(root=self.root, bands=self.bands, cache=self.cache)
 
     def setup(self, stage: str) -> None:
         """Set up datasets.
@@ -60,7 +62,7 @@ class L8BiomeDataModule(GeoDataModule):
         Args:
             stage: Either 'fit', 'validate', 'test', or 'predict'.
         """
-        dataset = L8Biome(root=self.root, bands=self.bands)
+        dataset = L8Biome(root=self.root, bands=self.bands, cache=self.cache)
         generator = torch.Generator().manual_seed(self.seed)
         (self.train_dataset, self.val_dataset, self.test_dataset) = (
             random_bbox_assignment(dataset, self.split, generator)

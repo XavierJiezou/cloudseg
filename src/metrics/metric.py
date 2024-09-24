@@ -236,7 +236,7 @@ class IoUMetric():
                  nan_to_num: Optional[int] = None,
                  beta: int = 1,
                  output_dir: Optional[str] = None,
-                 format_only: bool = False) -> None:
+                 format_only: bool = False,model_name:str=None) -> None:
 
         self.ignore_index = ignore_index
         self.metrics = iou_metrics
@@ -246,6 +246,7 @@ class IoUMetric():
         self.format_only = format_only
         self.results = []
         self.class_names = [str(i) for i in range(num_classes)]
+        self.model_name = model_name
 
 
     def compute_metrics(self, results: list) -> Dict[str, float]:
@@ -299,6 +300,9 @@ class IoUMetric():
         class_table_data = PrettyTable()
         for key, val in ret_metrics_class.items():
             class_table_data.add_column(key, val)
+        if self.model_name:
+            print(self.model_name)
+            print(class_table_data)
 
         return metrics
 
@@ -431,16 +435,18 @@ class IoUMetric():
 # 测试代码
 if __name__ == "__main__":
     classes = ["class_0", "class_1", "class_2", "class_3", "class_4"]
-    miou_metric = MMSeg(
-        classes=classes, iou_metrics=["mIoU", "mDice", "mFscore"], per_classses=True
+    miou_metric = IoUMetric(
+        num_classes=5, iou_metrics=["mIoU", "mDice", "mFscore"]
     )
 
     # 模拟预测和目标
-    preds = torch.tensor([[0, 1, 2], [1, 2, 0]]).to("cuda:3")
-    target = torch.tensor([[0, 1, 1], [1, 2, 0]]).to("cuda:3")
+    preds = torch.tensor([[0, 1, 2], [1, 2, 0]])
+    target = torch.tensor([[0, 1, 1], [1, 2, 0]])
 
-    miou_metric.update(preds, target)
-    result, table = miou_metric.compute()
+    miou_metric.results.append(
+        miou_metric.intersect_and_union(preds,target,5,255)
+    )
+    result = miou_metric.compute_metrics(miou_metric.results)
 
     print(result)
-    print(table)
+
