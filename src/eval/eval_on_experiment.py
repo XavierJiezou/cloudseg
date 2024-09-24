@@ -221,7 +221,11 @@ class Eval:
 
         data_loader = self.__get_data_module(experiment_name)
         data_loader.prepare_data()
-        data_loader.setup()
+        if experiment_name == "l8_biome":
+
+            data_loader.setup("test")
+        else:
+            data_loader.setup()
         val_dataloader = data_loader.test_dataloader()
         return val_dataloader
 
