@@ -15,7 +15,12 @@ from lightning import seed_everything
 class CloudSEN12High(Dataset):
     METAINFO = dict(
         classes=("clear", "thick cloud", "thin cloud", "cloud shadow"),
-        palette=((31, 119, 18), (255, 127, 14), (44, 160, 44), (214, 39, 40)),
+        palette=(
+            (0, 0, 0),
+            (255, 255, 255),
+            (170, 170, 170),
+            (85, 85, 85),
+        ),
         img_size=(512, 512),
         ann_size=(512, 512),
         train_size=8490,
@@ -117,49 +122,52 @@ def show_cloudsen12_high():
     
     plt.figure(figsize=(16, 4))
     
-    index = -1
     
-    plt.subplot(1, 4, 1)
-    plt.title("L1C")
-    plt.axis("off")
-    seed_everything(42)
-    dataset = CloudSEN12High(phase="train", level="l1c", bands=["B4", "B3", "B2"], all_transform=all_transform)
-    data = dataset[index]["img"]
-    data = data.permute(1, 2, 0).numpy()
-    data = gaussian_stretch(data)
-    plt.imshow(data)
     
-    plt.subplot(1, 4, 2)
-    plt.title("L2A")
-    plt.axis("off")
-    seed_everything(42)
-    dataset = CloudSEN12High(phase="train", level="l2a", bands=["B4", "B3", "B2"], all_transform=all_transform)
-    data = dataset[index]["img"]
-    data = data.permute(1, 2, 0).numpy()
-    data = gaussian_stretch(data)
-    plt.imshow(data)
-    
-    plt.subplot(1, 4, 3)
-    plt.title("SAR")
-    plt.axis("off")
-    seed_everything(42)
-    dataset = CloudSEN12High(phase="train", level="l1c", bands=["S1_VV", "S1_VH"], all_transform=all_transform)
-    data = dataset[index]["img"]
-    new_channel = (data[0] + data[1]) / 2
-    data = torch.stack([data[0], data[1], new_channel])
-    data = data.permute(1, 2, 0).numpy()
-    data = gaussian_stretch(data)
-    plt.imshow(data)
-    
-    plt.subplot(1, 4, 4)
-    plt.title("ANN")
-    plt.axis("off")
-    seed_everything(42)
-    dataset = CloudSEN12High(phase="train", level="l1c", bands=["B4", "B3", "B2"], all_transform=all_transform)
-    ann = dataset[index]["ann"]
-    plt.imshow(ann)
-    
-    plt.savefig("cloudsen12_high.png", bbox_inches="tight", pad_inches=0)
+    for index in range(8490):
+        plt.subplot(1, 4, 1)
+        plt.title("L1C")
+        plt.axis("off")
+        seed_everything(42)
+        dataset = CloudSEN12High(phase="train", level="l1c", bands=["B4", "B3", "B2"], all_transform=all_transform)
+        data = dataset[index]["img"]
+        data = data.permute(1, 2, 0).numpy()
+        data = gaussian_stretch(data)
+        plt.imshow(data)
+        
+        plt.subplot(1, 4, 2)
+        plt.title("L2A")
+        plt.axis("off")
+        seed_everything(42)
+        dataset = CloudSEN12High(phase="train", level="l2a", bands=["B4", "B3", "B2"], all_transform=all_transform)
+        data = dataset[index]["img"]
+        data = data.permute(1, 2, 0).numpy()
+        data = gaussian_stretch(data)
+        plt.imshow(data)
+        
+        plt.subplot(1, 4, 3)
+        plt.title("SAR")
+        plt.axis("off")
+        seed_everything(42)
+        dataset = CloudSEN12High(phase="train", level="l1c", bands=["S1_VV", "S1_VH"], all_transform=all_transform)
+        data = dataset[index]["img"]
+        new_channel = (data[0] + data[1]) / 2
+        data = torch.stack([data[0], data[1], new_channel])
+        data = data.permute(1, 2, 0).numpy()
+        data = gaussian_stretch(data)
+        plt.imshow(data)
+        
+        plt.subplot(1, 4, 4)
+        plt.title("ANN")
+        plt.axis("off")
+        seed_everything(42)
+        dataset = CloudSEN12High(phase="train", level="l1c", bands=["B4", "B3", "B2"], all_transform=all_transform)
+        ann = dataset[index]["ann"]
+        color_map = np.array(CloudSEN12High.METAINFO["palette"])
+        ann = color_map[ann]
+        plt.imshow(ann)
+        
+        plt.savefig("cloudsen12_high.png", bbox_inches="tight", pad_inches=0)
 
 
 if __name__ == "__main__":

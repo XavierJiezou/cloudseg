@@ -173,7 +173,16 @@ def show_l8_biome():
         plt.title(f"ann")
         plt.axis("off")
         ann = ann.numpy()
-        plt.imshow(ann)
+        palette=(
+            (0, 0, 0),
+            (85, 85, 85),
+            (170, 170, 170),
+            (255, 255, 255),
+        )
+        color_map = np.array(palette)
+        color_ann = color_map[ann]
+        print(color_ann.shape)
+        plt.imshow(color_ann)
         
         plt.savefig("l8_biome.png", bbox_inches="tight", pad_inches=0)
         

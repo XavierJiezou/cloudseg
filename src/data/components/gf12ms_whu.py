@@ -15,7 +15,7 @@ from src.utils.stretch import gaussian_stretch
 class GF12MSWHU(Dataset):
     METAINFO = dict(
         classes=("clear", "cloud"),
-        palette=((128, 192, 128), (255, 255, 255)),
+        palette=((0, 0, 0), (255, 255, 255)),
         img_size=(250, 250),
         ann_size=(250, 250),
     )

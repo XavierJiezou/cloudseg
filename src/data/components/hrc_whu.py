@@ -9,7 +9,7 @@ from torch.utils.data import Dataset
 class HRC_WHU(Dataset):
     METAINFO = dict(
         classes=('clear sky', 'cloud'),
-        palette=((128, 192, 128),(255, 255, 255)),
+        palette=((0, 0, 0),(255, 255, 255)),
         img_size=(3, 256, 256),  # C, H, W
         ann_size=(256, 256),  # C, H, W
         train_size=120,

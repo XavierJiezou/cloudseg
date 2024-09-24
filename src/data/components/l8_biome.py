@@ -222,10 +222,10 @@ class L8Biome(IntersectionDataset):
     METAINFO = dict(
         classes=("clear", "cloud shadow", "thin cloud", "cloud"),
         palette=(
-            (31, 119, 180),
-            (255, 127, 14),
-            (214, 39, 40),
-            (148, 103, 189),
+            (0, 0, 0),
+            (85, 85, 85),
+            (170, 170, 170),
+            (255, 255, 255),
         ),
         img_size=(512, 512),  # H, W
         ann_size=(512, 512),  # H, W
