@@ -19,7 +19,7 @@ class L8BiomeDataModule(GeoDataModule):
         root: str = "data/l8_biome",
         bands: List[str] = ["B4", "B3", "B2"],
         split=[0.6, 0.2, 0.2],
-        length=None,
+        length=None, # 29328
         patch_size=512,
         seed=42,
         train_pipeline = {"all_transform": None, "img_transform": None, "ann_transform": None},
@@ -149,7 +149,7 @@ def show_l8_biome():
         ]),
         "ann_transform": None,
     }
-    datamodule = L8BiomeDataModule(batch_size=1, train_pipeline=train_pipeline, length=3000)
+    datamodule = L8BiomeDataModule(batch_size=1, train_pipeline=train_pipeline)
     datamodule.setup("fit")
     datamodule.setup("test")
     train_daloader = datamodule.train_dataloader()
