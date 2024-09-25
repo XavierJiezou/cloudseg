@@ -436,7 +436,7 @@ class IoUMetric():
 if __name__ == "__main__":
     classes = ["class_0", "class_1", "class_2", "class_3", "class_4"]
     miou_metric = IoUMetric(
-        num_classes=5, iou_metrics=["mIoU", "mDice", "mFscore"]
+        num_classes=5, iou_metrics=["mIoU", "mDice", "mFscore"],model_name="test"
     )
 
     # 模拟预测和目标
