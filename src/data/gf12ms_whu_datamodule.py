@@ -28,6 +28,7 @@ class GF12MSWHUDataModule(BaseDataModule):
             pin_memory=pin_memory,
             persistent_workers=persistent_workers,
             serial=serial,
+            bands=bands,
         )
 
     @property
@@ -40,6 +41,7 @@ class GF12MSWHUDataModule(BaseDataModule):
             root=self.hparams.root,
             phase="train",
             serial=self.hparams.serial,
+            bands=self.hparams.bands,
             **self.hparams.train_pipeline,
         )
 
@@ -48,6 +50,7 @@ class GF12MSWHUDataModule(BaseDataModule):
             root=self.hparams.root,
             serial=self.hparams.serial,
             phase="test",
+            bands=self.hparams.bands,
             **self.hparams.test_pipeline,
         )
 
@@ -67,6 +70,7 @@ class GF12MSWHUDataModule(BaseDataModule):
                 phase="train",
                 **self.hparams.train_pipeline,
                 serial=self.hparams.serial,
+                bands=self.hparams.bands,
             )
 
             self.val_dataset = self.test_dataset = GF12MSWHU(
@@ -74,6 +78,7 @@ class GF12MSWHUDataModule(BaseDataModule):
                 phase="test",
                 **self.hparams.test_pipeline,
                 serial=self.hparams.serial,
+                bands=self.hparams.bands,
             )
 
 
