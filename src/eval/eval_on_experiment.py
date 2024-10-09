@@ -310,13 +310,9 @@ class Eval:
 
             # 绘制文本
             draw.text((x, y - 10), title, fill="black", font=font)
-        if index:
-            filename = os.path.join("images", f"{self.experiment_name}")
-            os.makedirs(filename, exist_ok=True)
-            new_image.save(f"{filename}{os.path.sep}{index}.pdf",dpi=(300,300))
-        else:
-            filename = f"{self.experiment_name}"
-            new_image.save(f"{filename}.pdf",dpi=(300,300))
+        filename = os.path.join("images", f"{self.experiment_name}")
+        os.makedirs(filename, exist_ok=True)
+        new_image.save(f"{filename}{os.path.sep}{index}.pdf",dpi=(300,300))
 
     @torch.no_grad()
     def inference(self, img: torch.Tensor, model: nn.Module) -> torch.Tensor:
