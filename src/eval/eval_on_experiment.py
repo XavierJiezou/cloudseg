@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 from albumentations.pytorch.transforms import ToTensorV2
 
-# from mmseg.evaluation.metrics.iou_metric import IoUMetric
+from collections import OrderedDict
 from src.metrics.metric import IoUMetric
 from torchmetrics.utilities.data import to_onehot
 import albumentations as albu
@@ -30,6 +30,8 @@ from src.models.components.kappamask import KappaMask
 from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNN
 from src.models.components.unetmobv2 import UNetMobV2
+from src.utils.model_order import model_order
+from src.utils.convert_svg import convert_svg
 
 
 def get_args():
@@ -66,6 +68,10 @@ class Eval:
                 self.device
             ),
         }
+        self.models = OrderedDict(
+             {key: self.models[key] for key in model_order[experiment_name] if key in self.models}
+        )
+        assert len(self.models) == 8,f"num of models is {len(self.models)},but actually is 8"
         self.root = self.__get_root(experiment_name)
         self.model_names_mapping = {
             "KappaMask": "kappamask",
@@ -247,7 +253,8 @@ class Eval:
     def give_colors_to_mask(
         self, image: torch.Tensor, mask: torch.Tensor, num_classes=2
     ):
-        image = (deepcopy(image) * 255).to(torch.uint8)
+        image = deepcopy(image) * 255
+        image = image.to(torch.uint8)
         mask = to_onehot(mask, num_classes=num_classes).to(torch.bool)[0]
         mask_colors = (
             torchvision.utils.draw_segmentation_masks(
@@ -263,7 +270,7 @@ class Eval:
     def visualize_img(self, show_images: np.ndarray, index=None, column_titles=None):
         show_images_tensor = torch.from_numpy(show_images).permute(0, 3, 1, 2)
         show_image = torchvision.utils.make_grid(
-            show_images_tensor, nrow=len(self.models) + 2, padding=8
+            show_images_tensor, nrow=1, padding=8
         )
         grid_image = torchvision.transforms.ToPILImage()(show_image)
 
@@ -307,10 +314,10 @@ class Eval:
         if index:
             filename = os.path.join("images", f"{self.experiment_name}")
             os.makedirs(filename, exist_ok=True)
-            new_image.save(f"{filename}{os.path.sep}{index}.pdf", dpi=(300, 300))
+            new_image.save(f"{filename}{os.path.sep}{index}.pdf",dpi=(300,300))
         else:
             filename = f"{self.experiment_name}"
-            new_image.save(f"{filename}.pdf", dpi=(300, 300))
+            new_image.save(f"{filename}.pdf",dpi=(300,300))
 
     @torch.no_grad()
     def inference(self, img: torch.Tensor, model: nn.Module) -> torch.Tensor:
@@ -361,16 +368,6 @@ class Eval:
         """
         评测模型
         """
-        model_order = [
-            "UNetMobv2",
-            "DBNet",
-            "CDNetv1",
-            "HRCloudNet",
-            "CDNetv2",
-            "KappaMask",
-            "SCNN",
-            "MCDNet",
-        ]
         show_images = None
         index = 0
         for data in track(
@@ -399,16 +396,12 @@ class Eval:
                     img[0], pred, num_classes=self.num_classes
                 )
                 model_masks[model_name] = color_mask
-            image = img[0].detach().cpu().permute(1, 2, 0).numpy()
+            image = (img[0].detach().cpu().permute(1, 2, 0).numpy() * 255).astype(np.uint8)
             gt = self.give_colors_to_mask(img[0], ann, num_classes=self.num_classes)
-            masks = [model_masks[mask_name] for mask_name in model_order]
-            masks = [image] + [gt] + masks
-            masks = np.array(masks)
-            self.visualize_img(
-                masks,
-                index=index,
-                column_titles=["Input", "Label"] + list(model_masks.keys()),
-            )
+            masks = [image] + [gt] + list(model_masks.values())
+            masks = np.concatenate(masks,axis=1)
+            masks = masks[None,]
+            self.visualize_img(masks,column_titles=["Input", "Label"] + list(model_masks.keys()),index=index)
             index += 1
 
         self.show_metrics()
