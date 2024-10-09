@@ -21,7 +21,7 @@ from src.data.hrc_whu_datamodule import HRC_WHU
 from src.data.hrc_whu_datamodule import HRC_WHUDataModule
 from src.data.cloudsen12_high_datamodule import CloudSEN12HighDataModule
 from src.data.gf12ms_whu_datamodule import GF12MSWHUDataModule
-from src.data.l8_biome_datamodule import L8BiomeDataModule
+from src.data.l8_biome_crop_datamodule import L8BiomeCropDataModule
 from src.models.components.cdnetv1 import CDnetV1
 from src.models.components.cdnetv2 import CDnetV2
 from src.models.components.dbnet import DBNet
@@ -94,27 +94,35 @@ class Eval:
             "gf12ms_whu_gf1": "data/gf12ms_whu",
             "gf12ms_whu_gf2": "data/gf12ms_whu",
             "hrc_whu": "data/hrc_whu",
-            "l8_biome": "data/l8_biome",
+            "l8_biome_crop": "data/l8_biome_crop",
         }
         return experiment_root_mapping[experiment_name]
 
     def __get_num_classes_image_shape_colors(self, experiment_name: str):
         if experiment_name in ["cloudsen12_high_l1c", "cloudsen12_high_l2a"]:
-            return 4, 512, ((31, 119, 18), (255, 127, 14), (44, 160, 44), (214, 39, 40))
-        elif experiment_name in ["gf12ms_whu_gf1", "gf12ms_whu_gf2"]:
-            return 2, 256, ((128, 192, 128), (255, 255, 255))
-        elif experiment_name in ["hrc_whu"]:
-            return 2, 256, ((128, 192, 128), (255, 255, 255))
-        elif experiment_name in ["l8_biome"]:
             return (
-                5,
+                4,
                 512,
                 (
-                    (31, 119, 180),
-                    (255, 127, 14),
-                    (44, 160, 44),
-                    (214, 39, 40),
-                    (148, 103, 189),
+                    (0, 0, 0),
+                    (255, 255, 255),
+                    (170, 170, 170),
+                    (85, 85, 85),
+                ),
+            )
+        elif experiment_name in ["gf12ms_whu_gf1", "gf12ms_whu_gf2"]:
+            return 2, 256, ((0, 0, 0), (255, 255, 255))
+        elif experiment_name in ["hrc_whu"]:
+            return 2, 256, ((0, 0, 0), (255, 255, 255))
+        elif experiment_name in ["l8_biome_crop"]:
+            return (
+                4,
+                512,
+                (
+                    (0, 0, 0),
+                    (85, 85, 85),
+                    (170, 170, 170),
+                    (255, 255, 255),
                 ),
             )
         raise ValueError(f"Experiment name {experiment_name} is not recognized.")
@@ -200,15 +208,13 @@ class Eval:
                 test_pipeline=test_pipeline,
                 batch_size=1,
             )
-        elif experiment_name == "l8_biome":
+        elif experiment_name == "l8_biome_crop":
             train_pipeline = val_pipeline = test_pipeline = dict(
-                all_transform=albu.Compose(
-                    [albu.CenterCrop(self.image_size, self.image_size)]
-                ),
-                img_transform=albu.Compose([albu.ToFloat(255), ToTensorV2()]),
+                all_transform=None,
+                img_transform=albu.Compose([ToTensorV2()]),
                 ann_transform=None,
             )
-            return L8BiomeDataModule(
+            return L8BiomeCropDataModule(
                 root=self.root,
                 train_pipeline=train_pipeline,
                 val_pipeline=val_pipeline,
@@ -221,7 +227,7 @@ class Eval:
 
         data_loader = self.__get_data_module(experiment_name)
         data_loader.prepare_data()
-        if experiment_name == "l8_biome":
+        if experiment_name == "l8_biome_crop":
 
             data_loader.setup("test")
         else:
@@ -299,8 +305,8 @@ class Eval:
             # 绘制文本
             draw.text((x, y - 10), title, fill="black", font=font)
         if index:
-            filename = os.path.join("images",f"{self.experiment_name}")
-            os.makedirs(filename,exist_ok=True)
+            filename = os.path.join("images", f"{self.experiment_name}")
+            os.makedirs(filename, exist_ok=True)
             new_image.save(f"{filename}{os.path.sep}{index}.pdf", dpi=(300, 300))
         else:
             filename = f"{self.experiment_name}"
@@ -398,7 +404,11 @@ class Eval:
             masks = [model_masks[mask_name] for mask_name in model_order]
             masks = [image] + [gt] + masks
             masks = np.array(masks)
-            self.visualize_img(masks, index=index,column_titles=["Input","Label"] + list(model_masks.keys()))
+            self.visualize_img(
+                masks,
+                index=index,
+                column_titles=["Input", "Label"] + list(model_masks.keys()),
+            )
             index += 1
 
         self.show_metrics()
