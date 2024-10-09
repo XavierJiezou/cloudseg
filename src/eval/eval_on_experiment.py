@@ -31,7 +31,6 @@ from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNN
 from src.models.components.unetmobv2 import UNetMobV2
 from src.utils.model_order import model_order
-from src.utils.convert_svg import convert_svg
 
 
 def get_args():
