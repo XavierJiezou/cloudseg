@@ -30,7 +30,7 @@ from src.models.components.kappamask import KappaMask
 from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNN
 from src.models.components.unetmobv2 import UNetMobV2
-# from src.utils.model_order import model_order
+from src.utils.model_order import model_order
 
 
 def get_args():
@@ -67,9 +67,9 @@ class Eval:
                 self.device
             ),
         }
-        # self.models = OrderedDict(
-        #      {key: self.models[key] for key in model_order[experiment_name] if key in self.models}
-        # )
+        self.models = OrderedDict(
+             {key: self.models[key] for key in model_order[experiment_name] if key in self.models}
+        )
         assert len(self.models) == 8,f"num of models is {len(self.models)},but actually is 8"
         self.root = self.__get_root(experiment_name)
         self.model_names_mapping = {
