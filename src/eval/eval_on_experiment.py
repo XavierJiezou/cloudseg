@@ -314,6 +314,19 @@ class Eval:
         os.makedirs(filename, exist_ok=True)
         new_image.save(f"{filename}{os.path.sep}{index}.pdf",dpi=(300,300))
 
+    def visualize_img_no_text(self, show_images: np.ndarray, index=None):
+        show_images_tensor = torch.from_numpy(show_images).permute(0, 3, 1, 2)
+        show_image = torchvision.utils.make_grid(
+            show_images_tensor, nrow=1, padding=8
+        )
+        grid_image = torchvision.transforms.ToPILImage()(show_image)
+
+        # 获取图像尺寸
+        filename = os.path.join("images", f"{self.experiment_name}")
+        os.makedirs(filename, exist_ok=True)
+        grid_image.save(f"{filename}{os.path.sep}{index}.png",dpi=(300,300))
+
+
     @torch.no_grad()
     def inference(self, img: torch.Tensor, model: nn.Module) -> torch.Tensor:
         logits = model(img)
@@ -396,7 +409,8 @@ class Eval:
             masks = [image] + [gt] + list(model_masks.values())
             masks = np.concatenate(masks,axis=1)
             masks = masks[None,]
-            self.visualize_img(masks,column_titles=["Input", "Label"] + list(model_masks.keys()),index=index)
+            # self.visualize_img(masks,column_titles=["Input", "Label"] + list(model_masks.keys()),index=index)
+            self.visualize_img_no_text(masks,index=index)
             index += 1
 
         self.show_metrics()

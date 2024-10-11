@@ -198,6 +198,16 @@ class Visualize:
         assert filename, f"filename is None"
         new_image.save(filename, dpi=(300, 300))
 
+    def visualize_img_no_text(
+        self, show_images: np.ndarray, index=None, column_titles=None, filename=None
+    ):
+        show_images_tensor = torch.from_numpy(show_images).permute(0, 3, 1, 2)
+        show_image = torchvision.utils.make_grid(show_images_tensor, nrow=1, padding=8)
+        grid_image = torchvision.transforms.ToPILImage()(show_image)
+
+        assert filename, f"filename is None"
+        grid_image.save(filename, dpi=(300, 300))
+
     def vis(self):
         index = 0
         for data in track(
@@ -227,13 +237,12 @@ class Visualize:
             masks = [image] + [gt] + list(model_masks.values())
             masks = np.concatenate(masks, axis=1)
             masks = masks[None,]
-            self.visualize_img(
+            self.visualize_img_no_text(
                 masks,
-                column_titles=["Input", "Label"] + list(model_masks.keys()),
                 index=index,
                 filename=os.path.join("images", "l8_biome_crop", lac_type)
                 + os.path.sep
-                + f"{index}.pdf",
+                + f"{index}.png",
             )
             index += 1
 
