@@ -31,6 +31,7 @@ from src.models.components.mcdnet import MCDNet
 from src.models.components.scnn import SCNN
 from src.models.components.unetmobv2 import UNetMobV2
 from src.utils.model_order import model_order
+from src.utils.stretch import gaussian_stretch
 
 
 def get_args():
@@ -406,6 +407,7 @@ class Eval:
                 model_masks[model_name] = color_mask
             image = (img[0].detach().cpu().permute(1, 2, 0).numpy() * 255).astype(np.uint8)
             gt = self.give_colors_to_mask(img[0], ann, num_classes=self.num_classes)
+            image = gaussian_stretch(image)
             masks = [image] + [gt] + list(model_masks.values())
             masks = np.concatenate(masks,axis=1)
             masks = masks[None,]
