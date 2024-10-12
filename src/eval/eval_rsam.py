@@ -219,7 +219,7 @@ class Eval:
             )
 
         result = metric.compute_metrics(metric.results)
-        with open(f"{self.dataset_name}.json", "w") as f:
+        with open(f"{self.dataset_name}_rsam.json", "w") as f:
             json.dump(result, f, ensure_ascii=False, indent=4)
 
 
