@@ -315,7 +315,7 @@ class IoUMetric():
         # for key, val in ret_metrics_class.items():
         #     class_table_data.add_column(key, val)
         if self.model_name:
-            with open(f"{self.model_name}.json",'w') as f:
+            with open(f"class_wise_{self.model_name}.json",'w') as f:
                 json.dump(json_formate,f,indent=4,ensure_ascii=False)
 
         return metrics
