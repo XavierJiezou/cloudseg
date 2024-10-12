@@ -3,7 +3,7 @@ from torchmetrics import Metric
 from sklearn.metrics import fbeta_score, recall_score, precision_score
 import numpy as np
 from collections import OrderedDict
-import logging
+import json
 from prettytable import PrettyTable
 from typing import Dict, List, Optional, Sequence
 
@@ -295,14 +295,28 @@ class IoUMetric():
             ret_metric: np.round(ret_metric_value * 100, 2)
             for ret_metric, ret_metric_value in ret_metrics.items()
         })
-        ret_metrics_class.update({'Class': class_names})
+        ret_metrics_class.update({'Class': np.array(class_names)})
         ret_metrics_class.move_to_end('Class', last=False)
-        class_table_data = PrettyTable()
-        for key, val in ret_metrics_class.items():
-            class_table_data.add_column(key, val)
+        ret_metrics
+        # print(ret_metrics_class)
+        ret_metrics_class = {key:value.tolist()  for key,value in ret_metrics_class.items()}
+        json_formate = []
+        for idx,class_name in enumerate(ret_metrics_class['Class']):
+            tmp = {}
+            tmp['Class'] = class_name
+            for key,value in ret_metrics_class.items():
+                if key == "Class":
+                    continue
+                tmp[key] = float(value[idx]) if not np.isnan(value[idx]) else 0
+            json_formate.append(tmp)
+        
+
+        # class_table_data = PrettyTable()
+        # for key, val in ret_metrics_class.items():
+        #     class_table_data.add_column(key, val)
         if self.model_name:
-            print(self.model_name)
-            print(class_table_data)
+            with open(f"{self.model_name}.json",'w') as f:
+                json.dump(json_formate,f,indent=4,ensure_ascii=False)
 
         return metrics
 
@@ -449,4 +463,5 @@ if __name__ == "__main__":
     result = miou_metric.compute_metrics(miou_metric.results)
 
     print(result)
+
 
