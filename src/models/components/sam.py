@@ -22,7 +22,7 @@ class SAM(nn.Module):
         self.transformer = ResizeLongestSide(self.model.image_encoder.img_size)
 
     def forward(self, images: torch.Tensor):
-        _, _, H, W = images.shape
+        B, _, H, W = images.shape
 
         images = F.interpolate(
             images,
@@ -39,12 +39,12 @@ class SAM(nn.Module):
 
         points = self.transformer.apply_coords(points, (H, W))
 
-        points_pt = torch.as_tensor(points, device=images.device, dtype=torch.float)
+        batch_points = np.repeat(points[np.newaxis, :, :], B, axis=0)  # (batch_size, num_points, 2)
+
+        points_pt = torch.as_tensor(batch_points, device=images.device, dtype=torch.float)
         point_labels_pt = torch.as_tensor(
             point_labels, device=images.device, dtype=torch.int
         )
-
-        points_pt, point_labels_pt = points_pt[None, :, :], point_labels_pt
 
         # exit()
 
@@ -79,7 +79,7 @@ class SAM(nn.Module):
 if __name__ == "__main__":
     device = "cuda:7"
     model = SAM().to(device)
-    fake_data = torch.randn(1, 3, 512, 512).to(device)
+    fake_data = torch.randn(2, 3, 512, 512).to(device)
     pred_masks, ious = model(fake_data)
     print(len(pred_masks), len(ious))
     print(pred_masks[0].shape)
