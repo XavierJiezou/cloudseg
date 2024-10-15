@@ -6,33 +6,54 @@
 # @Software: PyCharm
 
 from typing import Literal
-from ultralytics.models import sam
+from segment_anything import sam_model_registry
+from segment_anything.utils.transforms import ResizeLongestSide
 import torch
+import numpy as np
 from torch import nn as nn
 from torch.nn import functional as F
 
+
 class SAM(nn.Module):
-    def __init__(self,model:Literal['sam_b.pt','sam_l.pt','sam2_t.pt','sam2_s.pt','sam2_l.pt','sam2_b.pt']="sam_b.pt"):
+    def __init__(self, model_type="vit_h", points_per_size=32):
         super().__init__()
-        self.model = sam.SAM(model).model
-        self.setup()
-        
-    def setup(self):
-        for param in self.model.image_encoder.parameters():
-            param.requires_grad = False
-    
-    def forward(self,images):
+        self.model = sam_model_registry[model_type]()
+        self.points_per_size = 32
+        self.transformer = ResizeLongestSide(self.model.image_encoder.img_size)
+
+    def forward(self, images):
         _, _, H, W = images.shape
+
+        images = F.interpolate(
+            images,
+            (self.model.image_encoder.img_size, self.model.image_encoder.img_size),
+            mode="bilinear",
+            align_corners=False,
+        )
+
+        x = np.linspace(0, H - 1, self.points_per_size)
+        y = np.linspace(0, W - 1, self.points_per_size)
+        X, Y = np.meshgrid(x, y)
+        points = np.stack([X, Y], axis=-1).reshape(-1, 2)
+        point_labels = np.ones(shape=(images.shape[0], points.shape[0]))
+
+        # points = self.transformer.apply_coords(points,(H,W))
+
+        points_pt = torch.tensor(points,device=images.device).unsqueeze(0)
+        point_labels_pt = torch.tensor(point_labels,device=images.device)
+
+        print(points_pt.shape,point_labels_pt.shape)
+
         image_embeddings = self.model.image_encoder(images)
         pred_masks = []
         ious = []
         for embedding in image_embeddings:
             sparse_embeddings, dense_embeddings = self.model.prompt_encoder(
-                points=None,
+                points=(points_pt,point_labels_pt),
                 boxes=None,
                 masks=None,
             )
-            
+
             low_res_masks, iou_predictions = self.model.mask_decoder(
                 image_embeddings=embedding.unsqueeze(0),
                 image_pe=self.model.prompt_encoder.get_dense_pe(),
@@ -46,15 +67,15 @@ class SAM(nn.Module):
                 mode="bilinear",
                 align_corners=False,
             )
-            pred_masks.append(masks.squeeze())
+            pred_masks.append(masks)
             ious.append(iou_predictions)
-        return torch.stack(pred_masks,dim=0)
-        # return pred_masks, ious
-    
+        return pred_masks, ious
+
+
 if __name__ == "__main__":
-    device = "cuda:5"
+    device = "cuda:7"
     model = SAM().to(device)
-    fake_data = torch.randn(2,3,1024,1024).to(device)
-    pred_masks = model(fake_data)
-    print(pred_masks.shape)
-    print(pred_masks[0])
+    fake_data = torch.randn(1, 3, 512, 512).to(device)
+    pred_masks, ious = model(fake_data)
+    print(len(pred_masks), len(ious))
+    print(pred_masks[0].shape)
