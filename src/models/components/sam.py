@@ -21,7 +21,7 @@ class SAM(nn.Module):
         self.points_per_size = 32
         self.transformer = ResizeLongestSide(self.model.image_encoder.img_size)
 
-    def forward(self, images):
+    def forward(self, images: torch.Tensor):
         _, _, H, W = images.shape
 
         images = F.interpolate(
@@ -37,19 +37,23 @@ class SAM(nn.Module):
         points = np.stack([X, Y], axis=-1).reshape(-1, 2)
         point_labels = np.ones(shape=(images.shape[0], points.shape[0]))
 
-        # points = self.transformer.apply_coords(points,(H,W))
+        points = self.transformer.apply_coords(points, (H, W))
 
-        points_pt = torch.tensor(points,device=images.device).unsqueeze(0)
-        point_labels_pt = torch.tensor(point_labels,device=images.device)
+        points_pt = torch.as_tensor(points, device=images.device, dtype=torch.float)
+        point_labels_pt = torch.as_tensor(
+            point_labels, device=images.device, dtype=torch.int
+        )
 
-        print(points_pt.shape,point_labels_pt.shape)
+        points_pt, point_labels_pt = points_pt[None, :, :], point_labels_pt
+
+        # exit()
 
         image_embeddings = self.model.image_encoder(images)
         pred_masks = []
         ious = []
         for embedding in image_embeddings:
             sparse_embeddings, dense_embeddings = self.model.prompt_encoder(
-                points=(points_pt,point_labels_pt),
+                points=(points_pt, point_labels_pt),
                 boxes=None,
                 masks=None,
             )
