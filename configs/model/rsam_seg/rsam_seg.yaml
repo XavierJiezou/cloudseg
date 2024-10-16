@@ -1,4 +1,4 @@
-_target_: src.models.sam_module.SamLitModule
+_target_: src.models.rsam_seg.RSAMSegLitModule
 
 net:
   _target_: src.models.components.rsam_seg.sam.SAM

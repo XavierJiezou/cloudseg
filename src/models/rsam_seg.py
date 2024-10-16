@@ -4,7 +4,7 @@ import torch
 from lightning import LightningModule
 
 
-class SamLitModule(LightningModule):
+class RSAMSegLitModule(LightningModule):
     def __init__(
         self,
         net: torch.nn.Module,
