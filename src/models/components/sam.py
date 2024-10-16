@@ -15,12 +15,14 @@ from torch.nn import functional as F
 
 
 class SAM(nn.Module):
-    def __init__(self, model_type="vit_h", num_classes=6,checkpoint = "sam_vit_h_4b8939.pth"):
+    def __init__(
+        self, model_type="vit_h", num_classes=6, checkpoint="data/sam_check_point/sam_vit_h_4b8939.pth"
+    ):
         super().__init__()
         self.num_classes = num_classes
-        self.get_model(model_type=model_type,checkpoint=checkpoint)
+        self.get_model(model_type=model_type, checkpoint=checkpoint)
 
-    def get_model(self, model_type,checkpoint=None):
+    def get_model(self, model_type, checkpoint=None):
         sam_model = sam_model_registry[model_type](checkpoint)
 
         self.image_encoder = sam_model.image_encoder
@@ -36,14 +38,12 @@ class SAM(nn.Module):
 
         for name, param in self.image_encoder.named_parameters():
             param.requires_grad = False
-        
+
         for name, param in self.prompt_encoder.named_parameters():
             param.requires_grad = False
 
         # for name, param in self.mask_decoder.named_parameters():
-        #     param.requires_grad = False 
-        
-    
+        #     param.requires_grad = False
 
     def forward(self, images: torch.Tensor):
         B, _, H, W = images.shape
@@ -56,14 +56,14 @@ class SAM(nn.Module):
         )
 
         image_embeddings = self.image_encoder(images)
-        
+
         sparse_embeddings, dense_embeddings = self.prompt_encoder(
             points=None,
             boxes=None,
             masks=None,
         )
 
-        low_res_masks, _ = self.mask_decoder(
+        low_res_masks, iou_preds = self.mask_decoder(
             image_embeddings=image_embeddings,
             image_pe=self.prompt_encoder.get_dense_pe(),
             sparse_prompt_embeddings=sparse_embeddings,
@@ -77,15 +77,16 @@ class SAM(nn.Module):
             align_corners=False,
         )
 
-        return logits
+        return logits, iou_preds
 
 
 if __name__ == "__main__":
-    device = "cuda:0"
+    device = "cuda:7"
     model = SAM().to(device)
     fake_data = torch.randn(2, 3, 512, 512).to(device)
-    logits:torch.Tensor = model(fake_data)
+    logits,iou_preds = model(fake_data)
     print(logits.shape)
     print(logits.dtype)
+    print(iou_preds.shape)
     # sigmoid
-    print(torch.max(logits),torch.min(logits))
+    print(torch.max(logits), torch.min(logits))
