@@ -1,0 +1,18 @@
+_target_: src.models.base_module.BaseLitModule
+
+net:
+  _target_: src.models.components.dinov2.DINOv2
+  num_classes: 4
+  backbone: "dinov2_b"
+
+
+
+criterion:
+  _target_: torch.nn.CrossEntropyLoss
+
+optimizer:
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.001
+
+scheduler: null
