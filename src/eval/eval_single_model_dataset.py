@@ -8,7 +8,7 @@ import math
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 from albumentations.pytorch.transforms import ToTensorV2
-
+from src.models.components.dinov2 import DINOv2
 from collections import OrderedDict
 from src.metrics.metric import IoUMetric
 from torchmetrics.utilities.data import to_onehot
@@ -40,18 +40,54 @@ def get_args():
 
 class Eval:
     def __init__(self, dataset_name: str, model_name:str,device: str):
-        self.num_classes = 4
         self.device = device
         self.dataset_name = dataset_name
         self.model_name = model_name
-        self.image_size = 256
+        self.num_classes,self.image_size,self.colors = self.__get_num_classes_image_shape_colors(dataset_name)
         self.root = self.__get_root(self.dataset_name)
         
 
-        self.model = SAM(model_type="vit_b",num_classes=4,checkpoint="data/sam_check_point/sam_vit_b_01ec64.pth").to(self.device)
+        self.model = self.get_model(model_name)
 
         self.__load_weight()
         self.val_dataloader = self.__load_data(dataset_name=self.dataset_name)
+
+    def get_model(self,model_name:str):
+        models = {
+            "sam":SAM(model_type="vit_b",num_classes=self.num_classes,checkpoint="data/sam_check_point/sam_vit_b_01ec64.pth").to(self.device),
+            "dinov2":DINOv2(self.num_classes,backbone="dinov2_b").to(self.device)
+        }
+
+        return models[model_name]
+
+    def __get_num_classes_image_shape_colors(self, experiment_name: str):
+        if experiment_name in ["cloudsen12_high_l1c", "cloudsen12_high_l2a"]:
+            return (
+                4,
+                512,
+                (
+                    (0, 0, 0),
+                    (255, 255, 255),
+                    (170, 170, 170),
+                    (85, 85, 85),
+                ),
+            )
+        elif experiment_name in ["gf12ms_whu_gf1", "gf12ms_whu_gf2"]:
+            return 2, 256, ((0, 0, 0), (255, 255, 255))
+        elif experiment_name in ["hrc_whu"]:
+            return 2, 256, ((0, 0, 0), (255, 255, 255))
+        elif experiment_name in ["l8_biome_crop"]:
+            return (
+                4,
+                512,
+                (
+                    (0, 0, 0),
+                    (85, 85, 85),
+                    (170, 170, 170),
+                    (255, 255, 255),
+                ),
+            )
+        raise ValueError(f"Experiment name {experiment_name} is not recognized.")
 
     def __get_root(self, dataset_name: str):
         dataset_root_mapping = {
@@ -173,14 +209,15 @@ class Eval:
 
     @torch.no_grad()
     def inference(self, image: torch.Tensor) -> torch.tensor:
-        logits:torch.Tensor = self.model(image)[0]
+        if isinstance(logits,tuple):
+            logits:torch.Tensor = self.model(image)[0]
         preds = logits.argmax(dim=1).detach()
         return preds
 
     def run(self):
 
         metric = IoUMetric(
-            num_classes=4,
+            num_classes=self.num_classes,
             iou_metrics=["mIoU", "mDice", "mFscore"],
             model_name=f"{self.dataset_name}_{self.model_name}",
         )
@@ -194,7 +231,7 @@ class Eval:
             ann: torch.Tensor = data["ann"].to(self.device)
             pred = self.inference(img)
             metric.results.append(
-                metric.intersect_and_union(pred, ann, 4, ignore_index=255)
+                metric.intersect_and_union(pred, ann, self.num_classes, ignore_index=255)
             )
 
         result = metric.compute_metrics(metric.results)
