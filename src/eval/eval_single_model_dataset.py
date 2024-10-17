@@ -209,8 +209,9 @@ class Eval:
 
     @torch.no_grad()
     def inference(self, image: torch.Tensor) -> torch.tensor:
+        logits:torch.Tensor = self.model(image)
         if isinstance(logits,tuple):
-            logits:torch.Tensor = self.model(image)[0]
+            logits = logits[0]
         preds = logits.argmax(dim=1).detach()
         return preds
 
