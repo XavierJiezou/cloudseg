@@ -29,17 +29,21 @@ def get_args():
     parser.add_argument(
         "--dataset_name", type=str, help="数据集名称", default="cloudsen12_high_l1c"
     )
+    parser.add_argument(
+        "--model_name", type=str, help="模型名称", default="sam"
+    )
     parser.add_argument("--gpu", type=str, help="使用的设备", default="cuda:0")
 
     args = parser.parse_args()
-    return args.dataset_name, args.gpu
+    return args.dataset_name, args.model_name,args.gpu
 
 
 class Eval:
-    def __init__(self, dataset_name: str, device: str):
+    def __init__(self, dataset_name: str, model_name:str,device: str):
         self.num_classes = 4
         self.device = device
         self.dataset_name = dataset_name
+        self.model_name = model_name
         self.image_size = 256
         self.root = self.__get_root(self.dataset_name)
         
@@ -65,7 +69,7 @@ class Eval:
         将模型权重加载进来
         """
         weight_path = glob(
-            f"logs/{self.dataset_name}/sam/*/checkpoints/*epoch*.ckpt"
+            f"logs/{self.dataset_name}/{self.model_name}/*/checkpoints/*epoch*.ckpt"
         )[0]
         weight = torch.load(weight_path, map_location=self.device)
         state_dict = {}
@@ -169,7 +173,7 @@ class Eval:
 
     @torch.no_grad()
     def inference(self, image: torch.Tensor) -> torch.tensor:
-        logits:torch.Tensor = self.model(image)
+        logits:torch.Tensor = self.model(image)[0]
         preds = logits.argmax(dim=1).detach()
         return preds
 
@@ -178,7 +182,7 @@ class Eval:
         metric = IoUMetric(
             num_classes=4,
             iou_metrics=["mIoU", "mDice", "mFscore"],
-            model_name=f"{self.dataset_name}_sam",
+            model_name=f"{self.dataset_name}_{self.model_name}",
         )
 
         for data in track(
@@ -194,11 +198,11 @@ class Eval:
             )
 
         result = metric.compute_metrics(metric.results)
-        with open(f"{self.dataset_name}_rsam.json", "w") as f:
+        with open(f"{self.dataset_name}_{self.model_name}.json", "w") as f:
             json.dump(result, f, ensure_ascii=False, indent=4)
 
 
 if __name__ == "__main__":
     # example usage: python src/eval/eval_sam.py --dataset_name cloudsen12_high_l1c --gpu cuda:0
-    dataset_name, gpu = get_args()
-    Eval(dataset_name, gpu).run()
+    dataset_name, model_name,gpu = get_args()
+    Eval(dataset_name, model_name,gpu).run()
