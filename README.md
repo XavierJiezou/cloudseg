@@ -171,7 +171,9 @@ In this example, the `trainer.devices` parameter is overridden to use GPU 1 for 
 
 ### Evaluation
 
-1. General Evaluation Command
+1. Download model weights from [hugging face](https://huggingface.co/XavierJiezou/cloudseg-models/tree/main/checkpoints)
+
+2. General Evaluation Command
 
 To evaluate the performance of models on a specified dataset:
 
@@ -182,7 +184,7 @@ python src/eval/eval_on_experiment.py --experiment_name=dataset_name --gpu="cuda
 - `experiment_name`: Specifies the name of the dataset.
 - `gpu`: Specifies the device to use for running the evaluation.
 
-2. Scene-wise Evaluation (Just for L8_Biome Dataset)
+3. Scene-wise Evaluation (Just for L8_Biome Dataset)
 
 To evaluate the model's performance on **L8_Biome** dataset by scenes:
 
