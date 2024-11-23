@@ -1,5 +1,6 @@
 # Cloud Segmentation for Remote Sensing
 
+[![arXiv](https://img.shields.io/badge/arXiv-2411.13127-b31b1b.svg)](https://arxiv.org/abs/2411.13127)
 [![Datasets](https://img.shields.io/badge/🤗HugginngFace-Datasets-orange)](https://huggingface.co/datasets/XavierJiezou/cloudseg-datasets)
 [![Models](https://img.shields.io/badge/🤗HugginngFace-Models-orange)](https://huggingface.co/XavierJiezou/cloudseg-models)
 [![Spaces](https://img.shields.io/badge/🤗HugginngFace-Spaces-orange)](https://huggingface.co/spaces/caixiaoshun/cloudseg)
