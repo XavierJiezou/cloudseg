@@ -37,12 +37,13 @@ We have uploaded the conda virtual environment used in our experiments to [Huggi
 ```bash
 mkdir envs
 tar -zxvf envs.tar.gz -C envs
-source env/bin/activate
+source envs/bin/activate
 ````
 
 ## Datasets
 
-You can download all datasets from [Hugging Face: CloudSeg Datasets](https://huggingface.co/datasets/XavierJiezou/cloudseg-datasets). The available datasets include:  
+You can download all datasets from [Hugging Face: CloudSeg Datasets](https://huggingface.co/datasets/XavierJiezou/cloudseg-datasets). The available datasets include: 
+
 - **[L8_Biome (RSE 2017)](configs/data/l8_biome)**  
 - **[HRC_WHU (ISPRS 2019)](configs/data/hrc_whu)**  
 - **[CloudSEN12_High (Scientific Data 2022)](configs/data/cloudsen12_high)**  
