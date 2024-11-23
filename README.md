@@ -179,6 +179,8 @@ cloudseg
 ├── ...
 ├── checkpoints
 │   ├── cloudsen12_high_l1c
+│   │   ├──cdnetv1.bin
+│   │   ├──cdnetv2.bin
 │   ├── cloudsen12_high_l2a
 │   ├── l8_biome
 │   ├── gf12ms_whu_gf1
