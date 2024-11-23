@@ -171,9 +171,22 @@ In this example, the `trainer.devices` parameter is overridden to use GPU 1 for 
 
 ### Evaluation
 
-1. Download model weights from [hugging face](https://huggingface.co/XavierJiezou/cloudseg-models/tree/main/checkpoints)
+1. Download model weights from [hugging face](https://huggingface.co/XavierJiezou/cloudseg-models/tree/main/checkpoints).
+```
+cloudseg
+├── src
+├── configs
+├── ...
+├── checkpoints
+│   ├── cloudsen12_high_l1c
+│   ├── cloudsen12_high_l2a
+│   ├── l8_biome
+│   ├── gf12ms_whu_gf1
+│   ├── gf12ms_whu_gf2
+│   ├── hrc_whu
+```
 
-2. General Evaluation Command
+3. General Evaluation Command
 
 To evaluate the performance of models on a specified dataset:
 
