@@ -182,7 +182,7 @@ python src/eval/eval_on_experiment.py --experiment_name=dataset_name --gpu="cuda
 - `experiment_name`: Specifies the name of the dataset.
 - `gpu`: Specifies the device to use for running the evaluation.
 
-2. Scene-wise Evaluation (just for L8_Biome Dataset)
+2. Scene-wise Evaluation (Just for L8_Biome Dataset)
 
 To evaluate the model's performance on **L8_Biome** dataset by scenes:
 
