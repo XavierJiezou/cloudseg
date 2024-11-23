@@ -153,44 +153,48 @@ ann_dir
 
 ## Usage
 
-**Train model with chosen experiment configuration from [configs/experiment/](configs/experiment/)**
+### Training
+
+Train model with chosen experiment configuration from [configs/experiment/](configs/experiment/).
 
 ```bash
 python src/train.py experiment=hrc_whu_cdnetv1.yaml
 ```
 
-**You can override any parameter from command line like this**
+You can override any parameter from command line like this.
 
 ```bash
 python src/train.py trainer.devices=["1"]
 ```
-- In this example, the `trainer.devices` parameter is overridden to use GPU 1 for training.
 
-### Model Evaluation and Visualization Guide
+In this example, the `trainer.devices` parameter is overridden to use GPU 1 for training.
 
-Below are instructions for running evaluation and visualization scripts for various models on datasets:
+### Evaluation
 
----
+1. General Evaluation Command
 
-#### 1. General Evaluation Command
 To evaluate the performance of models on a specified dataset:
+
 ```bash
 python src/eval/eval_on_experiment.py --experiment_name=dataset_name --gpu="cuda:0"
 ```
-- `--experiment_name=dataset_name`: Specifies the name of the dataset.
-- `--gpu="cuda:0"`: Specifies the device to use for running the evaluation.
 
----
+- `experiment_name`: Specifies the name of the dataset.
+- `gpu`: Specifies the device to use for running the evaluation.
 
-#### 2. Scene-Based Evaluation (for L8_Biome Dataset)
+2. Scene-wise Evaluation (just for L8_Biome Dataset)
+
 To evaluate the model's performance on **L8_Biome** dataset by scenes:
-```bash
-python src/eval/eval_l8_scene.py --gpu="cuda:0" --root="dataset_path"
-```
-- `--gpu="cuda:0"`: Specifies the device to use for running the evaluation.
-- `--root="dataset_path"`: Specifies the dataset path.
 
-## Methods
+```bash
+python src/eval/eval_l8_scene.py --root="dataset_path" --gpu="cuda:0"
+```
+
+- `root: Specifies the dataset path.
+- `gpu`: Specifies the device to use for running the evaluation.
+
+
+## Supported Methods
 
 - [CDNetv1 (TGRS 2019)](configs/model/cdnetv1)
 - [KappaMask (RS 2021)](configs/model/kappamask)
@@ -207,23 +211,14 @@ We provide a **Gradio Demo Application** for testing the methods in this reposit
 
 ### Option 1: Run Locally
 
-1. Clone this repository:
-   ```bash
-   git clone https://huggingface.co/spaces/caixiaoshun/cloudseg
-   cd cloudseg
-   ```
-
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-   
-3. Start the Gradio demo:
-   ```bash
-   python app.py
-   ```
-
-5. Open your browser and navigate to `http://127.0.0.1:7860` to interact with the demo.
+```bash
+git clone https://huggingface.co/XavierJiezou/cloudseg-models
+cd cloudseg-models
+mkdir envs
+tar -xzf envs.tar.gz -C envs
+source envs/bin/activate
+python app.py
+```
 
 ### Option 2: Access on Hugging Face Space
 
@@ -234,16 +229,14 @@ You can also try the demo online without any setup:
 
 If you use our code or models in your research, please cite with:
 
-```latex
-@article{cloud-adapter,
-  title={Adapting Vision Foundation Models for Robust Cloud Segmentation in Remote Sensing Images},
-  author={Xuechao Zou and Shun Zhang and Kai Li and Shiying Wang and Junliang Xing and Lei Jin and Congyan Lang and Pin Tao},
-  year={2024},
-  eprint={2411.13127},
-  archivePrefix={arXiv},
-  primaryClass={cs.CV},
-  url={https://arxiv.org/abs/2411.13127}
+```bib
+@misc{cloud-adapter,
+      title={Adapting Vision Foundation Models for Robust Cloud Segmentation in Remote Sensing Images}, 
+      author={Xuechao Zou and Shun Zhang and Kai Li and Shiying Wang and Junliang Xing and Lei Jin and Congyan Lang and Pin Tao},
+      year={2024},
+      eprint={2411.13127},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2411.13127}, 
 }
 ```
-
-
