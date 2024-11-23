@@ -87,14 +87,10 @@ class Eval:
         """
         for model_name, model in self.models.items():
             weight_path = glob(
-                f"logs/l8_biome_crop/{model_name}/*/checkpoints/*step*.ckpt"
+                f"checkpoints/l8_biome/{model_name}.bin"
             )[0]
             weight = torch.load(weight_path, map_location=self.device)
-            state_dict = {}
-            for key, value in weight["state_dict"].items():
-                new_key = key[4:]
-                state_dict[new_key] = value
-            model.load_state_dict(state_dict)
+            model.load_state_dict(weight)
             model.eval()
 
     def __get_data_module(self):

@@ -69,9 +69,11 @@ class Eval:
             ),
         }
         self.models = OrderedDict(
-             {key: self.models[key] for key in model_order[experiment_name] if key in self.models}
+            {key: self.models[key]
+                for key in model_order[experiment_name] if key in self.models}
         )
-        assert len(self.models) == 8,f"num of models is {len(self.models)},but actually is 8"
+        assert len(
+            self.models) == 8, f"num of models is {len(self.models)},but actually is 8"
         self.root = self.__get_root(experiment_name)
         self.model_names_mapping = {
             "KappaMask": "kappamask",
@@ -89,7 +91,8 @@ class Eval:
         self.__load_weight(experiment_name)
         self.val_dataloader = self.__load_data(experiment_name)
         self.model_metrics = {
-            model_name: self.__get_metrics(self.num_classes, model_name=model_name)
+            model_name: self.__get_metrics(
+                self.num_classes, model_name=model_name)
             for model_name in self.model_names_mapping
         }
 
@@ -131,7 +134,8 @@ class Eval:
                     (255, 255, 255),
                 ),
             )
-        raise ValueError(f"Experiment name {experiment_name} is not recognized.")
+        raise ValueError(
+            f"Experiment name {experiment_name} is not recognized.")
 
     def __load_weight(self, experiment_name):
         """
@@ -140,17 +144,14 @@ class Eval:
         for model_name, model in self.models.items():
             try:
                 weight_path = glob(
-                    f"logs/{experiment_name}/{model_name}/*/checkpoints/*_*.ckpt"
+                    f"checkpoints/{experiment_name}/{model_name}.bin"
                 )[0]
             except IndexError:
-                print(f"logs/{experiment_name}/{model_name}/*/checkpoints/*_*.ckpt")
+                print(
+                    f"checkpoints/{experiment_name}/{model_name}.bin not found!,you can download it from https://huggingface.co/XavierJiezou/cloudseg-models/tree/main/checkpoints")
                 exit()
             weight = torch.load(weight_path, map_location=self.device)
-            state_dict = {}
-            for key, value in weight["state_dict"].items():
-                new_key = key[4:]
-                state_dict[new_key] = value
-            model.load_state_dict(state_dict)
+            model.load_state_dict(weight)
             model.eval()
 
     def __get_data_module(self, experiment_name):
@@ -231,7 +232,8 @@ class Eval:
                 test_pipeline=test_pipeline,
                 batch_size=1,
             )
-        raise ValueError(f"Experiment name {experiment_name} is not recognized.")
+        raise ValueError(
+            f"Experiment name {experiment_name} is not recognized.")
 
     def __load_data(self, experiment_name: str):
 
@@ -318,7 +320,7 @@ class Eval:
             draw.text((x, y - 10), title, fill="black", font=font)
         filename = os.path.join("images", f"{self.experiment_name}")
         os.makedirs(filename, exist_ok=True)
-        new_image.save(f"{filename}{os.path.sep}{index}.pdf",dpi=(300,300))
+        new_image.save(f"{filename}{os.path.sep}{index}.pdf", dpi=(300, 300))
 
     def visualize_img_no_text(self, show_images: np.ndarray, index=None):
         show_images_tensor = torch.from_numpy(show_images).permute(0, 3, 1, 2)
@@ -330,8 +332,7 @@ class Eval:
         # 获取图像尺寸
         filename = os.path.join("images", f"{self.experiment_name}")
         os.makedirs(filename, exist_ok=True)
-        grid_image.save(f"{filename}{os.path.sep}{index}.png",dpi=(300,300))
-
+        grid_image.save(f"{filename}{os.path.sep}{index}.png", dpi=(300, 300))
 
     @torch.no_grad()
     def inference(self, img: torch.Tensor, model: nn.Module) -> torch.Tensor:
@@ -410,14 +411,16 @@ class Eval:
                     img[0], pred, num_classes=self.num_classes
                 )
                 model_masks[model_name] = color_mask
-            image = (img[0].detach().cpu().permute(1, 2, 0).numpy() * 255).astype(np.uint8)
-            gt = self.give_colors_to_mask(img[0], ann, num_classes=self.num_classes)
+            image = (img[0].detach().cpu().permute(
+                1, 2, 0).numpy() * 255).astype(np.uint8)
+            gt = self.give_colors_to_mask(
+                img[0], ann, num_classes=self.num_classes)
             image = gaussian_stretch(image)
             masks = [image] + [gt] + list(model_masks.values())
-            masks = np.concatenate(masks,axis=1)
+            masks = np.concatenate(masks, axis=1)
             masks = masks[None,]
             # self.visualize_img(masks,column_titles=["Input", "Label"] + list(model_masks.keys()),index=index)
-            self.visualize_img_no_text(masks,index=index)
+            self.visualize_img_no_text(masks, index=index)
             index += 1
 
         self.show_metrics()
