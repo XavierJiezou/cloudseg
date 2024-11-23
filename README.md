@@ -214,6 +214,9 @@ python src/eval/eval_l8_scene.py --root="dataset_path" --gpu="cuda:0"
 - `root: Specifies the dataset path.
 - `gpu`: Specifies the device to use for running the evaluation.
 
+## Visualization
+
+We have published the pre-trained model's visualization results of various datasets on Hugging Face at [Hugging Face](https://huggingface.co/XavierJiezou/cloud-adapter-models/tree/vis). If you prefer not to run the code, you can directly visit the repository to download the visualization results.
 
 ## Supported Methods
 
