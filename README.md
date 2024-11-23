@@ -5,7 +5,7 @@
 <!--[![Paper](http://img.shields.io/badge/paper-arxiv.1001.2234-B31B1B.svg)](https://arxiv.org)-->
 <!--[![Conference](http://img.shields.io/badge/AnyConference-year-4b44ce.svg)]([https://papers.nips.cc/paper/2020](https://arxiv.org))-->
 
-**CloudSeg is a repository containing the implementation of methods compared in the paper *"Adapting Vision Foundation Models for Robust Cloud Segmentation in Remote Sensing Images."* It includes implementations of CDNetv1 (TGRS 2019), CDNetv2 (TGRS 2021), DBNet (TGRS 2022), HRCloudNet (JEI 2024), MCDNet (JAG 2024), SCNN (ISPRS 2024),KappaMask (RS 2021) and UNetMobv2 (Scientific Data 2022). We have open-sourced the pretrained weights for these methods on various datasets, available at [Hugging Face](https://huggingface.co/XavierJiezou/cloud-adapter-models).**
+CloudSeg is a repository containing the implementation of methods compared in the paper [Cloud-Adapter](https://xavierjiezou.github.io/Cloud-Adapter/). It includes implementations of CDNetv1 (TGRS 2019), CDNetv2 (TGRS 2021), DBNet (TGRS 2022), HRCloudNet (JEI 2024), MCDNet (JAG 2024), SCNN (ISPRS 2024),KappaMask (RS 2021) and UNetMobv2 (Scientific Data 2022). We have open-sourced the pretrained weights for these methods on various datasets, available at [Hugging Face](https://huggingface.co/XavierJiezou/cloudseg-models).
 
 ## Leaderboard (mIoU, %, ↑)
 
