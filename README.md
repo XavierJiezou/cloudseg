@@ -30,7 +30,7 @@ conda activate cloudseg
 pip install -r requirements.txt
 ```
 
-**OR**  
+---
 
 We have uploaded the conda virtual environment used in our experiments to [Hugging Face](https://huggingface.co/XavierJiezou/cloudseg-models/blob/main/envs.tar.gz). You can download it directly from the link, extract the files, and activate the environment using the following commands:  
 
