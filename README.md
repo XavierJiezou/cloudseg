@@ -9,7 +9,7 @@ CloudSeg is a repository containing the implementation of methods compared in th
 
 ## Leaderboard (mIoU, %, ↑)
 
-|   **Methods**  | **HRC_WHU** | **GF12MS_WHU_GF1** | **GF12MS_WHU_GF2** | **CloudSEN12_High_L1C** | **CloudSEN12_High_L2A** | **L8_Biome** |
+|   **Methods**  | **HRC** | **GF1** | **GF2** | **L1C** | **L2A** | **L8B** |
 |:--------------:|:-----------:|:------------------:|:------------------:|:-----------------------:|:-----------------------:|:------------:|
 |    **SCNN**    |    57.22    |        81.68       |        76.99       |          22.75          |          28.76          |     32.38    |
 |   **CDNetv1**  |    77.79    |        81.82       |        78.20       |          60.35          |          62.39          |     34.58    |
