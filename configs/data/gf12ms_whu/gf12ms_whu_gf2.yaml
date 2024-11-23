@@ -1,0 +1,67 @@
+# Refercence: https://github.com/cloudsen12/models/blob/master/unet_mobilenetv2/cloudsen12_unet.ipynb
+_target_: src.data.gf12ms_whu_datamodule.GF12MSWHUDataModule
+root: data/gf12ms_whu
+train_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.PadIfNeeded
+        min_height: 256
+        min_width: 256
+        p: 1
+        always_apply: True
+      - _target_: albumentations.OneOf
+        transforms:
+          - _target_: albumentations.HorizontalFlip
+            p: 0.5
+          - _target_: albumentations.VerticalFlip
+            p: 0.5
+          - _target_: albumentations.RandomRotate90
+            p: 0.5
+          - _target_: albumentations.Transpose
+            p: 0.5
+        p: 1
+
+  img_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  ann_transform: null
+val_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.PadIfNeeded
+        min_height: 256
+        min_width: 256
+        p: 1
+        always_apply: True
+
+  img_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  ann_transform: null
+
+test_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.PadIfNeeded
+        min_height: 256
+        min_width: 256
+        p: 1
+        always_apply: True
+
+  img_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  ann_transform: null
+
+serial: "gf2"
+bands: ["B3", "B2", "B1"]
+batch_size: 8
+num_workers: 4
+pin_memory: True
+persistent_workers: False

@@ -1,0 +1,12 @@
+# Model
+
+|             **Method**             | **Year** | **Publication** | **Factor** |                                                                  **Paper**                                                                  | **Params (M)** | **MACs (G)** |
+|:----------------------------------:|:--------:|:---------------:|:----------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|:--------------:|:------------:|
+|    [cdnetv1](cdnetv1/README.md)    |   2019   |       TGRS      |     7.5    |                                         CDnet: CNN-Based Cloud Detection for Remote Sensing Imagery                                         |     46.487     |    65.747    |
+|    [cdnetv2](cdnetv2/README.md)    |   2021   |       TGRS      |     7.5    |                          CDnetV2: CNN-Based Cloud Detection for Remote Sensing Imagery With Cloud-Snow Coexistence                          |     67.083     |     18.4     |
+|      [dbnet](dbnet/README.md)      |   2022   |       TGRS      |     7.5    |                                         Dual-Branch Network for Cloud and Cloud Shadow Segmentation                                         |     95.064     |    28.474    |
+| [hrcloudnet](hrcloudnet/README.md) |   2024   |       JEI       |      1     |                                                   High-Resolution Cloud Detection Network                                                   |     74.537     |    50.833    |
+|  [kappamask](kappamask/README.md)  |   2021   |        RS       |     4.2    |                                            KappaMask: AI-Based Cloudmask Processor for Sentinel-2                                           |     31.033     |    54.697    |
+|     [mcdnet](mcdnet/README.md)     |   2024   |       JAG       |     7.6    | MCDNet: Multilevel cloud detection network for remote sensing images based on dual-perspective change-guided and multi-scale feature fusion |     13.109     |    14.547    |
+|       [scnn](scnn/README.md)       |   2024   |      ISPRS      |    10.6    |                              Remote sensing image cloud detection using a shallow convolutional neural network                              |    0.000424    |    0.02333   |
+|  [unetmobv2](unetmobv2/README.md)  |   2022   | Scientific data |     5.8    |                       CloudSEN12, a global dataset for semantic understanding of cloud and cloud shadow in Sentinel-2                       |      6.629     |     3.406    |

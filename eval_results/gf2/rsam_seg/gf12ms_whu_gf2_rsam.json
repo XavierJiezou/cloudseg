@@ -1,0 +1,9 @@
+{
+    "aAcc": 93.68,
+    "mIoU": 83.28,
+    "mAcc": 90.74,
+    "mDice": 90.61,
+    "mFscore": 90.61,
+    "mPrecision": 90.49,
+    "mRecall": 90.74
+}

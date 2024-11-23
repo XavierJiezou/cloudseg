@@ -1,0 +1,48 @@
+# Refercence: https://github.com/cloudsen12/models/blob/master/unet_mobilenetv2/cloudsen12_unet.ipynb
+_target_: src.data.cloudsen12_high_datamodule.CloudSEN12HighDataModule
+root: data/cloudsen12_high
+train_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.OneOf
+        transforms:
+          - _target_: albumentations.HorizontalFlip
+            p: 0.5
+          - _target_: albumentations.VerticalFlip
+            p: 0.5
+          - _target_: albumentations.RandomRotate90
+            p: 0.5
+          - _target_: albumentations.Transpose
+            p: 0.5
+        p: 1
+
+  img_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  ann_transform: null
+val_pipeline:
+  all_transform: null
+
+  img_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  ann_transform: null
+
+test_pipeline:
+  all_transform: null
+
+  img_transform: 
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  ann_transform: null
+
+level: l1c
+bands: ["B4", "B3", "B2"]
+batch_size: 8
+num_workers: 4
+pin_memory: True
+persistent_workers: False

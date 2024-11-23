@@ -1,0 +1,594 @@
+{
+    "Grass/Crops": {
+        "KappaMask": {
+            "aAcc": 76.56,
+            "mIoU": 36.29,
+            "mAcc": 62.25,
+            "mDice": 42.17,
+            "mFscore": 69.48,
+            "mPrecision": 55.49,
+            "mRecall": 62.25
+        },
+        "CDNetv1": {
+            "aAcc": 73.04,
+            "mIoU": 39.99,
+            "mAcc": 59.01,
+            "mDice": 44.22,
+            "mFscore": 63.86,
+            "mPrecision": 60.99,
+            "mRecall": 59.01
+        },
+        "CDNetv2": {
+            "aAcc": 86.78,
+            "mIoU": 55.17,
+            "mAcc": 71.84,
+            "mDice": 59.23,
+            "mFscore": 75.94,
+            "mPrecision": 70.36,
+            "mRecall": 71.84
+        },
+        "HRCloudNet": {
+            "aAcc": 81.99,
+            "mIoU": 50.47,
+            "mAcc": 66.21,
+            "mDice": 56.19,
+            "mFscore": 72.74,
+            "mPrecision": 70.43,
+            "mRecall": 66.21
+        },
+        "MCDNet": {
+            "aAcc": 81.61,
+            "mIoU": 28.92,
+            "mAcc": 69.85,
+            "mDice": 32.92,
+            "mFscore": 66.37,
+            "mPrecision": 35.58,
+            "mRecall": 69.85
+        },
+        "SCNN": {
+            "aAcc": 83.13,
+            "mIoU": 43.81,
+            "mAcc": 70.48,
+            "mDice": 46.86,
+            "mFscore": 77.97,
+            "mPrecision": 61.7,
+            "mRecall": 70.48
+        },
+        "DBNet": {
+            "aAcc": 89.85,
+            "mIoU": 59.08,
+            "mAcc": 73.85,
+            "mDice": 63.31,
+            "mFscore": 78.04,
+            "mPrecision": 77.03,
+            "mRecall": 73.85
+        },
+        "UNetMobv2": {
+            "aAcc": 88.21,
+            "mIoU": 49.46,
+            "mAcc": 74.78,
+            "mDice": 54.39,
+            "mFscore": 76.58,
+            "mPrecision": 63.21,
+            "mRecall": 74.78
+        }
+    },
+    "Urban": {
+        "KappaMask": {
+            "aAcc": 86.78,
+            "mIoU": 48.83,
+            "mAcc": 73.39,
+            "mDice": 55.55,
+            "mFscore": 74.62,
+            "mPrecision": 61.62,
+            "mRecall": 73.39
+        },
+        "CDNetv1": {
+            "aAcc": 81.44,
+            "mIoU": 46.3,
+            "mAcc": 64.64,
+            "mDice": 51.03,
+            "mFscore": 67.31,
+            "mPrecision": 66.2,
+            "mRecall": 64.64
+        },
+        "CDNetv2": {
+            "aAcc": 89.13,
+            "mIoU": 56.27,
+            "mAcc": 74.55,
+            "mDice": 61.74,
+            "mFscore": 76.52,
+            "mPrecision": 70.38,
+            "mRecall": 74.55
+        },
+        "HRCloudNet": {
+            "aAcc": 87.99,
+            "mIoU": 56.47,
+            "mAcc": 71.57,
+            "mDice": 62.85,
+            "mFscore": 77.62,
+            "mPrecision": 75.17,
+            "mRecall": 71.57
+        },
+        "MCDNet": {
+            "aAcc": 83.87,
+            "mIoU": 31.9,
+            "mAcc": 70.68,
+            "mDice": 36.48,
+            "mFscore": 66.47,
+            "mPrecision": 38.72,
+            "mRecall": 70.68
+        },
+        "SCNN": {
+            "aAcc": 85.66,
+            "mIoU": 48.63,
+            "mAcc": 71.55,
+            "mDice": 52.05,
+            "mFscore": 77.22,
+            "mPrecision": 66.78,
+            "mRecall": 71.55
+        },
+        "DBNet": {
+            "aAcc": 92.14,
+            "mIoU": 59.68,
+            "mAcc": 76.73,
+            "mDice": 65.25,
+            "mFscore": 80.47,
+            "mPrecision": 75.22,
+            "mRecall": 76.73
+        },
+        "UNetMobv2": {
+            "aAcc": 91.59,
+            "mIoU": 50.24,
+            "mAcc": 79.9,
+            "mDice": 55.39,
+            "mFscore": 79.48,
+            "mPrecision": 59.53,
+            "mRecall": 79.9
+        }
+    },
+    "Wetlands": {
+        "KappaMask": {
+            "aAcc": 75.12,
+            "mIoU": 40.38,
+            "mAcc": 61.72,
+            "mDice": 47.59,
+            "mFscore": 59.93,
+            "mPrecision": 57.36,
+            "mRecall": 61.72
+        },
+        "CDNetv1": {
+            "aAcc": 66.57,
+            "mIoU": 34.5,
+            "mAcc": 56.45,
+            "mDice": 39.69,
+            "mFscore": 55.99,
+            "mPrecision": 57.44,
+            "mRecall": 56.45
+        },
+        "CDNetv2": {
+            "aAcc": 74.78,
+            "mIoU": 40.54,
+            "mAcc": 59.62,
+            "mDice": 46.71,
+            "mFscore": 60.19,
+            "mPrecision": 61.96,
+            "mRecall": 59.62
+        },
+        "HRCloudNet": {
+            "aAcc": 76.38,
+            "mIoU": 41.48,
+            "mAcc": 57.89,
+            "mDice": 47.93,
+            "mFscore": 64.24,
+            "mPrecision": 66.54,
+            "mRecall": 57.89
+        },
+        "MCDNet": {
+            "aAcc": 68.51,
+            "mIoU": 26.23,
+            "mAcc": 55.86,
+            "mDice": 30.75,
+            "mFscore": 48.85,
+            "mPrecision": 36.79,
+            "mRecall": 55.86
+        },
+        "SCNN": {
+            "aAcc": 67.42,
+            "mIoU": 34.38,
+            "mAcc": 55.9,
+            "mDice": 37.76,
+            "mFscore": 64.15,
+            "mPrecision": 54.29,
+            "mRecall": 55.9
+        },
+        "DBNet": {
+            "aAcc": 83.53,
+            "mIoU": 49.79,
+            "mAcc": 67.54,
+            "mDice": 56.52,
+            "mFscore": 68.81,
+            "mPrecision": 69.7,
+            "mRecall": 67.54
+        },
+        "UNetMobv2": {
+            "aAcc": 77.59,
+            "mIoU": 41.54,
+            "mAcc": 64.58,
+            "mDice": 47.82,
+            "mFscore": 62.33,
+            "mPrecision": 57.09,
+            "mRecall": 64.58
+        }
+    },
+    "Snow/Ice": {
+        "KappaMask": {
+            "aAcc": 56.74,
+            "mIoU": 24.41,
+            "mAcc": 43.24,
+            "mDice": 29.37,
+            "mFscore": 52.66,
+            "mPrecision": 41.7,
+            "mRecall": 43.24
+        },
+        "CDNetv1": {
+            "aAcc": 44.9,
+            "mIoU": 20.93,
+            "mAcc": 38.0,
+            "mDice": 23.82,
+            "mFscore": 46.26,
+            "mPrecision": 43.01,
+            "mRecall": 38.0
+        },
+        "CDNetv2": {
+            "aAcc": 55.37,
+            "mIoU": 24.99,
+            "mAcc": 41.18,
+            "mDice": 28.51,
+            "mFscore": 55.73,
+            "mPrecision": 49.64,
+            "mRecall": 41.18
+        },
+        "HRCloudNet": {
+            "aAcc": 47.58,
+            "mIoU": 22.2,
+            "mAcc": 36.91,
+            "mDice": 25.41,
+            "mFscore": 51.18,
+            "mPrecision": 44.68,
+            "mRecall": 36.91
+        },
+        "MCDNet": {
+            "aAcc": 29.59,
+            "mIoU": 10.43,
+            "mAcc": 25.64,
+            "mDice": 13.3,
+            "mFscore": 24.19,
+            "mPrecision": 29.21,
+            "mRecall": 25.64
+        },
+        "SCNN": {
+            "aAcc": 24.7,
+            "mIoU": 12.43,
+            "mAcc": 23.33,
+            "mDice": 14.37,
+            "mFscore": 30.31,
+            "mPrecision": 31.66,
+            "mRecall": 23.33
+        },
+        "DBNet": {
+            "aAcc": 67.69,
+            "mIoU": 29.72,
+            "mAcc": 47.25,
+            "mDice": 34.04,
+            "mFscore": 58.64,
+            "mPrecision": 54.49,
+            "mRecall": 47.25
+        },
+        "UNetMobv2": {
+            "aAcc": 56.48,
+            "mIoU": 23.5,
+            "mAcc": 41.99,
+            "mDice": 27.96,
+            "mFscore": 49.15,
+            "mPrecision": 43.41,
+            "mRecall": 41.99
+        }
+    },
+    "Barren": {
+        "KappaMask": {
+            "aAcc": 76.96,
+            "mIoU": 38.36,
+            "mAcc": 60.64,
+            "mDice": 45.31,
+            "mFscore": 61.18,
+            "mPrecision": 56.1,
+            "mRecall": 60.64
+        },
+        "CDNetv1": {
+            "aAcc": 59.96,
+            "mIoU": 31.5,
+            "mAcc": 48.05,
+            "mDice": 36.15,
+            "mFscore": 53.98,
+            "mPrecision": 56.94,
+            "mRecall": 48.05
+        },
+        "CDNetv2": {
+            "aAcc": 76.33,
+            "mIoU": 41.24,
+            "mAcc": 59.24,
+            "mDice": 46.03,
+            "mFscore": 63.95,
+            "mPrecision": 62.66,
+            "mRecall": 59.24
+        },
+        "HRCloudNet": {
+            "aAcc": 77.51,
+            "mIoU": 44.33,
+            "mAcc": 60.53,
+            "mDice": 50.19,
+            "mFscore": 67.61,
+            "mPrecision": 68.43,
+            "mRecall": 60.53
+        },
+        "MCDNet": {
+            "aAcc": 73.0,
+            "mIoU": 26.56,
+            "mAcc": 60.52,
+            "mDice": 31.34,
+            "mFscore": 53.76,
+            "mPrecision": 35.76,
+            "mRecall": 60.52
+        },
+        "SCNN": {
+            "aAcc": 73.35,
+            "mIoU": 36.93,
+            "mAcc": 60.42,
+            "mDice": 40.55,
+            "mFscore": 70.73,
+            "mPrecision": 57.72,
+            "mRecall": 60.42
+        },
+        "DBNet": {
+            "aAcc": 80.38,
+            "mIoU": 47.41,
+            "mAcc": 65.13,
+            "mDice": 53.05,
+            "mFscore": 66.96,
+            "mPrecision": 70.04,
+            "mRecall": 65.13
+        },
+        "UNetMobv2": {
+            "aAcc": 84.01,
+            "mIoU": 43.66,
+            "mAcc": 67.8,
+            "mDice": 49.67,
+            "mFscore": 67.76,
+            "mPrecision": 60.25,
+            "mRecall": 67.8
+        }
+    },
+    "Forest": {
+        "KappaMask": {
+            "aAcc": 80.07,
+            "mIoU": 38.32,
+            "mAcc": 57.0,
+            "mDice": 44.46,
+            "mFscore": 64.53,
+            "mPrecision": 54.31,
+            "mRecall": 57.0
+        },
+        "CDNetv1": {
+            "aAcc": 71.81,
+            "mIoU": 33.86,
+            "mAcc": 48.5,
+            "mDice": 38.67,
+            "mFscore": 57.6,
+            "mPrecision": 59.33,
+            "mRecall": 48.5
+        },
+        "CDNetv2": {
+            "aAcc": 81.34,
+            "mIoU": 41.94,
+            "mAcc": 58.62,
+            "mDice": 47.87,
+            "mFscore": 66.43,
+            "mPrecision": 63.38,
+            "mRecall": 58.62
+        },
+        "HRCloudNet": {
+            "aAcc": 81.76,
+            "mIoU": 42.93,
+            "mAcc": 58.3,
+            "mDice": 49.64,
+            "mFscore": 68.93,
+            "mPrecision": 68.9,
+            "mRecall": 58.3
+        },
+        "MCDNet": {
+            "aAcc": 77.71,
+            "mIoU": 30.05,
+            "mAcc": 57.39,
+            "mDice": 35.23,
+            "mFscore": 53.05,
+            "mPrecision": 39.56,
+            "mRecall": 57.39
+        },
+        "SCNN": {
+            "aAcc": 77.92,
+            "mIoU": 37.62,
+            "mAcc": 55.44,
+            "mDice": 41.39,
+            "mFscore": 75.09,
+            "mPrecision": 62.25,
+            "mRecall": 55.44
+        },
+        "DBNet": {
+            "aAcc": 85.22,
+            "mIoU": 44.93,
+            "mAcc": 62.4,
+            "mDice": 50.81,
+            "mFscore": 68.44,
+            "mPrecision": 66.64,
+            "mRecall": 62.4
+        },
+        "UNetMobv2": {
+            "aAcc": 86.89,
+            "mIoU": 45.23,
+            "mAcc": 64.89,
+            "mDice": 51.17,
+            "mFscore": 67.86,
+            "mPrecision": 61.62,
+            "mRecall": 64.89
+        }
+    },
+    "Shrubland": {
+        "KappaMask": {
+            "aAcc": 77.26,
+            "mIoU": 40.87,
+            "mAcc": 59.71,
+            "mDice": 48.28,
+            "mFscore": 59.87,
+            "mPrecision": 57.21,
+            "mRecall": 59.71
+        },
+        "CDNetv1": {
+            "aAcc": 61.35,
+            "mIoU": 32.7,
+            "mAcc": 49.79,
+            "mDice": 38.89,
+            "mFscore": 50.24,
+            "mPrecision": 59.42,
+            "mRecall": 49.79
+        },
+        "CDNetv2": {
+            "aAcc": 76.94,
+            "mIoU": 42.04,
+            "mAcc": 59.48,
+            "mDice": 48.51,
+            "mFscore": 61.56,
+            "mPrecision": 62.78,
+            "mRecall": 59.48
+        },
+        "HRCloudNet": {
+            "aAcc": 76.79,
+            "mIoU": 41.68,
+            "mAcc": 57.22,
+            "mDice": 48.98,
+            "mFscore": 63.13,
+            "mPrecision": 67.6,
+            "mRecall": 57.22
+        },
+        "MCDNet": {
+            "aAcc": 71.57,
+            "mIoU": 28.66,
+            "mAcc": 57.34,
+            "mDice": 34.2,
+            "mFscore": 50.92,
+            "mPrecision": 39.12,
+            "mRecall": 57.34
+        },
+        "SCNN": {
+            "aAcc": 71.25,
+            "mIoU": 37.11,
+            "mAcc": 56.93,
+            "mDice": 41.61,
+            "mFscore": 67.5,
+            "mPrecision": 59.76,
+            "mRecall": 56.93
+        },
+        "DBNet": {
+            "aAcc": 80.88,
+            "mIoU": 46.49,
+            "mAcc": 63.41,
+            "mDice": 53.76,
+            "mFscore": 64.05,
+            "mPrecision": 68.56,
+            "mRecall": 63.41
+        },
+        "UNetMobv2": {
+            "aAcc": 79.79,
+            "mIoU": 41.58,
+            "mAcc": 63.24,
+            "mDice": 48.19,
+            "mFscore": 63.03,
+            "mPrecision": 56.84,
+            "mRecall": 63.24
+        }
+    },
+    "Water": {
+        "KappaMask": {
+            "aAcc": 81.19,
+            "mIoU": 42.42,
+            "mAcc": 64.4,
+            "mDice": 49.36,
+            "mFscore": 64.62,
+            "mPrecision": 57.41,
+            "mRecall": 64.4
+        },
+        "CDNetv1": {
+            "aAcc": 82.83,
+            "mIoU": 44.43,
+            "mAcc": 61.84,
+            "mDice": 49.2,
+            "mFscore": 66.97,
+            "mPrecision": 62.98,
+            "mRecall": 61.84
+        },
+        "CDNetv2": {
+            "aAcc": 85.07,
+            "mIoU": 48.72,
+            "mAcc": 64.17,
+            "mDice": 54.1,
+            "mFscore": 70.32,
+            "mPrecision": 67.09,
+            "mRecall": 64.17
+        },
+        "HRCloudNet": {
+            "aAcc": 82.62,
+            "mIoU": 46.74,
+            "mAcc": 60.46,
+            "mDice": 52.96,
+            "mFscore": 68.88,
+            "mPrecision": 70.5,
+            "mRecall": 60.46
+        },
+        "MCDNet": {
+            "aAcc": 79.71,
+            "mIoU": 29.43,
+            "mAcc": 60.95,
+            "mDice": 33.81,
+            "mFscore": 56.42,
+            "mPrecision": 37.44,
+            "mRecall": 60.95
+        },
+        "SCNN": {
+            "aAcc": 80.86,
+            "mIoU": 41.82,
+            "mAcc": 61.56,
+            "mDice": 45.51,
+            "mFscore": 75.01,
+            "mPrecision": 63.68,
+            "mRecall": 61.56
+        },
+        "DBNet": {
+            "aAcc": 87.15,
+            "mIoU": 52.42,
+            "mAcc": 67.85,
+            "mDice": 58.29,
+            "mFscore": 71.04,
+            "mPrecision": 70.41,
+            "mRecall": 67.85
+        },
+        "UNetMobv2": {
+            "aAcc": 88.24,
+            "mIoU": 49.58,
+            "mAcc": 70.25,
+            "mDice": 55.37,
+            "mFscore": 70.75,
+            "mPrecision": 62.08,
+            "mRecall": 70.25
+        }
+    }
+}

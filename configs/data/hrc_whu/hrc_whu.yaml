@@ -1,0 +1,71 @@
+_target_: src.data.hrc_whu_datamodule.HRC_WHUDataModule
+root: data/hrc_whu
+train_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      # - _target_: albumentations.PadIfNeeded
+      #   min_height: 512
+      #   min_width: 512
+      #   p: 1
+      #   always_apply: True
+      - _target_: albumentations.RandomCrop
+        height: 256
+        width: 256
+        always_apply: true
+      - _target_: albumentations.OneOf
+        transforms:
+          - _target_: albumentations.HorizontalFlip
+            p: 0.5
+          - _target_: albumentations.VerticalFlip
+            p: 0.5
+          - _target_: albumentations.RandomRotate90
+            p: 0.5
+          - _target_: albumentations.Transpose
+            p: 0.5
+        p: 1
+
+  img_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.ToFloat
+        max_value: 255
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+
+  ann_transform: null
+val_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.Resize
+        height: 256
+        width: 256
+
+  img_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.ToFloat
+        max_value: 255
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  ann_transform: null
+
+test_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.Resize
+        height: 256
+        width: 256
+
+  img_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.ToFloat
+        max_value: 255
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+  ann_transform: null
+
+batch_size: 8
+num_workers: 4
+pin_memory: True
+persistent_workers: False

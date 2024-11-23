@@ -1,0 +1,27 @@
+_target_: src.models.base_module.BaseLitModule
+
+net:
+  _target_: src.models.components.unetmobv2.UNetMobV2
+  num_classes: 2
+  in_channels: 3
+
+
+criterion:
+  _target_: torch.nn.CrossEntropyLoss
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 0.001
+
+scheduler:
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 4
+
+#scheduler:
+#  _target_: torch.optim.lr_scheduler.LambdaLR
+#  _partial_: true
+#  lr_lambda: src.models.components.mcdnet.lr_lambda

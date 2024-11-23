@@ -1,0 +1,41 @@
+# @package _global_
+
+# to execute this experiment run:
+# python train.py experiment=example
+
+defaults:
+  - override /trainer: gpu
+  - override /data: l8_biome_crop/l8_biome_crop
+  - override /model: cdnetv2/cdnetv2
+  - override /logger: tensorboard
+  - override /callbacks: default
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["l8_biome_crop", "cdnetv2"]
+
+seed: 42
+
+model:
+  net:
+    num_classes: 4
+
+logger:
+  wandb:
+    project: "l8_biome_crop"
+    name: "cdnetv2"
+
+# callbacks:
+#   model_checkpoint:
+#     dirpath: ${paths.output_dir}/checkpoints
+#     filename: "epoch_{epoch:03d}"
+#     monitor: "val/loss"
+#     mode: "min"
+#     save_last: True
+#     auto_insert_metric_name: False
+
+  # early_stopping:
+  #   monitor: "val/loss"
+  #   patience: 10
+  #   mode: "min"

@@ -1,0 +1,21 @@
+_target_: src.models.base_module.BaseLitModule
+
+net:
+  _target_: src.models.components.mcdnet.MCDNet
+  in_channels: 3
+  num_classes: 2
+
+
+criterion:
+  _target_: torch.nn.CrossEntropyLoss
+
+optimizer:
+  _target_: torch.optim.SGD
+  _partial_: true
+  lr: 0.0001
+scheduler: null
+
+#scheduler:
+#  _target_: torch.optim.lr_scheduler.LambdaLR
+#  _partial_: true
+#  lr_lambda: src.models.components.mcdnet.lr_lambda

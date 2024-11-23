@@ -1,0 +1,57 @@
+_target_: src.data.l8_biome_datamodule.L8BiomeDataModule
+root: data/l8_biome
+bands: ["B4", "B3", "B2"]
+split: [0.6, 0.2, 0.2]
+patch_size: 512
+seed: 42
+train_pipeline:
+  all_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.OneOf
+        transforms:
+          - _target_: albumentations.HorizontalFlip
+            p: 0.5
+          - _target_: albumentations.VerticalFlip
+            p: 0.5
+          - _target_: albumentations.RandomRotate90
+            p: 0.5
+          - _target_: albumentations.Transpose
+            p: 0.5
+        p: 1
+
+  img_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+      - _target_: albumentations.ToFloat
+        max_value: 255
+
+  ann_transform: null
+val_pipeline:
+  all_transform: null
+
+  img_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+      - _target_: albumentations.ToFloat
+        max_value: 255
+  ann_transform: null
+
+test_pipeline:
+  all_transform: null
+  img_transform:
+    _target_: albumentations.Compose
+    transforms:
+      - _target_: albumentations.pytorch.transforms.ToTensorV2
+      - _target_: albumentations.ToFloat
+        max_value: 255
+  ann_transform: null
+
+batch_size: 8
+num_workers: 4
+pin_memory: True
+persistent_workers: False
+cache: True
+length: 3000

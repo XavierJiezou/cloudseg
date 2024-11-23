@@ -1,0 +1,22 @@
+_target_: src.models.base_module.BaseLitModule
+
+net:
+  _target_: src.models.components.sam.SAM
+  model_type: "vit_b"
+  num_classes: 4
+  checkpoint: "data/sam_check_point/sam_vit_b_01ec64.pth"
+
+
+criterion:
+  _target_: torch.nn.CrossEntropyLoss
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 0.001
+
+scheduler: 
+  _target_: torch.optim.lr_scheduler.CosineAnnealingLR
+  _partial_: true
+  T_max: 10
+  eta_min: 0.0004
